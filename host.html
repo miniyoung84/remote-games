@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HOST — do not share</title>
+    <link rel="stylesheet" href="/src/client/host/host.css" />
+  </head>
+  <body>
+    <div id="warning">Host view — do not share this window</div>
+    <div id="toast" hidden></div>
+    <main>
+      <div class="col">
+        <section class="panel" id="now-panel">
+          <h2>On the clock</h2>
+          <div id="now"></div>
+        </section>
+        <section class="panel">
+          <h2>Roster <span class="hint" id="roster-count"></span></h2>
+          <form id="roster-form">
+            <input id="roster-name" placeholder="Add someone…" autocomplete="off" />
+            <button type="submit">Add</button>
+          </form>
+          <div id="roster"></div>
+        </section>
+        <section class="panel">
+          <h2>Board</h2>
+          <div id="board"></div>
+        </section>
+      </div>
+      <div class="col">
+        <section class="panel">
+          <h2>Bracket sets</h2>
+          <div id="sets"></div>
+          <form id="editor">
+            <h3 id="editor-title">New set</h3>
+            <label>Title<input id="set-title" autocomplete="off" /></label>
+            <label>Subtitle <span class="hint">optional</span><input id="set-subtitle" autocomplete="off" /></label>
+            <label>Entries <span class="hint">one per line</span><textarea id="set-items" rows="9" spellcheck="false"></textarea></label>
+            <p class="hint" id="set-preview"></p>
+            <div class="row">
+              <button type="submit">Save set</button>
+              <button type="button" id="set-new" class="ghost">New</button>
+              <button type="button" id="set-delete" class="danger">Delete</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="/src/client/host/main.ts"></script>
+  </body>
+</html>

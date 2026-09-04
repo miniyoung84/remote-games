@@ -1,0 +1,186 @@
+/* Built mobile-first so this same view works on a phone — see
+   docs/architecture.md. The host machine has two monitors today, but a
+   single-monitor setup needs the controls off the shared screen entirely. */
+:root {
+  --bg: #12141a;
+  --panel: #1b1f28;
+  --line: #2e3542;
+  --fg: #eceef2;
+  --dim: #8f98a8;
+  --accent: #ffb020;
+  --win: #1f7a4d;
+  --danger: #ff3d7f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px;
+}
+
+/* Impossible to mistake for the display if it ever gets shared by accident. */
+#warning {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--danger);
+  color: #fff;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  text-align: center;
+  padding: 9px;
+  font-size: 13px;
+}
+
+#toast {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--danger);
+  color: #fff;
+  font-weight: 700;
+  padding: 11px 20px;
+  border-radius: 8px;
+  z-index: 20;
+}
+#toast[hidden] { display: none; }
+
+main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 16px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+@media (min-width: 1000px) { main { grid-template-columns: 1fr 1fr; } }
+
+.col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+.panel { background: var(--panel); border: 2px solid var(--line); border-radius: 10px; padding: 16px; }
+.panel h2 { margin: 0 0 12px; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: var(--dim); }
+.panel h3 { margin: 0 0 10px; font-size: 15px; font-weight: 700; }
+.hint { color: var(--dim); font-weight: 600; font-size: 12px; text-transform: none; letter-spacing: 0; }
+
+button {
+  font: inherit;
+  font-weight: 700;
+  border: 2px solid var(--line);
+  background: #262c37;
+  color: var(--fg);
+  border-radius: 8px;
+  padding: 9px 14px;
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+button.ghost { background: transparent; }
+button.danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+button.primary { background: var(--accent); border-color: var(--accent); color: #14161a; }
+button:disabled { opacity: 0.35; cursor: not-allowed; border-color: var(--line); }
+
+input, textarea {
+  font: inherit;
+  width: 100%;
+  background: #12151b;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  color: var(--fg);
+  padding: 9px 11px;
+}
+input:focus, textarea:focus { outline: none; border-color: var(--accent); }
+textarea { resize: vertical; line-height: 1.5; }
+
+label { display: block; margin-bottom: 10px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); }
+label input, label textarea { margin-top: 5px; text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--fg); }
+
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ---------- on the clock ---------- */
+
+.picker-line { font-size: 20px; font-weight: 800; margin-bottom: 12px; }
+.picker-line.none { color: var(--danger); }
+.picker-line .round { color: var(--dim); font-weight: 700; font-size: 14px; display: block; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 4px; }
+
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.choice {
+  min-height: 92px;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.2;
+  padding: 12px;
+  white-space: normal;
+}
+.choice:hover { background: var(--win); border-color: var(--win); }
+.choice .key { display: block; font-size: 11px; color: var(--dim); letter-spacing: 0.14em; margin-bottom: 6px; }
+.choice:hover .key { color: #cfe9db; }
+
+.empty { color: var(--dim); font-weight: 600; padding: 8px 0; }
+.champion-note { font-size: 19px; font-weight: 800; color: var(--accent); margin-bottom: 12px; }
+
+/* ---------- roster ---------- */
+
+#roster-form { display: flex; gap: 8px; margin-bottom: 12px; }
+#roster { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 6px 5px 13px;
+  background: #12151b;
+}
+.person.current { border-color: var(--accent); background: #3a2c0d; }
+.person.away { opacity: 0.4; }
+.person .name { font-weight: 700; cursor: pointer; }
+.person .mini { border: none; background: transparent; color: var(--dim); padding: 2px 5px; font-size: 13px; border-radius: 6px; }
+.person .mini:hover { color: var(--fg); background: #2a3039; }
+.person .state { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+.person .state.here { color: #46d17f; }
+.person .state.away { color: var(--danger); }
+
+/* ---------- sets ---------- */
+
+#sets { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+
+.set {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 11px;
+  background: #12151b;
+}
+.set.editing { border-color: var(--accent); }
+.set .meta { flex: 1; min-width: 0; cursor: pointer; }
+.set .meta strong { display: block; font-size: 15px; }
+.set .meta span { color: var(--dim); font-size: 12px; }
+.set-actions { display: flex; gap: 6px; align-items: center; }
+.set-actions label { margin: 0; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.set-actions input[type="checkbox"] { width: auto; }
+
+/* ---------- board overview ---------- */
+
+#board { display: flex; gap: 10px; overflow-x: auto; }
+.h-round { flex: 1; min-width: 130px; }
+.h-round-name { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); margin-bottom: 6px; text-align: center; }
+.h-round-matches { display: flex; flex-direction: column; justify-content: space-around; height: calc(100% - 20px); gap: 6px; }
+
+.h-match { border: 2px solid var(--line); border-radius: 6px; overflow: hidden; background: #12151b; }
+.h-match.ready { cursor: pointer; }
+.h-match.ready:hover { border-color: var(--accent); }
+.h-match.current { border-color: var(--accent); }
+.h-match.bye { opacity: 0.35; }
+.h-slot { font-size: 12px; font-weight: 700; padding: 4px 7px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.h-slot + .h-slot { border-top: 2px solid var(--line); }
+.h-slot.filled { color: var(--fg); }
+.h-slot.winner { background: var(--win); color: #fff; }
+.h-slot.loser { opacity: 0.4; }

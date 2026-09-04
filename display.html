@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Display — remote-games</title>
+    <link rel="stylesheet" href="/src/client/display/display.css" />
+  </head>
+  <body>
+    <div id="viewport">
+      <div id="stage">
+        <header id="header">
+          <div id="title">remote-games</div>
+          <div id="progress"></div>
+        </header>
+        <section id="board"></section>
+        <footer id="band"></footer>
+        <div id="champion" hidden></div>
+        <div id="offline" hidden>reconnecting</div>
+      </div>
+    </div>
+    <script type="module" src="/src/client/display/main.ts"></script>
+  </body>
+</html>

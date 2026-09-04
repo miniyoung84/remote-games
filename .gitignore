@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+.vite/
+
+# Personal brainstorming / working notes — not part of the public project
+notes/
+
+# Runtime game state (bracket in progress, roster)
+data/state.json
+
+# Screenshots from `npm run shot`
+screenshots/

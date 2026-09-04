@@ -1,0 +1,7 @@
+{
+  "id": "best-weather",
+  "title": "Best Weather",
+  "subtitle": "You get this every day from now on",
+  "items": ["Clear blue sky", "Light rain", "Thunderstorm", "Fresh snowfall", "Thick fog", "Crisp autumn day", "Warm breeze", "Overcast and cool", "First warm day", "Golden hour", "Frost on windows", "Starry night", "Windy and clear", "Big fluffy clouds", "Hot and dry", "After the rain"],
+  "updatedAt": 0
+}

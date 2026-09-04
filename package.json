@@ -1,0 +1,32 @@
+{
+  "name": "remote-games",
+  "version": "0.0.1",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "module",
+  "packageManager": "npm@11.15.0",
+  "engines": {
+    "node": ">=24.13.1"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "start": "tsx src/server/main.ts",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test src/**/*.test.ts",
+    "shot": "node scripts/shot.mjs",
+    "sets": "node scripts/set-list.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "@types/ws": "^8.18.1",
+    "playwright": "^1.62.1",
+    "tsx": "^4.23.13",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  },
+  "dependencies": {
+    "ws": "^8.21.3"
+  }
+}
