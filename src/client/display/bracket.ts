@@ -186,7 +186,17 @@ export function mountBracket(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     if (decided) {
       // Hold the result on screen so the pick reads as an event rather than
       // the board silently changing.
-      sound.play(next.game.phase === "complete" ? "champion" : "advance");
+      if (next.game.phase === "complete") {
+        sound.play("champion");
+      } else {
+        const rounds = next.game.bracket.rounds.length;
+        sound.play("advance", rounds > 1 ? decided.round / (rounds - 1) : 0);
+        // A round finishing is worth its own beat, offset so it doesn't collide.
+        const nextRound = findMatch(next.game.bracket, next.game.currentMatchId)?.round;
+        if (nextRound !== undefined && nextRound > decided.round) {
+          setTimeout(() => sound.play("round"), 320);
+        }
+      }
       animating = true;
       renderBoard(next, decided.id);
       renderBand(next, decided);

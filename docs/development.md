@@ -127,6 +127,11 @@ Off by default. **Sound on/off** in the host view toggles it, and the display
 then asks for one click to enable audio — browsers won't start it otherwise.
 Click it while you're setting the window up, before you share.
 
+What you'll hear: a thunk when a tier list item is placed, a whoosh when one is
+moved, a knock on every bracket pick that climbs in pitch as the bracket
+narrows, a short chord when a round finishes, and a longer one for a champion or
+a finished list.
+
 For anyone else to hear it you must also share computer audio: Teams has an
 "include computer sound" tick on the share dialog, Discord's Go Live picks up
 application audio on its own. Assume some of the room won't hear it — nothing

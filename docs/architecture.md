@@ -207,7 +207,12 @@ of the repo.
 `renderSound()` is deliberately split from playback so the identical synthesis
 can be rendered into an `OfflineAudioContext` and measured. A sound that has
 quietly become silence is otherwise invisible; the checks assert peak, RMS and
-duration.
+duration, and for the escalating sounds, pitch.
+
+Bracket picks take an `intensity` from how deep the round is, lifting the pitch
+as the field narrows — roughly 101Hz in the opening round to 217Hz for the
+final. Finishing a round adds its own short chord, offset so it doesn't collide
+with the pick that caused it.
 
 ## Images and packs
 
