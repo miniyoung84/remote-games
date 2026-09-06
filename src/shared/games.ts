@@ -37,6 +37,16 @@ export const GAMES: GameEntry[] = [
     display: "/display",
     host: "/host?game=tierlist",
   },
+  {
+    id: "draft",
+    title: "Draft",
+    blurb:
+      "Pick a topic, then everyone drafts to their own bench — anything they can think of, typed in by you. No list to choose from.",
+    players: "3+ · any order · pausable",
+    status: "ready",
+    display: "/display",
+    host: "/host?game=draft",
+  },
 ];
 
 export const readyGames = (): GameEntry[] => GAMES.filter((g) => g.status === "ready");

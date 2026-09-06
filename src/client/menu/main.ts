@@ -98,6 +98,16 @@ function describe(state: DisplayState): { text: string; cls: string; action: Gam
     return { text: `${game.bracket.title} in progress — ${decided} of ${total} decided.`, cls: "live", action: entry };
   }
 
+  if (game.kind === "draft") {
+    const board = game.board;
+    if (board.phase === "final") return { text: `${board.topic} — draft finished.`, cls: "done", action: entry };
+    return {
+      text: `${board.topic} — ${board.total} pick${board.total === 1 ? "" : "s"} in.`,
+      cls: "live",
+      action: entry,
+    };
+  }
+
   const board = game.board;
   if (board.phase === "final") return { text: `${board.title} finished.`, cls: "done", action: entry };
   return {

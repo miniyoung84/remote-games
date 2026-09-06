@@ -6,6 +6,7 @@ import type { Art, GameKind, HostState, ItemSetView, RawItem } from "../../share
 import { connect } from "../connection.js";
 import { mountBracketPanel } from "./bracket.js";
 import { button, text, type HostDom, type HostPanel } from "./panel.js";
+import { mountDraftPanel } from "./draft.js";
 import { mountTierPanel } from "./tierlist.js";
 
 const el = <T extends HTMLElement>(id: string): T => {
@@ -36,6 +37,10 @@ const artList = el("art-list");
 const packName = el<HTMLInputElement>("pack-name");
 const packImport = el<HTMLInputElement>("pack-import");
 const packUnused = el("pack-unused");
+const draftStart = el("draft-start");
+const draftTopic = el<HTMLInputElement>("draft-topic");
+const draftSubtitle = el<HTMLInputElement>("draft-subtitle");
+const draftRounds = el<HTMLInputElement>("draft-rounds");
 
 let state: HostState | null = null;
 let editingId: string | null = null;
@@ -47,8 +52,9 @@ let panel: HostPanel | null = null;
 let panelKind: GameKind | null = null;
 
 /** Which game the Start buttons launch. Seeded from the menu's ?game= link. */
-const requested = new URLSearchParams(location.search).get("game");
-let startKind: GameKind = requested === "tierlist" ? "tierlist" : "bracket";
+const KINDS: GameKind[] = ["bracket", "tierlist", "draft"];
+const requested = new URLSearchParams(location.search).get("game") as GameKind | null;
+let startKind: GameKind = requested && KINDS.includes(requested) ? requested : "bracket";
 
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
 function flash(message: string): void {
@@ -83,6 +89,7 @@ function ensurePanel(kind: GameKind | null): void {
   dom.board.replaceChildren();
   if (kind === "bracket") panel = mountBracketPanel(dom, act);
   else if (kind === "tierlist") panel = mountTierPanel(dom, act);
+  else if (kind === "draft") panel = mountDraftPanel(dom, act);
 }
 
 function renderGameActions(next: HostState): void {
@@ -174,16 +181,35 @@ function matchesFilter(set: ItemSetView, query: string): boolean {
   return query.split(/\s+/).every((word) => haystack.includes(word));
 }
 
+/** A draft has no pool, so the set library is irrelevant while it's selected. */
+function applyStartKind(): void {
+  const drafting = startKind === "draft";
+  draftStart.hidden = !drafting;
+  setFilter.hidden = drafting;
+  setsList.hidden = drafting;
+  editor.hidden = drafting;
+  setsCount.hidden = drafting;
+}
+
+el("draft-go").onclick = () => {
+  if (state?.game && !confirm("A game is already running. Replace it?")) return;
+  act({
+    type: "draft/start",
+    topic: draftTopic.value,
+    subtitle: draftSubtitle.value,
+    rounds: Number(draftRounds.value) || 2,
+  });
+};
+
 function renderGamePick(): void {
   gamePick.replaceChildren();
   for (const game of GAMES.filter((g) => g.status === "ready")) {
     const node = button(game.title, game.id === startKind ? "pick on" : "pick");
     node.onclick = () => {
       startKind = game.id as GameKind;
-      if (state) {
-        renderGamePick();
-        renderSets(state);
-      }
+      applyStartKind();
+      renderGamePick();
+      if (state) renderSets(state);
     };
     gamePick.append(node);
   }
@@ -531,5 +557,6 @@ function render(next: HostState): void {
 }
 
 renderGamePick();
+applyStartKind();
 renderPackControls();
 loadEditor(null);

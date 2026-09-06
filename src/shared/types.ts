@@ -41,7 +41,7 @@ export type Pack = {
 
 export type Person = { id: string; name: string; present: boolean };
 
-export type GameKind = "bracket" | "tierlist";
+export type GameKind = "bracket" | "tierlist" | "draft";
 
 /* ---------- bracket ---------- */
 
@@ -119,7 +119,43 @@ export type TierBoard = {
   total: number;
 };
 
-export type Game = BracketGame | TierGame;
+/* ---------- draft ---------- */
+
+/** Picks are free text typed by the host — there is no pool to choose from. */
+export type DraftPick = { id: string; label: string; by: string; at: number };
+
+export type DraftGame = {
+  kind: "draft";
+  topic: string;
+  subtitle: string;
+  /** Target picks per person. Advisory: the host decides when it's done. */
+  rounds: number;
+  picks: DraftPick[];
+  finished: boolean;
+  startedAt: number;
+};
+
+export type DraftColumn = {
+  personId: string;
+  name: string;
+  present: boolean;
+  picks: DraftPick[];
+};
+
+export type DraftBoard = {
+  topic: string;
+  subtitle: string;
+  rounds: number;
+  columns: DraftColumn[];
+  /** The pick just made, with its drafter's name resolved. */
+  last: (DraftPick & { byName: string }) | null;
+  total: number;
+  /** rounds x drafters, for the progress readout. */
+  target: number;
+  phase: "drafting" | "final";
+};
+
+export type Game = BracketGame | TierGame | DraftGame;
 
 export type AppState = {
   roster: Person[];
@@ -134,6 +170,7 @@ export type AppState = {
 /* ---------- projections ---------- */
 
 export type DisplayGame =
+  | { kind: "draft"; board: DraftBoard; actionCount: number }
   | { kind: "bracket"; phase: "playing" | "complete"; bracket: Bracket; currentMatchId: string | null; actionCount: number }
   | { kind: "tierlist"; board: TierBoard; actionCount: number };
 
@@ -145,6 +182,7 @@ export type DisplayState = {
 };
 
 export type HostGame =
+  | { kind: "draft"; board: DraftBoard; actionCount: number }
   | { kind: "bracket"; phase: "playing" | "complete"; bracket: Bracket; currentMatchId: string | null; remaining: number }
   | { kind: "tierlist"; board: TierBoard; remaining: number };
 

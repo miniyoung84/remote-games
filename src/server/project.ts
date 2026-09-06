@@ -1,5 +1,6 @@
 import { buildBracket, readyMatches, resolveCurrentMatch } from "../shared/bracket.js";
 import { buildBoard } from "../shared/tierlist.js";
+import { buildDraftBoard } from "../shared/draft.js";
 import type { AppState, DisplayGame, DisplayState, HostGame, HostState } from "../shared/types.js";
 import { loadSets } from "./store.js";
 import { orphanImages } from "./packs.js";
@@ -23,6 +24,10 @@ function displayGame(state: AppState): DisplayGame | null {
       currentMatchId: resolveCurrentMatch(bracket, game.selectedMatchId)?.id ?? null,
       actionCount: game.decisions.length,
     };
+  }
+
+  if (game.kind === "draft") {
+    return { kind: "draft", board: buildDraftBoard(game, state.roster), actionCount: game.picks.length };
   }
 
   return { kind: "tierlist", board: buildBoard(game, state.roster), actionCount: game.placements.length };
@@ -53,6 +58,10 @@ function hostGame(state: AppState): HostGame | null {
     };
   }
 
+  if (game.kind === "draft") {
+    return { kind: "draft", board: buildDraftBoard(game, state.roster), actionCount: game.picks.length };
+  }
+
   const board = buildBoard(game, state.roster);
   return { kind: "tierlist", board, remaining: board.unplaced.length };
 }
@@ -64,7 +73,9 @@ export function projectHost(state: AppState): HostState {
       ? game.decisions.length > 0
       : game?.kind === "tierlist"
         ? game.placements.length > 0 || game.finished
-        : false;
+        : game?.kind === "draft"
+          ? game.picks.length > 0 || game.finished
+          : false;
 
   return {
     roster: state.roster,

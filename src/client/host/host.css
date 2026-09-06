@@ -14,6 +14,10 @@
 
 * { box-sizing: border-box; }
 
+/* An author `display` rule outranks the hidden attribute's UA style, so
+   anything with its own display would ignore [hidden] without this. */
+[hidden] { display: none !important; }
+
 body {
   margin: 0;
   background: var(--bg);
@@ -315,3 +319,28 @@ label input, label textarea { margin-top: 5px; text-transform: none; letter-spac
 .set-select { width: auto; flex: none; margin-right: 2px; cursor: pointer; }
 .pack-unused { margin: 10px 0 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .pack-unused .mini { border: 2px solid var(--danger); color: var(--danger); padding: 4px 9px; font-size: 11px; }
+
+/* ---------- draft ---------- */
+
+.draft-start { border: 2px solid var(--accent); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+.draft-start .hint { display: block; margin: 0 0 12px; }
+.draft-start[hidden] { display: none; }
+
+.draft-entry { display: flex; gap: 8px; margin-bottom: 6px; }
+.draft-input { flex: 1; font-size: 17px; font-weight: 700; }
+.draft-warning { margin: 0 0 8px; min-height: 16px; font-size: 12px; font-weight: 700; color: var(--accent); }
+.draft-behind { margin: 0 0 10px; font-size: 12px; font-weight: 700; color: var(--dim); }
+
+.h-draft { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.h-draft-col { border: 2px solid var(--line); border-radius: 8px; overflow: hidden; }
+.h-draft-col.away { opacity: 0.5; }
+.h-draft-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 9px;
+  background: #1f2530;
+  font-size: 13px;
+  font-weight: 800;
+}
+.h-draft-count { color: var(--accent); }
+.h-draft-picks { display: flex; flex-wrap: wrap; gap: 5px; padding: 7px; }

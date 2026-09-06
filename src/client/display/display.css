@@ -18,6 +18,10 @@
 
 * { box-sizing: border-box; }
 
+/* An author `display` rule outranks the hidden attribute's UA style, so
+   anything with its own display would ignore [hidden] without this. */
+[hidden] { display: none !important; }
+
 body {
   margin: 0;
   background: var(--ink);
@@ -535,3 +539,67 @@ body {
   cursor: pointer;
 }
 #sound-arm[hidden] { display: none; }
+
+/* ---------- draft ---------- */
+
+#board[data-cols] { flex-direction: row; gap: 10px; padding: 16px 40px; align-items: stretch; }
+
+.draft-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border: 3px solid var(--line);
+  border-radius: 12px;
+  background: var(--ink-2);
+  overflow: hidden;
+  transition: border-color 200ms linear;
+}
+.draft-col.away { opacity: 0.45; }
+.draft-col.receiving { border-color: var(--accent); }
+
+.draft-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--line);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.draft-head .draft-name { overflow: hidden; text-overflow: ellipsis; }
+.draft-count { flex: none; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+.draft-picks { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 8px; min-height: 0; }
+
+.draft-pick {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6px 8px;
+  min-height: var(--pick-h, 58px);
+  border: 3px solid var(--line);
+  border-radius: 9px;
+  background: var(--ink);
+  font-size: var(--pick-font, 20px);
+  font-weight: 800;
+  line-height: 1.12;
+  overflow: hidden;
+  will-change: transform;
+}
+.draft-pick.focus { border-color: var(--paper); }
+.draft-pick.in-flight { z-index: 6; box-shadow: 0 0 0 5px var(--accent); }
+
+#board[data-depth="3"] { --pick-h: 108px; --pick-font: 26px; }
+#board[data-depth="5"] { --pick-h: 74px; --pick-font: 22px; }
+#board[data-depth="8"] { --pick-h: 48px; --pick-font: 17px; }
+#board[data-depth="12"] { --pick-h: 32px; --pick-font: 14px; }
+
+#board[data-cols="9"] .draft-head, #board[data-cols="10"] .draft-head,
+#board[data-cols="11"] .draft-head, #board[data-cols="12"] .draft-head { font-size: 19px; padding: 8px 9px; }

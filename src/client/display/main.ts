@@ -3,6 +3,7 @@ import { connect } from "../connection.js";
 import { autoFitStage } from "../stage.js";
 import { mountBracket } from "./bracket.js";
 import { text, type DisplayDom, type Renderer } from "./dom.js";
+import { mountDraft } from "./draft.js";
 import { createSound } from "./sound.js";
 import { mountTierlist } from "./tierlist.js";
 
@@ -50,6 +51,7 @@ function swapTo(next: string | null): void {
   dom.overlay.hidden = true;
   if (next === "bracket") renderer = mountBracket(dom, sound);
   else if (next === "tierlist") renderer = mountTierlist(dom, sound);
+  else if (next === "draft") renderer = mountDraft(dom, sound);
 }
 
 function renderIdle(state: DisplayState): void {

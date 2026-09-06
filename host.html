@@ -45,6 +45,13 @@
         <section class="panel">
           <h2>Sets <span class="hint" id="sets-count"></span></h2>
           <div id="game-pick" class="game-pick"></div>
+          <div id="draft-start" class="draft-start" hidden>
+            <p class="hint">A draft has no list — people say anything, you type it in.</p>
+            <label>Topic<input id="draft-topic" placeholder="Zombie apocalypse squad" autocomplete="off" /></label>
+            <label>Subtitle <span class="hint">optional</span><input id="draft-subtitle" autocomplete="off" /></label>
+            <label>Picks each<input id="draft-rounds" type="number" min="1" max="12" value="2" /></label>
+            <button type="button" id="draft-go" class="primary">Start draft</button>
+          </div>
           <input id="set-filter" placeholder="Filter by name or entry…" autocomplete="off" />
           <div id="sets"></div>
           <form id="editor">

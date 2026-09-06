@@ -91,6 +91,17 @@ entrant, **B** / **→** for the right, and **U** to undo.
 The roster and the bracket both survive a restart, so a bracket can span several
 days of standups with different people present each day.
 
+## Running a draft
+
+Pick **Draft** in the host view and the set library hides itself — there's
+nothing to choose from. Give it a topic and how many picks each person gets,
+then hit Start.
+
+On someone's turn, tap their name to put them on the clock, type what they said,
+and press Enter. The clock clears after every pick so the next person has to be
+called on deliberately. If the pick duplicates something already taken you're
+told who has it, but nothing stops you.
+
 ## Item art
 
 Items may carry optional art, which both games render — big in the on-the-clock

@@ -6,7 +6,7 @@ the window, and everyone plays by talking and by typing in the meeting chat.
 
 No install for anyone, no accounts, no phones.
 
-> **Status: two games playable.** Bracket and Tier List, both end to end —
+> **Status: three games playable.** Bracket, Tier List and Draft, all end to end —
 > shared display, private host controls, 28 shared sets, undo, and state that
 > survives restarts so a game can span several days of standups.
 
@@ -44,6 +44,18 @@ Dependencies install into the project directory only — nothing touches your
 global environment. [docs/development.md](docs/development.md) covers the
 isolation guarantees in detail, including how they map onto a Python `venv`.
 
+## Draft
+
+Pick a topic — "zombie apocalypse squad", "your ideal team lunch" — and everyone
+drafts to their own bench. **There is no list to choose from:** people say
+whatever they think of and you type it in. Each person gets a column that fills
+up as they pick.
+
+Nothing is restricted. If two people draft the same thing you get a warning and
+can go ahead anyway. Since turn order is emergent, the host view shows who has
+the fewest picks rather than enforcing a snake order — which is the fairness the
+snake was for. Someone leaving mid-draft keeps their column and their picks.
+
 ## Tier List
 
 Rank sixteen things from S down to D. On your turn you place one item — or
@@ -64,8 +76,8 @@ order is whoever raises their hand next and attendance changes daily.
 - **Any number of entries** from 2 up. Non-powers-of-two get byes automatically.
 - **Nothing is lost on a restart**, so a bracket can run across several days.
 
-Both games share the same sets, so a set can be run as a bracket one week and a
-tier list the next — comparing the two results is half the fun. Items can carry
+Bracket and Tier List share the same sets, so a set can be run as a bracket one
+week and a tier list the next — comparing the two results is half the fun. Items can carry
 **emoji, a color swatch or an uploaded image**, and a **pack** bundles sets plus
 their images into one file you can share or keep as a backup.
 

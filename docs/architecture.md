@@ -150,6 +150,20 @@ display swaps renderers when the running game changes.
 Both games read the same `data/sets/` content, so item art added for one shows
 up in the other.
 
+### How the draft works
+
+The odd one out: a draft has **no set and no pool**. The topic is typed, and so
+is every pick, because the point is that nobody is limited to a list. That makes
+it the first game where the *roster* is the board — each person owns a column —
+which is why it was worth building third.
+
+Same ordered log as the others, so undo is unchanged. Two consequences of
+emergent turn order are handled deliberately: a pick with nobody on the clock is
+refused outright (an unattributed pick makes the board a lie), and since a fixed
+snake order is impossible, the host view surfaces who has the fewest picks
+instead. Columns cover everyone present *plus* anyone who has already drafted,
+so leaving the meeting never erases what you picked.
+
 ### How the tier list works
 
 Like the bracket, it stores an ordered log rather than a derived board: an

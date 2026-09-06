@@ -97,6 +97,55 @@ export function reduce(state: AppState, action: Action): ReduceResult {
       });
     }
 
+    case "draft/start": {
+      const topic = action.topic.trim();
+      if (!topic) return fail("Give the draft a topic.");
+      const rounds = Math.min(12, Math.max(1, Math.round(action.rounds) || 1));
+      return ok({
+        ...state,
+        currentPickerId: null,
+        game: {
+          kind: "draft",
+          topic,
+          subtitle: action.subtitle.trim(),
+          rounds,
+          picks: [],
+          finished: false,
+          startedAt: Date.now(),
+        },
+      });
+    }
+
+    case "draft/pick": {
+      const game = state.game;
+      if (game?.kind !== "draft") return fail("No draft in progress.");
+      if (game.finished) return fail("This draft is finished.");
+      const label = action.label.trim();
+      if (!label) return fail("Type what they picked.");
+      if (label.length > 80) return fail("That pick is too long.");
+      // Picks belong to a person; an unattributed one makes the board a lie.
+      if (!state.currentPickerId) return fail("Nobody is on the clock — tap a name first.");
+
+      return ok({
+        ...state,
+        currentPickerId: null,
+        game: {
+          ...game,
+          picks: [
+            ...game.picks,
+            { id: `d${game.picks.length}${Date.now().toString(36)}`, label, by: state.currentPickerId, at: Date.now() },
+          ],
+        },
+      });
+    }
+
+    case "draft/finish": {
+      const game = state.game;
+      if (game?.kind !== "draft") return fail("No draft in progress.");
+      if (!game.picks.length) return fail("Nothing has been drafted yet.");
+      return ok({ ...state, game: { ...game, finished: true } });
+    }
+
     case "bracket/decide": {
       const game = state.game;
       if (game?.kind !== "bracket") return fail("No bracket in progress.");
@@ -168,6 +217,17 @@ export function reduce(state: AppState, action: Action): ReduceResult {
           // Put the matchup back on screen and the picker back on the clock.
           currentPickerId: undone.by,
           game: { ...game, decisions: game.decisions.slice(0, -1), selectedMatchId: undone.matchId },
+        });
+      }
+
+      if (game.kind === "draft") {
+        if (game.finished) return ok({ ...state, game: { ...game, finished: false } });
+        if (!game.picks.length) return fail("Nothing to undo.");
+        const undone = game.picks[game.picks.length - 1];
+        return ok({
+          ...state,
+          currentPickerId: undone.by,
+          game: { ...game, picks: game.picks.slice(0, -1) },
         });
       }
 

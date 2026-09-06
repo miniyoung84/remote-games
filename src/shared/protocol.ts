@@ -14,6 +14,9 @@ export type Action =
   | { type: "bracket/selectMatch"; matchId: string | null }
   | { type: "tier/place"; itemId: string; tierId: string }
   | { type: "tier/finish" }
+  | { type: "draft/start"; topic: string; subtitle: string; rounds: number }
+  | { type: "draft/pick"; label: string }
+  | { type: "draft/finish" }
   | { type: "sets/save"; set: ItemSet }
   | { type: "sets/delete"; id: string }
   | { type: "images/put"; id: string; data: string }
