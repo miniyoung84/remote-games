@@ -134,6 +134,28 @@ data/sets/      one JSON file per bracket set
 data/state.json runtime state — gitignored, survives restarts
 ```
 
+### Two games, one shell
+
+`AppState.game` is a discriminated union on `kind`. The roster, turn-taking,
+persistence and the on-the-clock band are shared; each game contributes a
+reducer branch, a projection branch, a display renderer and a host panel. The
+display swaps renderers when the running game changes.
+
+Both games read the same `data/sets/` content, so item art added for one shows
+up in the other.
+
+### How the tier list works
+
+Like the bracket, it stores an ordered log rather than a derived board: an
+item's tier is simply its most recent placement. **Moving is therefore the same
+operation as placing**, undo is "drop the last entry", and the display can tell
+the two apart because a replay knows whether that item had a previous tier.
+
+The display animates with FLIP — render the new positions, invert every chip to
+where it was, then transition home. One consequence worth knowing: the stage is
+CSS-scaled, so a screen-space delta must be divided by that scale before being
+used as a local transform, or the scaling is applied twice.
+
 ### How the bracket game works
 
 A game is stored as **seeding plus an ordered decision log**, never as a derived

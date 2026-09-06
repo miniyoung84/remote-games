@@ -91,7 +91,27 @@ entrant, **B** / **→** for the right, and **U** to undo.
 The roster and the bracket both survive a restart, so a bracket can span several
 days of standups with different people present each day.
 
-## Editing bracket sets
+## Item art
+
+Items may carry optional art, which both games render — big in the on-the-clock
+band, small on the board:
+
+```json
+{ "label": "Mango", "art": { "emoji": "🥭" } }
+{ "label": "Teal",  "art": { "color": "#14b8a6" } }
+{ "label": "Bad pun" }
+```
+
+Plain strings still work, so sets written before art existed are untouched. Art
+is added by hand in the set file; the host editor preserves it for entries whose
+label doesn't change. `{ "image": "..." }` is accepted by the type but has no
+upload pipeline yet and renders as the label.
+
+Emoji beat photographs at the ~120px a board chip gets, and colors beat both for
+a set like Best Color. About a third of the library is abstract enough that no
+art helps, and those sets are deliberately left plain.
+
+## Editing sets
 
 Two equivalent routes — both write the same files:
 

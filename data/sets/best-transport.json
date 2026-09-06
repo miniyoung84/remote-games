@@ -2,6 +2,23 @@
   "id": "best-transport",
   "title": "Best Way to Travel",
   "subtitle": "Getting from A to B",
-  "items": ["Train", "Airplane", "Bicycle", "Walking", "Car", "Bus", "Ferry", "Submarine", "Hot air balloon", "Helicopter", "Roller skates", "Skateboard", "Scooter", "Camel", "Horse", "Teleportation"],
+  "items": [
+    { "label": "Train", "art": { "emoji": "🚆" } },
+    { "label": "Airplane", "art": { "emoji": "✈️" } },
+    { "label": "Bicycle", "art": { "emoji": "🚲" } },
+    { "label": "Walking", "art": { "emoji": "🚶" } },
+    { "label": "Car", "art": { "emoji": "🚗" } },
+    { "label": "Bus", "art": { "emoji": "🚌" } },
+    { "label": "Ferry", "art": { "emoji": "⛴️" } },
+    { "label": "Submarine", "art": { "emoji": "🤿" } },
+    { "label": "Hot air balloon", "art": { "emoji": "🎈" } },
+    { "label": "Helicopter", "art": { "emoji": "🚁" } },
+    { "label": "Roller skates", "art": { "emoji": "🛼" } },
+    { "label": "Skateboard", "art": { "emoji": "🛹" } },
+    { "label": "Scooter", "art": { "emoji": "🛴" } },
+    { "label": "Camel", "art": { "emoji": "🐫" } },
+    { "label": "Horse", "art": { "emoji": "🐎" } },
+    { "label": "Teleportation", "art": { "emoji": "✨" } }
+  ],
   "updatedAt": 0
 }

@@ -2,6 +2,23 @@
   "id": "best-fruit",
   "title": "Best Fruit",
   "subtitle": "No raisins allowed to sneak in",
-  "items": ["Mango", "Strawberry", "Watermelon", "Pineapple", "Peach", "Grapes", "Orange", "Banana", "Apple", "Cherry", "Kiwi", "Blueberry", "Pear", "Coconut", "Plum", "Lemon"],
+  "items": [
+    { "label": "Mango", "art": { "emoji": "🥭" } },
+    { "label": "Strawberry", "art": { "emoji": "🍓" } },
+    { "label": "Watermelon", "art": { "emoji": "🍉" } },
+    { "label": "Pineapple", "art": { "emoji": "🍍" } },
+    { "label": "Peach", "art": { "emoji": "🍑" } },
+    { "label": "Grapes", "art": { "emoji": "🍇" } },
+    { "label": "Orange", "art": { "emoji": "🍊" } },
+    { "label": "Banana", "art": { "emoji": "🍌" } },
+    { "label": "Apple", "art": { "emoji": "🍎" } },
+    { "label": "Cherry", "art": { "emoji": "🍒" } },
+    { "label": "Kiwi", "art": { "emoji": "🥝" } },
+    { "label": "Blueberry", "art": { "emoji": "🫐" } },
+    { "label": "Pear", "art": { "emoji": "🍐" } },
+    { "label": "Coconut", "art": { "emoji": "🥥" } },
+    { "label": "Plum", "art": { "emoji": "🟣" } },
+    { "label": "Lemon", "art": { "emoji": "🍋" } }
+  ],
   "updatedAt": 0
 }

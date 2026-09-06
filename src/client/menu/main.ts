@@ -80,24 +80,30 @@ function renderGames(): void {
 }
 
 function describe(state: DisplayState): { text: string; cls: string; action: GameEntry | null } {
-  const bracket = GAMES.find((g) => g.id === "bracket") ?? null;
-  if (state.phase === "idle" || !state.bracket) {
-    return { text: "Nothing running. Pick a game to start.", cls: "", action: null };
+  const game = state.game;
+  if (!game) return { text: "Nothing running. Pick a game to start.", cls: "", action: null };
+  const entry = GAMES.find((g) => g.id === game.kind) ?? null;
+
+  if (game.kind === "bracket") {
+    const all = game.bracket.rounds.flat();
+    if (game.phase === "complete") {
+      return {
+        text: `${game.bracket.title} finished — ${game.bracket.champion?.label ?? "champion"} won.`,
+        cls: "done",
+        action: entry,
+      };
+    }
+    const decided = all.filter((m) => m.winner && !m.bye).length;
+    const total = all.filter((m) => !m.bye).length;
+    return { text: `${game.bracket.title} in progress — ${decided} of ${total} decided.`, cls: "live", action: entry };
   }
-  if (state.phase === "complete") {
-    return {
-      text: `${state.bracket.title} finished — ${state.bracket.champion?.label ?? "champion"} won.`,
-      cls: "done",
-      action: bracket,
-    };
-  }
-  const all = state.bracket.rounds.flat();
-  const decided = all.filter((m) => m.winner && !m.bye).length;
-  const total = all.filter((m) => !m.bye).length;
+
+  const board = game.board;
+  if (board.phase === "final") return { text: `${board.title} finished.`, cls: "done", action: entry };
   return {
-    text: `${state.bracket.title} in progress — ${decided} of ${total} decided.`,
+    text: `${board.title} in progress — ${board.placed} of ${board.total} placed.`,
     cls: "live",
-    action: bracket,
+    action: entry,
   };
 }
 
@@ -110,7 +116,7 @@ connect<DisplayState>("display", {
     statusText.textContent = label;
     statusAction.hidden = !action;
     if (action?.display && action.host) {
-      statusAction.textContent = state.phase === "complete" ? "Reopen" : "Resume";
+      statusAction.textContent = cls === "done" ? "Reopen" : "Resume";
       statusAction.onclick = () => {
         openDisplay(action.display!);
         window.location.href = action.host!;

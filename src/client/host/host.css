@@ -188,3 +188,67 @@ label input, label textarea { margin-top: 5px; text-transform: none; letter-spac
 .h-slot.filled { color: var(--fg); }
 .h-slot.winner { background: var(--win); color: #fff; }
 .h-slot.loser { opacity: 0.4; }
+
+/* ---------- game picker ---------- */
+
+.game-pick { display: flex; gap: 6px; margin-bottom: 10px; }
+.game-pick .pick { flex: 1; background: transparent; font-size: 13px; padding: 7px 10px; }
+.game-pick .pick.on { background: var(--accent); border-color: var(--accent); color: #14161a; }
+
+/* ---------- tier list panel ---------- */
+
+.tier-subject {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  background: #12151b;
+}
+.subject-art { font-size: 34px; line-height: 1; font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif; }
+.subject-swatch { width: 30px; height: 30px; border-radius: 6px; border: 2px solid var(--line); }
+.subject-label { font-size: 22px; font-weight: 800; flex: 1; }
+.subject-tag { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); }
+
+.tier-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 10px; }
+.tier-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 4px;
+  background: var(--tier);
+  border-color: var(--tier);
+  color: #0a0c0f;
+}
+.tier-btn:hover { filter: brightness(1.15); border-color: var(--fg); }
+.tier-btn .key { font-size: 10px; font-weight: 800; opacity: 0.65; letter-spacing: 0.1em; }
+.tier-btn .tier-name { font-size: 22px; font-weight: 800; }
+.tier-btn:disabled { filter: grayscale(0.7) brightness(0.7); }
+
+.h-tiers { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.h-tier { display: flex; gap: 8px; border: 2px solid var(--line); border-radius: 8px; overflow: hidden; min-height: 46px; }
+.h-tier-label { flex: none; width: 46px; display: grid; place-items: center; background: var(--tier); color: #0a0c0f; font-size: 20px; font-weight: 800; }
+.h-tier-items { flex: 1; display: flex; flex-wrap: wrap; gap: 5px; align-content: center; padding: 6px; min-width: 0; }
+.h-tier-empty { color: var(--dim); font-size: 12px; }
+
+.h-chip {
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  padding: 4px 9px;
+  font-size: 13px;
+  font-weight: 700;
+  background: #12151b;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.h-chip:hover { border-color: var(--accent); }
+.h-chip.moving { border-color: var(--accent); background: #3a2c0d; }
+.h-chip.ghost { opacity: 0.45; cursor: default; }
+.h-chip.ghost:hover { border-color: var(--line); }
+
+.h-queue { margin-top: 4px; }
+.h-queue-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--dim); margin-bottom: 6px; }
+.h-queue-items { display: flex; flex-wrap: wrap; gap: 5px; }

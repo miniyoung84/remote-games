@@ -1,18 +1,20 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { bracketSize, buildBracket, readyMatches, seedOrder, seedPositions } from "./bracket.js";
-import type { Decision, Entrant, Game } from "./types.js";
+import type { BracketGame, Decision, Item } from "./types.js";
 
-const entrants = (n: number): Entrant[] =>
+const entrants = (n: number): Item[] =>
   Array.from({ length: n }, (_, i) => ({ id: `e${i}`, label: `Item ${i + 1}` }));
 
-const gameOf = (n: number, decisions: Decision[] = []): Game => ({
+const gameOf = (n: number, decisions: Decision[] = []): BracketGame => ({
+  kind: "bracket",
   setId: "test",
   title: "Test",
   subtitle: "",
-  entrants: entrants(n),
+  items: entrants(n),
   positions: seedPositions(entrants(n), false),
   decisions,
+  selectedMatchId: null,
   startedAt: 0,
 });
 
@@ -98,7 +100,7 @@ test("slots carry true tournament seeds, not page positions", () => {
 
 test("seeds follow list order when unshuffled, and survive into later rounds", () => {
   const game = gameOf(8);
-  assert.equal(game.entrants[0].label, "Item 1");
+  assert.equal(game.items[0].label, "Item 1");
   const bracket = buildBracket(game, []);
   // Seed 1 is the first item in the set file.
   assert.equal(bracket.rounds[0][0].a?.label, "Item 1");

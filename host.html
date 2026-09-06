@@ -14,6 +14,7 @@
         <section class="panel" id="now-panel">
           <h2>On the clock</h2>
           <div id="now"></div>
+          <div id="game-actions" class="row"></div>
         </section>
         <section class="panel">
           <h2>Roster <span class="hint" id="roster-count"></span></h2>
@@ -30,7 +31,8 @@
       </div>
       <div class="col">
         <section class="panel">
-          <h2>Bracket sets <span class="hint" id="sets-count"></span></h2>
+          <h2>Sets <span class="hint" id="sets-count"></span></h2>
+          <div id="game-pick" class="game-pick"></div>
           <input id="set-filter" placeholder="Filter by name or entry…" autocomplete="off" />
           <div id="sets"></div>
           <form id="editor">

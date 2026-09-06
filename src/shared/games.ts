@@ -25,7 +25,17 @@ export const GAMES: GameEntry[] = [
     players: "3+ · any order · pausable",
     status: "ready",
     display: "/display",
-    host: "/host",
+    host: "/host?game=bracket",
+  },
+  {
+    id: "tierlist",
+    title: "Tier List",
+    blurb:
+      "Rank sixteen things from S down to D. On your turn you place one item — or move one somebody else placed, which is where the arguing starts.",
+    players: "3+ · any order · pausable",
+    status: "ready",
+    display: "/display",
+    host: "/host?game=tierlist",
   },
 ];
 

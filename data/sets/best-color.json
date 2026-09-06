@@ -2,6 +2,23 @@
   "id": "best-color",
   "title": "Best Color",
   "subtitle": "Pure instinct, no thinking allowed",
-  "items": ["Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Pink", "Teal", "Black", "White", "Gold", "Silver", "Navy", "Lime", "Maroon", "Turquoise"],
+  "items": [
+    { "label": "Red", "art": { "color": "#ef4444" } },
+    { "label": "Blue", "art": { "color": "#3b82f6" } },
+    { "label": "Green", "art": { "color": "#22c55e" } },
+    { "label": "Yellow", "art": { "color": "#eab308" } },
+    { "label": "Purple", "art": { "color": "#a855f7" } },
+    { "label": "Orange", "art": { "color": "#f97316" } },
+    { "label": "Pink", "art": { "color": "#ec4899" } },
+    { "label": "Teal", "art": { "color": "#14b8a6" } },
+    { "label": "Black", "art": { "color": "#1f2937" } },
+    { "label": "White", "art": { "color": "#f8fafc" } },
+    { "label": "Gold", "art": { "color": "#d4af37" } },
+    { "label": "Silver", "art": { "color": "#c0c0c0" } },
+    { "label": "Navy", "art": { "color": "#1e3a8a" } },
+    { "label": "Lime", "art": { "color": "#84cc16" } },
+    { "label": "Maroon", "art": { "color": "#7f1d1d" } },
+    { "label": "Turquoise", "art": { "color": "#40e0d0" } }
+  ],
   "updatedAt": 0
 }

@@ -1,4 +1,4 @@
-import type { Bracket, Entrant, Game, Match, Person } from "./types.js";
+import type { Bracket, BracketGame, Entrant, Item, Match, Person } from "./types.js";
 
 /** Smallest power of two >= n, minimum 2. */
 export function bracketSize(n: number): number {
@@ -37,7 +37,7 @@ function shuffled<T>(input: T[]): T[] {
  * padded with byes, and standard seeding puts every bye against a real entrant
  * — a bye never faces another bye, so no match is ever empty on both sides.
  */
-export function seedPositions(entrants: Entrant[], shuffle: boolean): (string | null)[] {
+export function seedPositions(entrants: Item[], shuffle: boolean): (string | null)[] {
   const ordered = shuffle ? shuffled(entrants) : entrants.slice();
   const size = bracketSize(ordered.length);
   return seedOrder(size).map((seed) => ordered[seed - 1]?.id ?? null);
@@ -51,7 +51,7 @@ export function matchId(round: number, slot: number): string {
  * Rebuild the whole board from seeding + the decision log. Pure and
  * deterministic: the same game always produces the same bracket.
  */
-export function buildBracket(game: Game, roster: Person[]): Bracket {
+export function buildBracket(game: BracketGame, roster: Person[]): Bracket {
   // Attach each entrant's true tournament seed. `positions` is in bracket
   // order, so the seed living at position i is seedOrder()[i] — NOT i + 1,
   // which is merely where it sits on the page.
@@ -60,7 +60,7 @@ export function buildBracket(game: Game, roster: Person[]): Bracket {
   game.positions.forEach((id, index) => {
     if (id) seedOf.set(id, order[index]);
   });
-  const byId = new Map(game.entrants.map((e) => [e.id, { ...e, seed: seedOf.get(e.id) }]));
+  const byId = new Map<string, Entrant>(game.items.map((e) => [e.id, { ...e, seed: seedOf.get(e.id) }]));
   const nameOf = (id: string | null) =>
     id ? (roster.find((p) => p.id === id)?.name ?? null) : null;
 

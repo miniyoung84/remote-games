@@ -6,9 +6,9 @@ the window, and everyone plays by talking and by typing in the meeting chat.
 
 No install for anyone, no accounts, no phones.
 
-> **Status: one game playable.** Bracket is built end to end — shared display,
-> private host controls, editable bracket sets, undo, and state that survives
-> restarts so a bracket can span several days of standups.
+> **Status: two games playable.** Bracket and Tier List, both end to end —
+> shared display, private host controls, 28 shared sets, undo, and state that
+> survives restarts so a game can span several days of standups.
 
 ## Why this is not just "a web game"
 
@@ -44,6 +44,13 @@ Dependencies install into the project directory only — nothing touches your
 global environment. [docs/development.md](docs/development.md) covers the
 isolation guarantees in detail, including how they map onto a Python `venv`.
 
+## Tier List
+
+Rank sixteen things from S down to D. On your turn you place one item — or
+**move one somebody else already placed**, which is where the arguing starts.
+Placements and moves get distinct animations, and the finished board is the
+artifact: the band collapses and the rows grow so it's worth screenshotting.
+
 ## Bracket
 
 Sixteen things enter, one thing leaves. Each person decides **one matchup** on
@@ -57,7 +64,10 @@ order is whoever raises their hand next and attendance changes daily.
 - **Any number of entries** from 2 up. Non-powers-of-two get byes automatically.
 - **Nothing is lost on a restart**, so a bracket can run across several days.
 
-Twenty-eight bracket sets ship in [data/sets/](data/sets/); add your own in the host
+Both games share the same sets, so a set can be run as a bracket one week and a
+tier list the next — comparing the two results is half the fun.
+
+Twenty-eight sets ship in [data/sets/](data/sets/); add your own in the host
 view or by dropping a JSON file next to them. There's a ready-made prompt for
 generating new ones with any AI in
 [docs/generating-bracket-sets.md](docs/generating-bracket-sets.md).

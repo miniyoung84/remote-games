@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import type { AppState, BracketSet } from "../shared/types.js";
+import type { AppState, ItemSet } from "../shared/types.js";
 
 const DATA_DIR = join(process.cwd(), "data");
 const SETS_DIR = join(DATA_DIR, "sets");
@@ -10,7 +10,6 @@ export const emptyState = (): AppState => ({
   roster: [],
   playedAt: {},
   currentPickerId: null,
-  selectedMatchId: null,
   game: null,
 });
 
@@ -45,13 +44,13 @@ export function saveState(state: AppState): void {
   writeJson(STATE_FILE, state);
 }
 
-export function loadSets(): BracketSet[] {
+export function loadSets(): ItemSet[] {
   ensureDirs();
-  const sets: BracketSet[] = [];
+  const sets: ItemSet[] = [];
   for (const file of readdirSync(SETS_DIR)) {
     if (!file.endsWith(".json")) continue;
     try {
-      sets.push(JSON.parse(readFileSync(join(SETS_DIR, file), "utf8")) as BracketSet);
+      sets.push(JSON.parse(readFileSync(join(SETS_DIR, file), "utf8")) as ItemSet);
     } catch (err) {
       console.warn(`[store] skipping malformed set ${file}: ${String(err)}`);
     }
@@ -59,7 +58,7 @@ export function loadSets(): BracketSet[] {
   return sets.sort((a, b) => a.title.localeCompare(b.title));
 }
 
-export function saveSet(set: BracketSet): void {
+export function saveSet(set: ItemSet): void {
   ensureDirs();
   writeJson(join(SETS_DIR, `${set.id}.json`), set);
 }

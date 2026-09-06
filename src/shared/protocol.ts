@@ -1,4 +1,4 @@
-import type { BracketSet, DisplayState, HostState } from "./types.js";
+import type { DisplayState, GameKind, HostState, ItemSet } from "./types.js";
 
 export type Role = "display" | "host";
 
@@ -7,12 +7,14 @@ export type Action =
   | { type: "roster/remove"; id: string }
   | { type: "roster/setPresent"; id: string; present: boolean }
   | { type: "roster/setCurrent"; id: string | null }
-  | { type: "game/start"; setId: string; shuffle: boolean }
-  | { type: "game/decide"; matchId: string; winner: "a" | "b" }
-  | { type: "game/selectMatch"; matchId: string | null }
+  | { type: "game/start"; setId: string; kind: GameKind; shuffle: boolean }
   | { type: "game/undo" }
   | { type: "game/reset" }
-  | { type: "sets/save"; set: BracketSet }
+  | { type: "bracket/decide"; matchId: string; winner: "a" | "b" }
+  | { type: "bracket/selectMatch"; matchId: string | null }
+  | { type: "tier/place"; itemId: string; tierId: string }
+  | { type: "tier/finish" }
+  | { type: "sets/save"; set: ItemSet }
   | { type: "sets/delete"; id: string };
 
 export type ClientMessage = { type: "action"; action: Action };

@@ -2,6 +2,23 @@
   "id": "best-animal-sidekick",
   "title": "Best Animal Sidekick",
   "subtitle": "Every adventure needs one",
-  "items": ["Dog", "Cat", "Duck", "Rabbit", "Turtle", "Parrot", "Penguin", "Fox", "Owl", "Dolphin", "Elephant", "Monkey", "Goat", "Horse", "Otter", "Panda"],
+  "items": [
+    { "label": "Dog", "art": { "emoji": "🐕" } },
+    { "label": "Cat", "art": { "emoji": "🐈" } },
+    { "label": "Duck", "art": { "emoji": "🦆" } },
+    { "label": "Rabbit", "art": { "emoji": "🐇" } },
+    { "label": "Turtle", "art": { "emoji": "🐢" } },
+    { "label": "Parrot", "art": { "emoji": "🦜" } },
+    { "label": "Penguin", "art": { "emoji": "🐧" } },
+    { "label": "Fox", "art": { "emoji": "🦊" } },
+    { "label": "Owl", "art": { "emoji": "🦉" } },
+    { "label": "Dolphin", "art": { "emoji": "🐬" } },
+    { "label": "Elephant", "art": { "emoji": "🐘" } },
+    { "label": "Monkey", "art": { "emoji": "🐒" } },
+    { "label": "Goat", "art": { "emoji": "🐐" } },
+    { "label": "Horse", "art": { "emoji": "🐴" } },
+    { "label": "Otter", "art": { "emoji": "🦦" } },
+    { "label": "Panda", "art": { "emoji": "🐼" } }
+  ],
   "updatedAt": 0
 }
