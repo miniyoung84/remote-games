@@ -2,6 +2,7 @@ import { buildBracket, readyMatches, resolveCurrentMatch } from "../shared/brack
 import { buildBoard } from "../shared/tierlist.js";
 import type { AppState, DisplayGame, DisplayState, HostGame, HostState } from "../shared/types.js";
 import { loadSets } from "./store.js";
+import { orphanImages } from "./packs.js";
 
 /**
  * Role projection is mandatory rather than optional — see docs/architecture.md.
@@ -68,6 +69,7 @@ export function projectHost(state: AppState): HostState {
     roster: state.roster,
     currentPickerId: state.currentPickerId,
     sets: loadSets().map((set) => ({ ...set, lastPlayedAt: state.playedAt[set.id] })),
+    unusedImages: orphanImages().length,
     canUndo,
     game: hostGame(state),
   };

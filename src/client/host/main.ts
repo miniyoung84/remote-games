@@ -2,7 +2,7 @@ import { GAMES } from "../../shared/games.js";
 import { readItems } from "../../shared/items.js";
 import { bracketSize } from "../../shared/bracket.js";
 import type { Action } from "../../shared/protocol.js";
-import type { GameKind, HostState, ItemSetView } from "../../shared/types.js";
+import type { Art, GameKind, HostState, ItemSetView, RawItem } from "../../shared/types.js";
 import { connect } from "../connection.js";
 import { mountBracketPanel } from "./bracket.js";
 import { button, text, type HostDom, type HostPanel } from "./panel.js";
@@ -32,9 +32,17 @@ const setItems = el<HTMLTextAreaElement>("set-items");
 const setPreview = el("set-preview");
 const setDelete = el<HTMLButtonElement>("set-delete");
 const toast = el("toast");
+const artList = el("art-list");
+const packName = el<HTMLInputElement>("pack-name");
+const packImport = el<HTMLInputElement>("pack-import");
+const packUnused = el("pack-unused");
 
 let state: HostState | null = null;
 let editingId: string | null = null;
+/** Art being edited, keyed by label — the textarea owns the labels. */
+let editingArt = new Map<string, Art>();
+let selecting = false;
+const selected = new Set<string>();
 let panel: HostPanel | null = null;
 let panelKind: GameKind | null = null;
 
@@ -56,6 +64,7 @@ const send = connect<HostState>("host", {
     render(next);
   },
   onError: flash,
+  onNotice: flash,
   onStatus: (connected) => {
     if (!connected) flash("Disconnected — reconnecting…");
   },
@@ -180,9 +189,134 @@ function loadEditor(set: ItemSetView | null): void {
   setTitle.value = set?.title ?? "";
   setSubtitle.value = set?.subtitle ?? "";
   setItems.value = set ? readItems(set.items).map((i) => i.label).join("\n") : "";
+  editingArt = new Map(
+    readItems(set?.items ?? [])
+      .filter((i) => i.art)
+      .map((i) => [i.label, i.art as Art]),
+  );
   setDelete.disabled = !set;
   updatePreview();
+  renderArtList();
   if (state) renderSets(state);
+}
+
+function currentLabels(): string[] {
+  return setItems.value.split("\n").map((l) => l.trim()).filter(Boolean);
+}
+
+/**
+ * Downscale to a fixed square, re-encode as WebP, and name the file by a hash
+ * of its own bytes. Doing this in the browser means no image library on the
+ * server, identical images dedupe for free, and every stored image is already
+ * the size the display wants.
+ */
+async function prepareImage(file: File): Promise<string> {
+  const SIZE = 320;
+  const bitmap = await createImageBitmap(file);
+  const canvas = document.createElement("canvas");
+  canvas.width = SIZE;
+  canvas.height = SIZE;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas unavailable.");
+
+  const scale = Math.min(SIZE / bitmap.width, SIZE / bitmap.height);
+  const w = bitmap.width * scale;
+  const h = bitmap.height * scale;
+  ctx.drawImage(bitmap, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
+  bitmap.close?.();
+
+  const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/webp", 0.85));
+  if (!blob) throw new Error("Could not encode that image.");
+  const bytes = new Uint8Array(await blob.arrayBuffer());
+
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  const id = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 32);
+
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  act({ type: "images/put", id, data: btoa(binary) });
+  return id;
+}
+
+function artPreview(art: Art | undefined): HTMLElement {
+  const node = text("span", "art-preview");
+  if (!art) return node;
+  if ("emoji" in art) node.textContent = art.emoji;
+  else if ("color" in art) node.style.background = art.color;
+  else {
+    const img = document.createElement("img");
+    img.src = `/images/${art.image}.webp`;
+    img.alt = "";
+    node.append(img);
+  }
+  return node;
+}
+
+function renderArtList(): void {
+  artList.replaceChildren();
+  const labels = currentLabels();
+  if (!labels.length) {
+    artList.append(text("p", "hint", "Add entries above first."));
+    return;
+  }
+
+  for (const label of labels) {
+    const art = editingArt.get(label);
+    const row = text("div", "art-row");
+    row.append(artPreview(art), text("span", "art-label", label));
+
+    // onchange, not oninput: the list re-renders on edit and would steal focus.
+    const emoji = document.createElement("input");
+    emoji.className = "art-emoji-input";
+    emoji.placeholder = "emoji";
+    emoji.maxLength = 8;
+    emoji.value = art && "emoji" in art ? art.emoji : "";
+    emoji.onchange = () => {
+      const value = emoji.value.trim();
+      if (value) editingArt.set(label, { emoji: value });
+      else editingArt.delete(label);
+      renderArtList();
+    };
+
+    const color = document.createElement("input");
+    color.type = "color";
+    color.className = "art-color-input";
+    color.title = "Use a color swatch";
+    color.value = art && "color" in art ? art.color : "#ffc02e";
+    color.onchange = () => {
+      editingArt.set(label, { color: color.value });
+      renderArtList();
+    };
+
+    const file = document.createElement("input");
+    file.type = "file";
+    file.accept = "image/*";
+    file.hidden = true;
+    file.onchange = async () => {
+      const chosen = file.files?.[0];
+      file.value = "";
+      if (!chosen) return;
+      try {
+        editingArt.set(label, { image: await prepareImage(chosen) });
+        renderArtList();
+      } catch (err) {
+        flash(err instanceof Error ? err.message : "Could not read that image.");
+      }
+    };
+    const pick = button("image", "mini");
+    pick.title = "Upload an image";
+    pick.onclick = () => file.click();
+
+    const clear = button("✕", "mini");
+    clear.title = "No art";
+    clear.onclick = () => {
+      editingArt.delete(label);
+      renderArtList();
+    };
+
+    row.append(emoji, color, pick, file, clear);
+    artList.append(row);
+  }
 }
 
 function updatePreview(): void {
@@ -200,33 +334,23 @@ function updatePreview(): void {
     (size > 16 ? " — over 16 gets cramped on the display" : "");
 }
 
-setItems.oninput = updatePreview;
+setItems.oninput = () => {
+  updatePreview();
+  renderArtList();
+};
 setFilter.oninput = () => {
   if (state) renderSets(state);
 };
 
 editor.onsubmit = (event) => {
   event.preventDefault();
-  // Editing through this form writes plain strings; art is added by hand in the
-  // set file for now, and is preserved for entries whose label is unchanged.
-  const existing = state?.sets.find((s) => s.id === editingId);
-  const artByLabel = new Map(readItems(existing?.items ?? []).map((i) => [i.label, i.art]));
+  const items: RawItem[] = currentLabels().map((label) => {
+    const art = editingArt.get(label);
+    return art ? { label, art } : label;
+  });
   act({
     type: "sets/save",
-    set: {
-      id: editingId ?? "",
-      title: setTitle.value,
-      subtitle: setSubtitle.value,
-      items: setItems.value
-        .split("\n")
-        .map((line) => line.trim())
-        .filter(Boolean)
-        .map((label) => {
-          const art = artByLabel.get(label);
-          return art ? { label, art } : label;
-        }),
-      updatedAt: Date.now(),
-    },
+    set: { id: editingId ?? "", title: setTitle.value, subtitle: setSubtitle.value, items, updatedAt: Date.now() },
   });
 };
 
@@ -263,6 +387,20 @@ function renderSets(next: HostState): void {
     const played = playedLabel(set.lastPlayedAt);
     if (set.lastPlayedAt && Date.now() - set.lastPlayedAt < 14 * 86_400_000) row.classList.add("recent");
 
+    if (selecting) {
+      const box = document.createElement("input");
+      box.type = "checkbox";
+      box.className = "set-select";
+      box.checked = selected.has(set.id);
+      box.onclick = (event) => {
+        event.stopPropagation();
+        if (box.checked) selected.add(set.id);
+        else selected.delete(set.id);
+        renderPackControls();
+      };
+      row.append(box);
+    }
+
     const meta = text("div", "meta");
     meta.append(text("strong", "", set.title));
     const sub = text("span", "");
@@ -293,6 +431,69 @@ function renderSets(next: HostState): void {
   }
 }
 
+/* ---------- packs ---------- */
+
+function exportPack(ids: string[] | null): void {
+  const query = new URLSearchParams();
+  const name = packName.value.trim();
+  if (name) query.set("name", name);
+  if (ids?.length) query.set("sets", ids.join(","));
+  // Content-Disposition makes this a download, so the page stays put.
+  window.location.href = `/pack.json?${query}`;
+}
+
+const packExport = el<HTMLButtonElement>("pack-export");
+const packSelect = el<HTMLButtonElement>("pack-select");
+
+packExport.onclick = () => {
+  if (selecting) {
+    if (!selected.size) return flash("No sets selected.");
+    exportPack([...selected]);
+    return;
+  }
+  exportPack(null);
+};
+
+packSelect.onclick = () => {
+  selecting = !selecting;
+  if (!selecting) selected.clear();
+  renderPackControls();
+  if (state) renderSets(state);
+};
+
+function renderPackControls(): void {
+  packExport.textContent = selecting ? `Export ${selected.size} selected` : "Export all";
+  packExport.className = selecting && selected.size ? "primary" : "";
+  packSelect.textContent = selecting ? "Cancel" : "Choose sets…";
+}
+
+function renderUnused(next: HostState): void {
+  packUnused.replaceChildren();
+  if (!next.unusedImages) {
+    packUnused.hidden = true;
+    return;
+  }
+  packUnused.hidden = false;
+  packUnused.append(
+    document.createTextNode(`${next.unusedImages} stored image${next.unusedImages === 1 ? "" : "s"} no set uses. `),
+  );
+  const prune = button("Remove them", "mini");
+  prune.onclick = () => act({ type: "images/prune" });
+  packUnused.append(prune);
+}
+
+packImport.onchange = async () => {
+  const file = packImport.files?.[0];
+  packImport.value = "";
+  if (!file) return;
+  try {
+    const pack = JSON.parse(await file.text());
+    act({ type: "packs/import", pack });
+  } catch {
+    flash("That file isn't valid JSON.");
+  }
+};
+
 /* ---------- keyboard ---------- */
 
 document.addEventListener("keydown", (event) => {
@@ -317,10 +518,12 @@ function render(next: HostState): void {
   renderGameActions(next);
   renderRoster(next);
   renderSets(next);
+  renderUnused(next);
   // The editor is deliberately not repopulated here — a state push mid-typing
   // would wipe what the operator is writing.
   if (editingId && !next.sets.some((s) => s.id === editingId)) loadEditor(null);
 }
 
 renderGamePick();
+renderPackControls();
 loadEditor(null);

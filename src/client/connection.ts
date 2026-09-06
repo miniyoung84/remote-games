@@ -3,6 +3,7 @@ import type { Action, Role, ServerMessage } from "../shared/protocol.js";
 type Handlers<S> = {
   onState: (state: S) => void;
   onError?: (message: string) => void;
+  onNotice?: (message: string) => void;
   onStatus?: (connected: boolean) => void;
 };
 
@@ -29,6 +30,7 @@ export function connect<S>(role: Role, handlers: Handlers<S>): (action: Action) 
       const message = JSON.parse(event.data as string) as ServerMessage;
       if (message.type === "state") handlers.onState(message.state as S);
       else if (message.type === "error") handlers.onError?.(message.message);
+      else if (message.type === "notice") handlers.onNotice?.(message.message);
     });
 
     socket.addEventListener("close", () => {

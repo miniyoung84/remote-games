@@ -29,6 +29,16 @@ export type ItemSet = {
  */
 export type ItemSetView = ItemSet & { lastPlayedAt?: number };
 
+export type Pack = {
+  format: string;
+  version: number;
+  name: string;
+  createdAt: number;
+  sets: ItemSet[];
+  /** Image id -> base64 WebP bytes, inlined so a pack is one portable file. */
+  images: Record<string, string>;
+};
+
 export type Person = { id: string; name: string; present: boolean };
 
 export type GameKind = "bracket" | "tierlist";
@@ -139,6 +149,8 @@ export type HostState = {
   roster: Person[];
   currentPickerId: string | null;
   sets: ItemSetView[];
+  /** Stored images no set references any more. */
+  unusedImages: number;
   canUndo: boolean;
   game: HostGame | null;
 };

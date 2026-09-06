@@ -506,3 +506,10 @@ body {
 /* The finished list is the artifact, so the band shrinks and the rows grow. */
 #stage.tier-final { grid-template-rows: 88px 1fr 96px; }
 #stage.tier-final #band { padding: 12px 48px; }
+
+.art-image { object-fit: contain; }
+.art-image.chip { width: var(--art-size, 40px); height: var(--art-size, 40px); }
+.art-image.hero { width: 104px; height: 104px; }
+.duel-side.has-art .art-image.hero { width: 76px; height: 76px; }
+#champion .art-image.hero { width: 128px; height: 128px; }
+.slot .art-image.chip { width: var(--slot-font, 20px); height: var(--slot-font, 20px); }

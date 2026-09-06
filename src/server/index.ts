@@ -31,6 +31,7 @@ function handle(socket: WebSocket, action: Action): void {
   const result = reduce(state, action);
 
   if (result.error) send(socket, { type: "error", message: result.error });
+  if (result.notice) send(socket, { type: "notice", message: result.notice });
   if (result.state !== before) {
     state = result.state;
     saveState(state);

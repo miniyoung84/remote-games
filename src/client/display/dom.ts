@@ -19,10 +19,7 @@ export function text(tag: string, className: string, value = ""): HTMLElement {
   return node;
 }
 
-/**
- * Item art. Emoji and color render today; `image` is accepted by the type but
- * has no upload pipeline yet, so it falls through to the label.
- */
+/** Item art: emoji glyph, flat color swatch, or an uploaded image. */
 export function artNode(item: Item, variant: "chip" | "hero"): HTMLElement | null {
   const art = item.art;
   if (!art) return null;
@@ -37,7 +34,17 @@ export function artNode(item: Item, variant: "chip" | "hero"): HTMLElement | nul
     node.style.background = art.color;
     return node;
   }
-  return null;
+
+  const img = document.createElement("img");
+  img.className = `art art-image ${variant}`;
+  img.src = `/images/${art.image}.webp`;
+  img.alt = "";
+  // A missing image falls back to the label rather than a broken-image icon.
+  img.onerror = () => {
+    img.parentElement?.classList.remove("has-art");
+    img.remove();
+  };
+  return img;
 }
 
 export function setHeader(dom: DisplayDom, title: string, subtitle: string): void {

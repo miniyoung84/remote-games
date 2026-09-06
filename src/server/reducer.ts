@@ -3,7 +3,8 @@ import { readItems } from "../shared/items.js";
 import { DEFAULT_TIERS, buildBoard } from "../shared/tierlist.js";
 import type { Action } from "../shared/protocol.js";
 import type { AppState, Item, ItemSet } from "../shared/types.js";
-import { deleteSet, loadSets, saveSet } from "./store.js";
+import { deleteSet, isImageId, loadSets, saveImage, saveSet } from "./store.js";
+import { importPack, pruneImages } from "./packs.js";
 
 function slug(input: string): string {
   const base = input.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -23,7 +24,7 @@ function shuffled<T>(input: T[]): T[] {
   return out;
 }
 
-export type ReduceResult = { state: AppState; setsChanged: boolean; error?: string };
+export type ReduceResult = { state: AppState; setsChanged: boolean; error?: string; notice?: string };
 
 export function reduce(state: AppState, action: Action): ReduceResult {
   const ok = (next: AppState, setsChanged = false): ReduceResult => ({ state: next, setsChanged });
@@ -201,6 +202,32 @@ export function reduce(state: AppState, action: Action): ReduceResult {
       };
       saveSet(set);
       return ok(state, true);
+    }
+
+    case "images/put": {
+      if (!isImageId(action.id)) return fail("Bad image id.");
+      const bytes = Buffer.from(action.data, "base64");
+      // 320x320 WebP is tens of kilobytes; anything near this cap isn't one.
+      if (!bytes.length || bytes.length > 2_000_000) return fail("Image is too large.");
+      if (!saveImage(action.id, bytes)) return fail("Could not store that image.");
+      return ok(state);
+    }
+
+    case "packs/import": {
+      const pack = action.pack;
+      if (!pack || !Array.isArray(pack.sets)) return fail("That doesn't look like a pack file.");
+      const r = importPack(pack);
+      if (!r.sets) return fail("No usable sets in that pack.");
+      const parts = [`Imported ${r.sets} set${r.sets === 1 ? "" : "s"}`];
+      if (r.images) parts.push(`${r.images} image${r.images === 1 ? "" : "s"}`);
+      if (r.renamed) parts.push(`${r.renamed} renamed to avoid clashes`);
+      if (r.skipped) parts.push(`${r.skipped} skipped`);
+      return { state, setsChanged: true, notice: parts.join(" · ") };
+    }
+
+    case "images/prune": {
+      const gone = pruneImages();
+      return { state, setsChanged: true, notice: gone ? `Removed ${gone} unused image${gone === 1 ? "" : "s"}.` : "Nothing to remove." };
     }
 
     case "sets/delete":

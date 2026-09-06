@@ -2,6 +2,7 @@ import type { Server } from "node:http";
 import { resolve } from "node:path";
 import { defineConfig, type Plugin } from "vite";
 import { attachGameServer } from "./src/server/index.js";
+import { handleApi } from "./src/server/http.js";
 
 /** Serve /display and /host without the .html suffix, in dev and preview alike. */
 function prettyRoutes(): Plugin {
@@ -31,14 +32,24 @@ function prettyRoutes(): Plugin {
 
 /** Run the websocket game server inside Vite so `npm run dev` is the whole app. */
 function gameServer(): Plugin {
+  const api: Plugin["configureServer"] = (server) => {
+    // Images and pack downloads, served the same way in dev and production.
+    server.middlewares.use((req, res, next) => {
+      if (!handleApi(req, res)) next();
+    });
+  };
   return {
     name: "remote-games:game-server",
     // Vite types httpServer as possibly HTTP/2; this app never enables it, so
     // the narrowing is safe.
     configureServer(server) {
+      api?.(server);
       if (server.httpServer) attachGameServer(server.httpServer as Server);
     },
     configurePreviewServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (!handleApi(req, res)) next();
+      });
       if (server.httpServer) attachGameServer(server.httpServer as Server);
     },
   };

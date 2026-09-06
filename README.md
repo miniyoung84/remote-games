@@ -65,7 +65,9 @@ order is whoever raises their hand next and attendance changes daily.
 - **Nothing is lost on a restart**, so a bracket can run across several days.
 
 Both games share the same sets, so a set can be run as a bracket one week and a
-tier list the next — comparing the two results is half the fun.
+tier list the next — comparing the two results is half the fun. Items can carry
+**emoji, a color swatch or an uploaded image**, and a **pack** bundles sets plus
+their images into one file you can share or keep as a backup.
 
 Twenty-eight sets ship in [data/sets/](data/sets/); add your own in the host
 view or by dropping a JSON file next to them. There's a ready-made prompt for

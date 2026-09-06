@@ -252,3 +252,66 @@ label input, label textarea { margin-top: 5px; text-transform: none; letter-spac
 .h-queue { margin-top: 4px; }
 .h-queue-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--dim); margin-bottom: 6px; }
 .h-queue-items { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* ---------- art editor ---------- */
+
+.art-head { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); margin: 4px 0 8px; }
+.art-list { display: flex; flex-direction: column; gap: 6px; max-height: 300px; overflow-y: auto; margin-bottom: 14px; }
+
+.art-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 7px;
+  background: #12151b;
+}
+
+.art-preview {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 2px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  line-height: 1;
+  overflow: hidden;
+  font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+}
+.art-preview img { width: 100%; height: 100%; object-fit: contain; }
+
+.art-label { flex: 1; min-width: 0; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.art-emoji-input { width: 74px; flex: none; padding: 5px 7px; font-size: 13px; text-align: center; }
+.art-color-input { width: 34px; flex: none; height: 30px; padding: 2px; cursor: pointer; }
+.art-row .mini { border: 2px solid var(--line); padding: 5px 8px; font-size: 12px; }
+.art-row .mini:hover { border-color: var(--accent); color: var(--fg); }
+
+/* ---------- packs ---------- */
+
+.pack-blurb { margin: -6px 0 12px; }
+.pack-row { margin-bottom: 10px; }
+.pack-row input { flex: 1; min-width: 120px; }
+
+.pack-import {
+  display: block;
+  border: 2px dashed var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  color: var(--dim);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+.pack-import:hover { border-color: var(--accent); color: var(--fg); }
+.pack-import input { display: none; }
+
+.set-select { width: auto; flex: none; margin-right: 2px; cursor: pointer; }
+.pack-unused { margin: 10px 0 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pack-unused .mini { border: 2px solid var(--danger); color: var(--danger); padding: 4px 9px; font-size: 11px; }

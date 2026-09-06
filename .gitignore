@@ -9,8 +9,13 @@ dist/
 # Personal brainstorming / working notes — not part of the public project
 notes/
 
-# Runtime game state (bracket in progress, roster)
+# Runtime game state (game in progress, roster, play history)
 data/state.json
+
+# Uploaded images. Kept out of the repo deliberately: they'd bloat it, and
+# publishing sourced images under this project's license isn't ours to do.
+# Share them with an exported pack instead — see docs/development.md.
+data/images/
 
 # Screenshots from `npm run shot`
 screenshots/

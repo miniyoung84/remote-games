@@ -25,6 +25,18 @@
           <div id="roster"></div>
         </section>
         <section class="panel">
+          <h2>Packs</h2>
+          <p class="hint pack-blurb">One file holding sets and every image they use. Share it, or keep it as a backup.</p>
+          <div class="row pack-row">
+            <input id="pack-name" placeholder="Pack name" autocomplete="off" />
+            <button type="button" id="pack-export">Export all</button>
+            <button type="button" id="pack-select" class="ghost">Choose sets…</button>
+          </div>
+          <label class="pack-import">Import a pack<input type="file" id="pack-import" accept="application/json,.json" /></label>
+          <p class="hint pack-unused" id="pack-unused" hidden></p>
+        </section>
+
+        <section class="panel">
           <h2>Board</h2>
           <div id="board"></div>
         </section>
@@ -41,6 +53,8 @@
             <label>Subtitle <span class="hint">optional</span><input id="set-subtitle" autocomplete="off" /></label>
             <label>Entries <span class="hint">one per line</span><textarea id="set-items" rows="9" spellcheck="false"></textarea></label>
             <p class="hint" id="set-preview"></p>
+            <div class="art-head">Art <span class="hint">optional — emoji, a color, or an image</span></div>
+            <div id="art-list" class="art-list"></div>
             <div class="row">
               <button type="submit">Save set</button>
               <button type="button" id="set-new" class="ghost">New</button>

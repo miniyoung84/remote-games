@@ -102,10 +102,20 @@ band, small on the board:
 { "label": "Bad pun" }
 ```
 
-Plain strings still work, so sets written before art existed are untouched. Art
-is added by hand in the set file; the host editor preserves it for entries whose
-label doesn't change. `{ "image": "..." }` is accepted by the type but has no
-upload pipeline yet and renders as the label.
+Plain strings still work, so sets written before art existed are untouched. The
+host editor has an **Art** row per entry: type an emoji, pick a color, or upload
+an image.
+
+Uploads are resized to 320x320 and re-encoded as WebP **in the browser**, then
+named by a SHA-256 of their own bytes and sent over the existing websocket. That
+means no image library on the server, identical images dedupe for free, and
+every stored image is already the size the display wants. They land in
+`data/images/<id>.webp`, which is **gitignored** — they'd bloat the repo, and
+republishing sourced images under this project's license isn't ours to do.
+Share them with a pack instead.
+
+If a set is deleted, its images become orphans; the Packs panel offers to
+remove any image no set references.
 
 Emoji beat photographs at the ~120px a board chip gets, and colors beat both for
 a set like Best Color. About a third of the library is abstract enough that no
@@ -139,6 +149,21 @@ Over 16 entries the board gets cramped on the display, and the editor says so.
 
 To invent new sets, [docs/generating-bracket-sets.md](generating-bracket-sets.md)
 has a copy-paste prompt that outputs sets in exactly this JSON shape.
+
+## Packs
+
+A pack is a single JSON file holding sets *and* the bytes of every image they
+use, so it survives being emailed or dropped in a chat with nothing missing.
+
+- **Export** — name it, then **Export all**, or **Choose sets…** to tick a
+  subset. It downloads as `<name>.pack.json`.
+- **Import** — drop the file on the Packs panel. Sets whose id already exists
+  are **renamed rather than overwritten**, so someone else's pack can never
+  quietly replace a set you've edited. The result is reported back: how many
+  sets, images, renames and skips.
+
+Packs are also the backup story for `data/images/`, since that directory is
+gitignored. Export all before you wipe a machine.
 
 ## Screenshots
 

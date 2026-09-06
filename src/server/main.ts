@@ -7,6 +7,7 @@ import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, normalize } from "node:path";
 import { attachGameServer } from "./index.js";
+import { handleApi } from "./http.js";
 
 const DIST = join(process.cwd(), "dist");
 const PORT = Number(process.env.PORT ?? 5173);
@@ -20,6 +21,7 @@ const TYPES: Record<string, string> = {
 };
 
 const server = createServer((req, res) => {
+  if (handleApi(req, res)) return;
   const path = (req.url ?? "/").split("?")[0];
   const route = path === "/" ? "/index.html" : path === "/display" || path === "/host" ? `${path}.html` : path;
 

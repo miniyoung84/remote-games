@@ -191,6 +191,22 @@ the bottom carries the live matchup at 56px, which is what people actually read.
 Slot heights are calibrated per bracket size in `display.css`; they are keyed on
 **first-round match count** (half the entrant count).
 
+## Images and packs
+
+Images are **content-addressed**: the id is a hash of the bytes, computed by the
+uploading browser. Identical images dedupe, ids can't collide when two packs
+meet, nothing has to invent filenames, and the strict `^[a-f0-9]{32}$` id shape
+is what stops a crafted id walking out of the directory.
+
+Because the id is derived client-side, upload needs no response — the browser
+already knows the id and can reference it immediately. `images/put` is a plain
+one-way action like every other.
+
+`src/server/http.ts` serves `/images/:id` and `/pack.json`, and is mounted by
+both the Vite dev middleware and the production server so the two behave
+identically. Pack export is an ordinary HTTP download rather than a websocket
+message, which is what makes `Content-Disposition` do the work.
+
 ## The menu
 
 `/` lists the games from `src/shared/games.ts` and is the only place that knows
