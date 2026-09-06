@@ -344,3 +344,6 @@ label input, label textarea { margin-top: 5px; text-transform: none; letter-spac
 }
 .h-draft-count { color: var(--accent); }
 .h-draft-picks { display: flex; flex-wrap: wrap; gap: 5px; padding: 7px; }
+.art-row.dropping { border-color: var(--accent); background: #2a2410; }
+.art-row.busy { opacity: 0.55; pointer-events: none; }
+.art-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }

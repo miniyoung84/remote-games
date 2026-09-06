@@ -242,9 +242,9 @@ function currentLabels(): string[] {
  * server, identical images dedupe for free, and every stored image is already
  * the size the display wants.
  */
-async function prepareImage(file: File): Promise<string> {
+async function prepareImage(source: Blob): Promise<string> {
   const SIZE = 320;
-  const bitmap = await createImageBitmap(file);
+  const bitmap = await createImageBitmap(source);
   const canvas = document.createElement("canvas");
   canvas.width = SIZE;
   canvas.height = SIZE;
@@ -268,6 +268,28 @@ async function prepareImage(file: File): Promise<string> {
   for (const byte of bytes) binary += String.fromCharCode(byte);
   act({ type: "images/put", id, data: btoa(binary) });
   return id;
+}
+
+/**
+ * The browser can't resize a cross-origin image itself — drawing one to a
+ * canvas taints it and `toBlob()` then throws — so the server fetches the bytes
+ * and hands them back same-origin.
+ */
+async function blobFromUrl(url: string): Promise<Blob> {
+  const response = await fetch(`/fetch-image?url=${encodeURIComponent(url)}`);
+  if (!response.ok) throw new Error((await response.text()) || "Could not fetch that image.");
+  return response.blob();
+}
+
+/** Pull an image URL out of whatever a drag or paste actually carried. */
+function imageUrlFrom(data: DataTransfer | null): string | null {
+  if (!data) return null;
+  const uri = (data.getData("text/uri-list") || data.getData("text/plain") || "").split("\n")[0].trim();
+  if (/^https?:\/\//i.test(uri)) return uri;
+  // Dragging an image out of a page hands over its HTML rather than a URL.
+  const html = data.getData("text/html");
+  const match = html && /<img[^>]+src=["']([^"']+)["']/i.exec(html);
+  return match ? match[1] : null;
 }
 
 function artPreview(art: Art | undefined): HTMLElement {
@@ -295,7 +317,52 @@ function renderArtList(): void {
   for (const label of labels) {
     const art = editingArt.get(label);
     const row = text("div", "art-row");
+    row.tabIndex = 0;
+    row.title = "Drop or paste an image here";
     row.append(artPreview(art), text("span", "art-label", label));
+
+    const useImage = async (get: () => Promise<Blob>) => {
+      row.classList.add("busy");
+      try {
+        editingArt.set(label, { image: await prepareImage(await get()) });
+        renderArtList();
+      } catch (err) {
+        row.classList.remove("busy");
+        flash(err instanceof Error ? err.message : "Could not read that image.");
+      }
+    };
+
+    row.ondragover = (event) => {
+      event.preventDefault();
+      row.classList.add("dropping");
+    };
+    row.ondragleave = () => row.classList.remove("dropping");
+    row.ondrop = (event) => {
+      event.preventDefault();
+      row.classList.remove("dropping");
+      const dropped = event.dataTransfer?.files?.[0];
+      if (dropped?.type.startsWith("image/")) return void useImage(async () => dropped);
+      const url = imageUrlFrom(event.dataTransfer);
+      if (url) return void useImage(() => blobFromUrl(url));
+      flash("That didn't carry an image.");
+    };
+
+    row.onpaste = (event) => {
+      // Don't hijack a paste meant for the emoji field.
+      if ((event.target as HTMLElement)?.tagName === "INPUT") return;
+      for (const item of event.clipboardData?.items ?? []) {
+        if (item.kind !== "file" || !item.type.startsWith("image/")) continue;
+        const pasted = item.getAsFile();
+        if (!pasted) continue;
+        event.preventDefault();
+        return void useImage(async () => pasted);
+      }
+      const url = imageUrlFrom(event.clipboardData);
+      if (url) {
+        event.preventDefault();
+        void useImage(() => blobFromUrl(url));
+      }
+    };
 
     // onchange, not oninput: the list re-renders on edit and would steal focus.
     const emoji = document.createElement("input");
@@ -328,12 +395,7 @@ function renderArtList(): void {
       const chosen = file.files?.[0];
       file.value = "";
       if (!chosen) return;
-      try {
-        editingArt.set(label, { image: await prepareImage(chosen) });
-        renderArtList();
-      } catch (err) {
-        flash(err instanceof Error ? err.message : "Could not read that image.");
-      }
+      await useImage(async () => chosen);
     };
     const pick = button("image", "mini");
     pick.title = "Upload an image";

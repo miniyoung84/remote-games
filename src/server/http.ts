@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
+import { fetchRemoteImage } from "./fetch-image.js";
 import { buildPack } from "./packs.js";
 import { readImage } from "./store.js";
 
@@ -23,6 +24,21 @@ export function handleApi(req: IncomingMessage, res: ServerResponse): boolean {
       "cache-control": "public, max-age=31536000, immutable",
     });
     res.end(bytes);
+    return true;
+  }
+
+  if (url.pathname === "/fetch-image") {
+    const target = url.searchParams.get("url") ?? "";
+    fetchRemoteImage(target).then(
+      ({ type, bytes }) => {
+        res.writeHead(200, { "content-type": type, "cache-control": "no-store" });
+        res.end(bytes);
+      },
+      (err: unknown) => {
+        res.writeHead(400, { "content-type": "text/plain; charset=utf-8" });
+        res.end(err instanceof Error ? err.message : "Could not fetch that image.");
+      },
+    );
     return true;
   }
 

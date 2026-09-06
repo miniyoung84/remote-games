@@ -239,6 +239,19 @@ Because the id is derived client-side, upload needs no response — the browser
 already knows the id and can reference it immediately. `images/put` is a plain
 one-way action like every other.
 
+Images can also come from the web — dropped out of a page, or pasted as a URL.
+The browser can't fetch those itself: drawing a cross-origin image to a canvas
+taints it, and the resize step needs `toBlob()`. So `/fetch-image` retrieves the
+bytes server-side and returns them same-origin, after which the normal
+resize-hash-upload path runs unchanged.
+
+That endpoint takes a URL from the user, so it guards against being pointed at
+the local network: http/https only, private and link-local addresses refused,
+**every redirect hop re-checked** (a public URL can otherwise bounce to a
+private one), a size cap and a timeout. IPv6 literals arrive from
+`URL.hostname` still wrapped in brackets, which has to be stripped or the
+literal check silently misses them.
+
 `src/server/http.ts` serves `/images/:id` and `/pack.json`, and is mounted by
 both the Vite dev middleware and the production server so the two behave
 identically. Pack export is an ordinary HTTP download rather than a websocket

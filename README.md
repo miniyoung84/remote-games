@@ -78,7 +78,8 @@ order is whoever raises their hand next and attendance changes daily.
 
 Bracket and Tier List share the same sets, so a set can be run as a bracket one
 week and a tier list the next — comparing the two results is half the fun. Items can carry
-**emoji, a color swatch or an uploaded image**, and a **pack** bundles sets plus
+**emoji, a color swatch or an image** — uploaded, dropped straight out of a web
+page, or pasted — and a **pack** bundles sets plus
 their images into one file you can share or keep as a backup.
 
 Twenty-eight sets ship in [data/sets/](data/sets/); add your own in the host

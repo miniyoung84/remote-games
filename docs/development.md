@@ -117,6 +117,10 @@ Plain strings still work, so sets written before art existed are untouched. The
 host editor has an **Art** row per entry: type an emoji, pick a color, or upload
 an image.
 
+There are three ways to give an entry an image, all ending in the same place:
+pick a file, **drop one dragged straight out of a web page**, or **paste** —
+either a copied image or a copied image URL.
+
 Uploads are resized to 320x320 and re-encoded as WebP **in the browser**, then
 named by a SHA-256 of their own bytes and sent over the existing websocket. That
 means no image library on the server, identical images dedupe for free, and
@@ -127,6 +131,10 @@ Share them with a pack instead.
 
 If a set is deleted, its images become orphans; the Packs panel offers to
 remove any image no set references.
+
+One thing to keep in mind about images pulled off the web: they stay out of the
+repo, but **a pack embeds them**, so sharing a pack shares whatever you pulled.
+Fine for your own team, worth a thought before posting one publicly.
 
 Emoji beat photographs at the ~120px a board chip gets, and colors beat both for
 a set like Best Color. About a third of the library is abstract enough that no
