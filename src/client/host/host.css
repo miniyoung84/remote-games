@@ -148,7 +148,8 @@ label input, label textarea { margin-top: 5px; text-transform: none; letter-spac
 
 /* ---------- sets ---------- */
 
-#sets { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+#set-filter { margin-bottom: 10px; }
+#sets { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; max-height: 340px; overflow-y: auto; }
 
 .set {
   display: flex;
@@ -163,6 +164,9 @@ label input, label textarea { margin-top: 5px; text-transform: none; letter-spac
 .set .meta { flex: 1; min-width: 0; cursor: pointer; }
 .set .meta strong { display: block; font-size: 15px; }
 .set .meta span { color: var(--dim); font-size: 12px; }
+.set .meta .played { color: var(--accent); font-weight: 700; margin-left: 8px; }
+.set.recent { opacity: 0.6; }
+.set.recent:hover, .set.editing { opacity: 1; }
 .set-actions { display: flex; gap: 6px; align-items: center; }
 .set-actions label { margin: 0; display: flex; align-items: center; gap: 5px; cursor: pointer; }
 .set-actions input[type="checkbox"] { width: auto; }

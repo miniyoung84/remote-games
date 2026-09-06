@@ -1,5 +1,5 @@
 import { bracketSize, roundName } from "../../shared/bracket.js";
-import type { BracketSet, HostState, Match } from "../../shared/types.js";
+import type { BracketSetView, HostState, Match } from "../../shared/types.js";
 import { connect } from "../connection.js";
 
 const el = <T extends HTMLElement>(id: string): T => {
@@ -14,6 +14,8 @@ const rosterCount = el("roster-count");
 const rosterForm = el<HTMLFormElement>("roster-form");
 const rosterName = el<HTMLInputElement>("roster-name");
 const setsList = el("sets");
+const setsCount = el("sets-count");
+const setFilter = el<HTMLInputElement>("set-filter");
 const editor = el<HTMLFormElement>("editor");
 const editorTitle = el("editor-title");
 const setTitle = el<HTMLInputElement>("set-title");
@@ -186,7 +188,7 @@ rosterForm.onsubmit = (event) => {
 
 /* ---------- sets ---------- */
 
-function loadEditor(set: BracketSet | null): void {
+function loadEditor(set: BracketSetView | null): void {
   editingId = set?.id ?? null;
   editorTitle.textContent = set ? `Editing “${set.title}”` : "New set";
   setTitle.value = set?.title ?? "";
@@ -213,6 +215,10 @@ function updatePreview(): void {
 
 setItems.oninput = updatePreview;
 
+setFilter.oninput = () => {
+  if (state) renderSets(state);
+};
+
 editor.onsubmit = (event) => {
   event.preventDefault();
   send({
@@ -238,20 +244,53 @@ setDelete.onclick = () => {
   }
 };
 
+/** Relative "played" label. Absolute dates are noise at this granularity. */
+function playedLabel(at?: number): string | null {
+  if (!at) return null;
+  const days = Math.floor((Date.now() - at) / 86_400_000);
+  if (days <= 0) return "played today";
+  if (days === 1) return "played yesterday";
+  if (days < 7) return `played ${days}d ago`;
+  if (days < 28) return `played ${Math.floor(days / 7)}w ago`;
+  return `played ${Math.floor(days / 30)}mo ago`;
+}
+
+function matchesFilter(set: BracketSetView, query: string): boolean {
+  if (!query) return true;
+  const haystack = [set.title, set.subtitle, ...set.items].join(" ").toLowerCase();
+  return query.split(/\s+/).every((word) => haystack.includes(word));
+}
+
 function renderSets(state: HostState): void {
   setsList.replaceChildren();
   if (state.sets.length === 0) {
+    setsCount.textContent = "";
     setsList.append(text("p", "empty", "No sets yet — build one below."));
     return;
   }
 
-  for (const set of state.sets) {
+  const query = setFilter.value.trim().toLowerCase();
+  const shown = state.sets.filter((s) => matchesFilter(s, query));
+  setsCount.textContent = query ? `${shown.length} of ${state.sets.length}` : `${state.sets.length}`;
+
+  if (shown.length === 0) {
+    setsList.append(text("p", "empty", `Nothing matches “${setFilter.value.trim()}”.`));
+    return;
+  }
+
+  for (const set of shown) {
     const row = text("div", "set");
     if (set.id === editingId) row.classList.add("editing");
+    // Recently played sets are dimmed, so an unplayed one stands out at a glance.
+    const played = playedLabel(set.lastPlayedAt);
+    if (set.lastPlayedAt && Date.now() - set.lastPlayedAt < 14 * 86_400_000) row.classList.add("recent");
 
     const meta = text("div", "meta");
     meta.append(text("strong", "", set.title));
-    meta.append(text("span", "", `${set.items.length} entries${set.subtitle ? ` · ${set.subtitle}` : ""}`));
+    const sub = text("span", "");
+    sub.append(document.createTextNode(`${set.items.length} entries${set.subtitle ? ` · ${set.subtitle}` : ""}`));
+    if (played) sub.append(text("span", "played", played));
+    meta.append(sub);
     meta.title = "Edit this set";
     meta.onclick = () => loadEditor(set);
 

@@ -1,0 +1,146 @@
+/* The front door. Shares the display's palette and weight so the project reads
+   as one thing, but it's a normal responsive page — it gets looked at on a
+   laptop, not screenshared. */
+:root {
+  --ink: #0a0c0f;
+  --ink-2: #12161c;
+  --line: #232a34;
+  --paper: #f5f2ea;
+  --dim: #7c879a;
+  --accent: #ffc02e;
+  --danger: #ff3d7f;
+  --ok: #46d17f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+main { max-width: 1080px; margin: 0 auto; padding: 48px 24px 80px; }
+
+.masthead { margin-bottom: 32px; }
+.masthead h1 {
+  margin: 0;
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  border-left: 12px solid var(--accent);
+  padding-left: 18px;
+}
+.masthead p { margin: 10px 0 0 30px; color: var(--dim); font-size: 18px; font-weight: 600; }
+
+h2 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--dim);
+  margin: 0 0 14px;
+}
+
+/* ---------- live status ---------- */
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--ink-2);
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 32px;
+  font-weight: 700;
+}
+.status .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--dim); flex: none; }
+.status.live { border-color: var(--accent); }
+.status.live .dot { background: var(--accent); }
+.status.done .dot { background: var(--ok); }
+.status.offline .dot { background: var(--danger); }
+.status #status-text { flex: 1; min-width: 0; }
+.status button {
+  font: inherit;
+  font-weight: 800;
+  border: 2px solid var(--accent);
+  background: var(--accent);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.status button[hidden] { display: none; }
+
+/* ---------- games ---------- */
+
+.games { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+
+.game {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--ink-2);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+}
+.game.ready { border-color: var(--accent); }
+.game h3 { margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.game .meta { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--dim); }
+.game p { margin: 0; color: var(--dim); font-weight: 500; flex: 1; }
+.game .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.game button, .game a.button {
+  font: inherit;
+  font-weight: 800;
+  border: 2px solid var(--line);
+  background: #262c37;
+  color: var(--paper);
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.game button.primary { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+.game button:hover, .game a.button:hover { border-color: var(--accent); }
+
+.game.planned { opacity: 0.55; border-style: dashed; }
+.game.planned h3 { color: var(--dim); }
+
+/* ---------- guidance ---------- */
+
+.columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-top: 40px; }
+
+.steps { margin: 0; padding-left: 20px; color: var(--dim); font-weight: 500; }
+.steps li { margin-bottom: 8px; }
+.steps strong { color: var(--paper); }
+
+.warn {
+  margin: 14px 0 0;
+  border-left: 4px solid var(--danger);
+  padding: 8px 0 8px 14px;
+  color: var(--dim);
+  font-weight: 600;
+}
+
+.keys { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; align-items: center; }
+.keys dt { display: flex; gap: 5px; }
+.keys dd { margin: 0; color: var(--dim); font-weight: 600; }
+.note { color: var(--dim); font-size: 13px; margin: 14px 0 0; }
+
+kbd {
+  display: inline-block;
+  min-width: 28px;
+  text-align: center;
+  background: #262c37;
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 7px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+}

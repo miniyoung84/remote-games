@@ -8,6 +8,7 @@ const STATE_FILE = join(DATA_DIR, "state.json");
 
 export const emptyState = (): AppState => ({
   roster: [],
+  playedAt: {},
   currentPickerId: null,
   selectedMatchId: null,
   game: null,

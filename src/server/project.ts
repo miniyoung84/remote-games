@@ -47,7 +47,7 @@ export function projectHost(state: AppState): HostState {
     currentMatchId: bracket ? (resolveCurrentMatch(bracket, state.selectedMatchId)?.id ?? null) : null,
     roster: state.roster,
     currentPickerId: state.currentPickerId,
-    sets: loadSets(),
+    sets: loadSets().map((set) => ({ ...set, lastPlayedAt: state.playedAt[set.id] })),
     canUndo: (state.game?.decisions.length ?? 0) > 0,
     remaining: bracket ? readyMatches(bracket).length : 0,
   };

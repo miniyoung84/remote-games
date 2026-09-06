@@ -42,6 +42,8 @@ npm run build      # typecheck, then build to dist/
 npm test           # bracket logic tests
 npm run typecheck  # typecheck only
 npm run shot       # screenshot the display and host views (see below)
+npm run fit        # check the display is centered at every monitor size
+npm run sets       # regenerate the set list in the bracket-set prompt
 ```
 
 `npm run dev` runs the websocket game server inside Vite, so one command is the
@@ -74,9 +76,10 @@ browser window on your own desktop to screenshare anyway.
 You need two windows on two monitors:
 
 1. `npm run build && npm start`
-2. Open **`/host`** on your primary monitor. Add whoever is in the meeting to
-   the roster, pick a bracket set, and hit **Start**.
-3. Open **`/display`** on your second monitor and fullscreen it (F11).
+2. Open the menu at **`/`**. It lists the games, shows whether one is already in
+   progress, and **Set up both windows** opens the display in its own window and
+   takes you to the host controls.
+3. Fullscreen the display on your second monitor (F11).
 4. In Teams or Discord, share **the display window specifically** — not your
    whole screen. The host view contains the controls and is marked with a pink
    "do not share" banner precisely because this is the mistake to avoid.
@@ -128,6 +131,10 @@ npm run shot           # writes screenshots/
 npm run shot -- out 5199   # custom directory and port
 ```
 
-This needs a browser Playwright can drive, which is **not** installed by
-`npm ci` — run `npx playwright install chromium` once if you want screenshots.
+`npm run fit -- 5199` uses the same browser to verify the display lands centered
+and fully on screen across nine monitor sizes, including the scaled-DPI cases
+that are easy to break and impossible to notice on one machine.
+
+Both need a browser Playwright can drive, which is **not** installed by
+`npm ci` — run `npx playwright install chromium` once if you want them.
 Nothing else in the project depends on it.

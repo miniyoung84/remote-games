@@ -4,22 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>remote-games</title>
-    <link rel="stylesheet" href="/src/client/landing.css" />
+    <link rel="stylesheet" href="/src/client/menu/menu.css" />
   </head>
-  <body class="landing">
+  <body>
     <main>
-      <h1>remote-games</h1>
-      <p>Open both windows. Share the display window only.</p>
-      <nav>
-        <a class="card display" href="/display">
-          <strong>Display</strong>
-          <span>Fullscreen this on your second monitor. This is the window you share.</span>
-        </a>
-        <a class="card host" href="/host">
-          <strong>Host controls</strong>
-          <span>Keep this on your primary monitor. Contains controls — never share it.</span>
-        </a>
-      </nav>
+      <header class="masthead">
+        <h1>remote-games</h1>
+        <p>Party games built to be screenshared into a remote meeting.</p>
+      </header>
+
+      <section id="status" class="status" aria-live="polite">
+        <span class="dot"></span>
+        <span id="status-text">Connecting…</span>
+        <button id="status-action" hidden></button>
+      </section>
+
+      <section>
+        <h2>Games</h2>
+        <div id="games" class="games"></div>
+      </section>
+
+      <div class="columns">
+        <section>
+          <h2>Running a session</h2>
+          <ol class="steps">
+            <li>Open the <strong>host controls</strong> on your main monitor.</li>
+            <li>Open the <strong>display</strong> on your second monitor and fullscreen it with <kbd>F11</kbd>.</li>
+            <li>In Teams or Discord, share <strong>the display window specifically</strong> — not your whole screen.</li>
+          </ol>
+          <p class="warn">The host window shows the answers and the controls. If you share your whole screen, everyone sees it.</p>
+        </section>
+
+        <section>
+          <h2>Host shortcuts</h2>
+          <dl class="keys">
+            <dt><kbd>A</kbd><kbd>←</kbd></dt><dd>pick the left entry</dd>
+            <dt><kbd>B</kbd><kbd>→</kbd></dt><dd>pick the right entry</dd>
+            <dt><kbd>U</kbd></dt><dd>undo the last pick</dd>
+          </dl>
+          <p class="note">Shortcuts are ignored while you're typing in a field.</p>
+        </section>
+      </div>
     </main>
+    <script type="module" src="/src/client/menu/main.ts"></script>
   </body>
 </html>

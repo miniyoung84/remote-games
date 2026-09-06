@@ -10,6 +10,13 @@ export type BracketSet = {
   updatedAt: number;
 };
 
+/**
+ * A set as the host view sees it: the stored set plus runtime play history.
+ * `lastPlayedAt` lives in state.json, never in the set file — set files are
+ * committed content and shouldn't churn every time someone plays.
+ */
+export type BracketSetView = BracketSet & { lastPlayedAt?: number };
+
 /** One recorded pick. `by` is a roster person id, or null for an auto-resolved bye. */
 export type Decision = {
   matchId: string;
@@ -38,6 +45,8 @@ export type Person = { id: string; name: string; present: boolean };
 
 export type AppState = {
   roster: Person[];
+  /** setId -> when it was last started. */
+  playedAt: Record<string, number>;
   currentPickerId: string | null;
   selectedMatchId: string | null;
   game: Game | null;
@@ -82,7 +91,7 @@ export type HostState = {
   currentMatchId: string | null;
   roster: Person[];
   currentPickerId: string | null;
-  sets: BracketSet[];
+  sets: BracketSetView[];
   canUndo: boolean;
   remaining: number;
 };

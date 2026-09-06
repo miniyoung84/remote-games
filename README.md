@@ -36,9 +36,9 @@ npm ci
 npm run dev
 ```
 
-Then open **`/host`** on your primary monitor and **`/display`** fullscreened on
-your second one, and share the display window. Everything else happens from the
-host view.
+Then open **`http://127.0.0.1:5173`** — the menu launches both windows, shows
+whether a game is already in progress, and has the setup steps. Share the
+display window, never your whole screen.
 
 Dependencies install into the project directory only — nothing touches your
 global environment. [docs/development.md](docs/development.md) covers the

@@ -154,11 +154,31 @@ takes exactly n-1 real picks. This is property-tested for every size from 3 to
 pick. Deciding a matchup clears the current picker, so the host has to call on
 the next person rather than silently attributing two picks to one person.
 
+**Stage placement.** The stage is anchored top-left with
+`transform-origin: 0 0` and positioned by a computed `translate()`, not centered
+by CSS. Centering with a grid and scaling about the element's center looks
+correct at 1920x1080 and is wrong everywhere else: once the viewport is smaller
+than the stage — browser chrome, or any Windows machine at 125%/150% display
+scaling — the browser clamps the overflowing item to the start edge, and
+scaling about its own center then pushes the whole display down and right, off
+the screen. `npm run fit` checks placement across nine monitor configurations.
+
 **Display sizing.** The board is a progress map, not reading material — a
 16-entrant bracket cannot hold 24px type and still fit in 1080p. The band along
 the bottom carries the live matchup at 56px, which is what people actually read.
 Slot heights are calibrated per bracket size in `display.css`; they are keyed on
 **first-round match count** (half the entrant count).
+
+## The menu
+
+`/` lists the games from `src/shared/games.ts` and is the only place that knows
+more than one game could exist. It connects read-only to see whether a game is
+already running, and launches the display as a **named popup window** rather
+than a tab — a tab can't be screenshared without exposing every other tab you
+switch to.
+
+Adding a game means adding a registry entry with `status: "ready"` and its two
+routes; the card, the launcher and the status line follow from that.
 
 ## Deferred
 

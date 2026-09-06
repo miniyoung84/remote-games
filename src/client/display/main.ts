@@ -170,18 +170,39 @@ function renderChampion(state: DisplayState): void {
   else if (name.length > 13) nameNode.classList.add("long");
 
   const final = state.bracket.rounds[state.bracket.rounds.length - 1][0];
-  const runnerUp = final.winner === "a" ? final.b : final.a;
+
+  // Everything the champion beat, in order. Byes contribute nothing, since the
+  // losing side of a bye is empty.
+  const beaten = state.bracket.rounds
+    .map((round) =>
+      round.find((m) => m.winner && (m.winner === "a" ? m.a : m.b)?.id === state.bracket?.champion?.id),
+    )
+    .map((m) => (m ? (m.winner === "a" ? m.b : m.a) : null))
+    .filter((e): e is NonNullable<typeof e> => Boolean(e));
+
+  const path = text("div", "champion-path");
+  beaten.forEach((entrant, i) => {
+    if (i > 0) path.append(text("span", "sep", "›"));
+    path.append(text("span", "step", entrant.label));
+  });
+
+  const crownedBy = final.decidedBy;
+  const meta = [
+    state.bracket.title,
+    `${state.decisionCount} matchup${state.decisionCount === 1 ? "" : "s"}`,
+    crownedBy ? `crowned by ${crownedBy}` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   champion.replaceChildren(
     text("div", "champion-label", "Champion"),
     nameNode,
     text("div", "champion-rule"),
-    text("div", "champion-sub", runnerUp ? `beat ${runnerUp.label} in the final` : state.bracket.title),
-    text(
-      "div",
-      "champion-meta",
-      `${state.bracket.title} · ${state.decisionCount} matchup${state.decisionCount === 1 ? "" : "s"}`,
-    ),
+    ...(beaten.length
+      ? [text("div", "champion-path-label", "Road to the title"), path]
+      : []),
+    text("div", "champion-meta", meta),
   );
   champion.hidden = false;
 }

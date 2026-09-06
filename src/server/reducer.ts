@@ -60,6 +60,8 @@ export function reduce(state: AppState, action: Action): ReduceResult {
       return ok({
         ...state,
         selectedMatchId: null,
+        // Recorded here rather than on the set file, which is committed content.
+        playedAt: { ...state.playedAt, [set.id]: Date.now() },
         game: {
           setId: set.id,
           title: set.title,
