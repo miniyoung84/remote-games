@@ -225,6 +225,9 @@ export function reduce(state: AppState, action: Action): ReduceResult {
       return { state, setsChanged: true, notice: parts.join(" · ") };
     }
 
+    case "sound/toggle":
+      return ok({ ...state, soundOn: !state.soundOn });
+
     case "images/prune": {
       const gone = pruneImages();
       return { state, setsChanged: true, notice: gone ? `Removed ${gone} unused image${gone === 1 ? "" : "s"}.` : "Nothing to remove." };

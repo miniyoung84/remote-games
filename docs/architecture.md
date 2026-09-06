@@ -101,6 +101,12 @@ Broadcast an `endsAt` timestamp and let the display render the delta.
 No keyboard handlers, no focus requirements. It is a pure projection. Otherwise
 an unfocused display window becomes a dead display window.
 
+**One exception, and only one:** browsers refuse to start audio without a user
+gesture on that page, so when sound is switched on the display shows a single
+"click to enable sound" chip. It is dismissed during setup, before anything is
+shared, and never reappears. Without it the `AudioContext` sits suspended and
+every sound is silently dropped.
+
 ### Persistence
 
 Board state persists across days. This is a shell feature, not a per-game one —
@@ -190,6 +196,18 @@ the screen. `npm run fit` checks placement across nine monitor configurations.
 the bottom carries the live matchup at 56px, which is what people actually read.
 Slot heights are calibrated per bracket size in `display.css`; they are keyed on
 **first-round match count** (half the entrant count).
+
+## Sound
+
+Synthesized with the Web Audio API rather than shipped as files: the sounds
+needed here are a thunk, a whoosh, a blip and two chords, which is less code
+than a loader and carries no licensing surface — the same reason images stay out
+of the repo.
+
+`renderSound()` is deliberately split from playback so the identical synthesis
+can be rendered into an `OfflineAudioContext` and measured. A sound that has
+quietly become silence is otherwise invisible; the checks assert peak, RMS and
+duration.
 
 ## Images and packs
 

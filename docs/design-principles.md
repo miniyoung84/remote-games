@@ -40,6 +40,12 @@ Transitions fire on an event and then stop.
   Teams only shares system sound if the host ticks "include computer sound."
   Every audio cue needs a visual equivalent.
 
+  The display does synthesize sound — a thunk on a placement, a whoosh on a
+  move, a chord at the end — but it is decoration on top of a visual that
+  already says the same thing, and it is **off by default**. It has to stay
+  that way: at least some of the room will never hear it, and they should not
+  be able to tell.
+
 ## Constraint 3: the meeting format
 
 The target meeting is a standup. People raise their hands in Teams and the host

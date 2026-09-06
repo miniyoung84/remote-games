@@ -11,6 +11,7 @@ export const emptyState = (): AppState => ({
   roster: [],
   playedAt: {},
   currentPickerId: null,
+  soundOn: false,
   game: null,
 });
 

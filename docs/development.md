@@ -121,6 +121,17 @@ Emoji beat photographs at the ~120px a board chip gets, and colors beat both for
 a set like Best Color. About a third of the library is abstract enough that no
 art helps, and those sets are deliberately left plain.
 
+## Sound
+
+Off by default. **Sound on/off** in the host view toggles it, and the display
+then asks for one click to enable audio — browsers won't start it otherwise.
+Click it while you're setting the window up, before you share.
+
+For anyone else to hear it you must also share computer audio: Teams has an
+"include computer sound" tick on the share dialog, Discord's Go Live picks up
+application audio on its own. Assume some of the room won't hear it — nothing
+in either game depends on sound.
+
 ## Editing sets
 
 Two equivalent routes — both write the same files:

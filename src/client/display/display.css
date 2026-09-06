@@ -513,3 +513,25 @@ body {
 .duel-side.has-art .art-image.hero { width: 76px; height: 76px; }
 #champion .art-image.hero { width: 128px; height: 128px; }
 .slot .art-image.chip { width: var(--slot-font, 20px); height: var(--slot-font, 20px); }
+
+/* The display otherwise takes no input at all; this is the one exception, and
+   it exists only because browsers won't start audio without a gesture. It is
+   dismissed during setup, before anything is shared. */
+#sound-arm {
+  position: absolute;
+  bottom: 22px;
+  right: 26px;
+  z-index: 8;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  background: var(--accent);
+  border: none;
+  border-radius: 999px;
+  padding: 11px 20px;
+  cursor: pointer;
+}
+#sound-arm[hidden] { display: none; }

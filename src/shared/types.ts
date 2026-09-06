@@ -126,6 +126,8 @@ export type AppState = {
   /** setId -> when it was last started. */
   playedAt: Record<string, number>;
   currentPickerId: string | null;
+  /** Host-controlled, off by default so it can't surprise anyone mid-meeting. */
+  soundOn: boolean;
   game: Game | null;
 };
 
@@ -137,6 +139,7 @@ export type DisplayGame =
 
 export type DisplayState = {
   presentCount: number;
+  soundOn: boolean;
   pickerName: string | null;
   game: DisplayGame | null;
 };
@@ -147,6 +150,7 @@ export type HostGame =
 
 export type HostState = {
   roster: Person[];
+  soundOn: boolean;
   currentPickerId: string | null;
   sets: ItemSetView[];
   /** Stored images no set references any more. */

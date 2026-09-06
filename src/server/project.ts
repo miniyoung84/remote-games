@@ -32,6 +32,7 @@ export function projectDisplay(state: AppState): DisplayState {
   const picker = state.roster.find((p) => p.id === state.currentPickerId) ?? null;
   return {
     presentCount: state.roster.filter((p) => p.present).length,
+    soundOn: state.soundOn,
     pickerName: picker?.name ?? null,
     game: displayGame(state),
   };
@@ -67,6 +68,7 @@ export function projectHost(state: AppState): HostState {
 
   return {
     roster: state.roster,
+    soundOn: state.soundOn,
     currentPickerId: state.currentPickerId,
     sets: loadSets().map((set) => ({ ...set, lastPlayedAt: state.playedAt[set.id] })),
     unusedImages: orphanImages().length,

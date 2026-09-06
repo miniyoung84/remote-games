@@ -1,13 +1,13 @@
 import { roundName } from "../../shared/bracket.js";
 import type { Bracket, DisplayGame, DisplayState, Match } from "../../shared/types.js";
-import { artNode, setHeader, setProgress, text, type DisplayDom, type Renderer } from "./dom.js";
+import { artNode, setHeader, setProgress, text, type DisplayDom, type Renderer, type Sound } from "./dom.js";
 
 type BracketGame = Extract<DisplayGame, { kind: "bracket" }>;
 type Frame = { state: DisplayState; game: BracketGame };
 
 const DECISION_HOLD_MS = 1500;
 
-export function mountBracket(dom: DisplayDom): Renderer<Frame> {
+export function mountBracket(dom: DisplayDom, sound: Sound): Renderer<Frame> {
   const matchNodes = new Map<string, HTMLElement>();
   let boardKey = "";
   let shown: Frame | null = null;
@@ -186,6 +186,7 @@ export function mountBracket(dom: DisplayDom): Renderer<Frame> {
     if (decided) {
       // Hold the result on screen so the pick reads as an event rather than
       // the board silently changing.
+      sound.play(next.game.phase === "complete" ? "champion" : "advance");
       animating = true;
       renderBoard(next, decided.id);
       renderBand(next, decided);

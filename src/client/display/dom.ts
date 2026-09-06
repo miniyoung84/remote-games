@@ -1,4 +1,5 @@
 import type { Item } from "../../shared/types.js";
+import type { SoundPlayer } from "./sound.js";
 
 export type DisplayDom = {
   stage: HTMLElement;
@@ -11,6 +12,8 @@ export type DisplayDom = {
 
 /** A mounted game renderer. main.ts swaps these when the running game changes. */
 export type Renderer<S> = { update: (state: S) => void; unmount: () => void };
+
+export type Sound = SoundPlayer;
 
 export function text(tag: string, className: string, value = ""): HTMLElement {
   const node = document.createElement(tag);

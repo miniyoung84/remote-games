@@ -3,6 +3,7 @@ import { connect } from "../connection.js";
 import { autoFitStage } from "../stage.js";
 import { mountBracket } from "./bracket.js";
 import { text, type DisplayDom, type Renderer } from "./dom.js";
+import { createSound } from "./sound.js";
 import { mountTierlist } from "./tierlist.js";
 
 const el = <T extends HTMLElement>(id: string): T => {
@@ -20,6 +21,18 @@ const dom: DisplayDom = {
   overlay: el("champion"),
 };
 const offline = el("offline");
+const soundArm = el<HTMLButtonElement>("sound-arm");
+const sound = createSound();
+
+soundArm.onclick = async () => {
+  await sound.arm();
+  refreshSoundChip();
+};
+
+/** Only asks for the one click, and only while sound is on but still blocked. */
+function refreshSoundChip(): void {
+  soundArm.hidden = !sound.enabled() || sound.armed();
+}
 
 autoFitStage(dom.stage);
 
@@ -35,8 +48,8 @@ function swapTo(next: string | null): void {
   dom.board.replaceChildren();
   dom.band.replaceChildren();
   dom.overlay.hidden = true;
-  if (next === "bracket") renderer = mountBracket(dom);
-  else if (next === "tierlist") renderer = mountTierlist(dom);
+  if (next === "bracket") renderer = mountBracket(dom, sound);
+  else if (next === "tierlist") renderer = mountTierlist(dom, sound);
 }
 
 function renderIdle(state: DisplayState): void {
@@ -59,6 +72,8 @@ function renderIdle(state: DisplayState): void {
 
 connect<DisplayState>("display", {
   onState: (state) => {
+    sound.setEnabled(state.soundOn);
+    refreshSoundChip();
     swapTo(state.game?.kind ?? null);
     if (!state.game) return renderIdle(state);
     renderer?.update({ state, game: state.game });

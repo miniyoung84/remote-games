@@ -1,5 +1,5 @@
 import type { DisplayGame, DisplayState, TierAction, TierBoard } from "../../shared/types.js";
-import { artNode, setHeader, setProgress, text, type DisplayDom, type Renderer } from "./dom.js";
+import { artNode, setHeader, setProgress, text, type DisplayDom, type Renderer, type Sound } from "./dom.js";
 
 type TierGame = Extract<DisplayGame, { kind: "tierlist" }>;
 type Frame = { state: DisplayState; game: TierGame };
@@ -7,7 +7,7 @@ type Frame = { state: DisplayState; game: TierGame };
 const ACTION_HOLD_MS = 1600;
 const FLIGHT_MS = 620;
 
-export function mountTierlist(dom: DisplayDom): Renderer<Frame> {
+export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
   let shown: Frame | null = null;
   let queued: Frame | null = null;
   let animating = false;
@@ -174,7 +174,11 @@ export function mountTierlist(dom: DisplayDom): Renderer<Frame> {
     const isAction = Boolean(shown) && next.game.actionCount > (shown?.game.actionCount ?? 0);
     const action = isAction ? next.game.board.last : null;
     const before = shown ? capture() : null;
+    const wasFinal = shown?.game.board.phase === "final";
     shown = next;
+
+    if (action) sound.play(action.from ? "move" : "place");
+    else if (!wasFinal && next.game.board.phase === "final") sound.play("finish");
 
     render(next, action, before);
 

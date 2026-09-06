@@ -18,7 +18,8 @@ export type Action =
   | { type: "sets/delete"; id: string }
   | { type: "images/put"; id: string; data: string }
   | { type: "packs/import"; pack: Pack }
-  | { type: "images/prune" };
+  | { type: "images/prune" }
+  | { type: "sound/toggle" };
 
 export type ClientMessage = { type: "action"; action: Action };
 
