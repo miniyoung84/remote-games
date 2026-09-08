@@ -60,7 +60,10 @@
             <label>Subtitle <span class="hint">optional</span><input id="set-subtitle" autocomplete="off" /></label>
             <label>Entries <span class="hint">one per line</span><textarea id="set-items" rows="9" spellcheck="false"></textarea></label>
             <p class="hint" id="set-preview"></p>
-            <div class="art-head">Art <span class="hint">optional — emoji, a color, or an image. Drop or paste one from the web.</span></div>
+            <div class="art-head">
+              Art <span class="hint">optional — emoji, a color, or an image. Drop or paste one from the web.</span>
+              <button type="button" id="art-suggest" class="mini">Find images</button>
+            </div>
             <div id="art-list" class="art-list"></div>
             <div class="row">
               <button type="submit">Save set</button>
@@ -71,6 +74,24 @@
         </section>
       </div>
     </main>
+
+    <div id="suggest" class="suggest" hidden>
+      <div class="suggest-card">
+        <div class="suggest-head">
+          <strong id="suggest-label"></strong>
+          <span class="hint" id="suggest-pos"></span>
+        </div>
+        <input id="suggest-query" autocomplete="off" />
+        <div id="suggest-view" class="suggest-view"></div>
+        <p class="hint" id="suggest-meta"></p>
+        <div class="row">
+          <button type="button" id="suggest-use" class="primary">Use this</button>
+          <button type="button" id="suggest-next">Next image</button>
+          <button type="button" id="suggest-skip" class="ghost">Skip</button>
+          <button type="button" id="suggest-close" class="danger">Done</button>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/client/host/main.ts"></script>
   </body>
 </html>

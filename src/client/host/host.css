@@ -347,3 +347,53 @@ label input, label textarea { margin-top: 5px; text-transform: none; letter-spac
 .art-row.dropping { border-color: var(--accent); background: #2a2410; }
 .art-row.busy { opacity: 0.55; pointer-events: none; }
 .art-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* ---------- image suggestions ---------- */
+
+.art-head { display: flex; align-items: center; gap: 10px; }
+.art-head .hint { flex: 1; }
+#art-suggest { border: 2px solid var(--accent); color: var(--accent); padding: 5px 10px; font-size: 11px; }
+
+.suggest {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(6, 8, 11, 0.82);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.suggest-card {
+  width: min(560px, 100%);
+  background: var(--panel);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.suggest-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.suggest-head strong { font-size: 22px; font-weight: 800; }
+
+#suggest-query { margin-bottom: 12px; }
+
+.suggest-view {
+  height: 300px;
+  display: grid;
+  place-items: center;
+  background: #0d1015;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  color: var(--dim);
+  font-weight: 700;
+  text-align: center;
+  padding: 12px;
+}
+.suggest-view img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+#suggest-meta { min-height: 30px; margin: 0 0 12px; line-height: 1.4; }
+#suggest-meta a { color: var(--accent); }
+
+.art-credit { font-size: 10px; color: var(--dim); font-weight: 700; }

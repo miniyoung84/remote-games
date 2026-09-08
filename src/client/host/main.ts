@@ -41,6 +41,12 @@ const draftStart = el("draft-start");
 const draftTopic = el<HTMLInputElement>("draft-topic");
 const draftSubtitle = el<HTMLInputElement>("draft-subtitle");
 const draftRounds = el<HTMLInputElement>("draft-rounds");
+const suggest = el("suggest");
+const suggestLabel = el("suggest-label");
+const suggestPos = el("suggest-pos");
+const suggestQuery = el<HTMLInputElement>("suggest-query");
+const suggestView = el("suggest-view");
+const suggestMeta = el("suggest-meta");
 
 let state: HostState | null = null;
 let editingId: string | null = null;
@@ -292,6 +298,123 @@ function imageUrlFrom(data: DataTransfer | null): string | null {
   return match ? match[1] : null;
 }
 
+type Suggestion = { title: string; thumb: string; source: string; license: string; artist: string };
+
+/**
+ * Walks the entries that have no art, one at a time, offering candidates from
+ * Wikimedia Commons. Search is good for concrete things and useless for
+ * abstract ones, so every image is accepted or rejected by hand rather than
+ * applied in bulk.
+ */
+const review = { labels: [] as string[], at: 0, options: [] as Suggestion[], pick: 0, busy: false };
+
+async function loadSuggestions(query: string): Promise<void> {
+  review.options = [];
+  review.pick = 0;
+  suggestView.replaceChildren(text("span", "", "Searching…"));
+  suggestMeta.textContent = "";
+  try {
+    const response = await fetch(`/suggest-images?q=${encodeURIComponent(query)}&n=8`);
+    if (!response.ok) throw new Error((await response.text()) || "Search failed.");
+    review.options = (await response.json()) as Suggestion[];
+  } catch (err) {
+    suggestView.replaceChildren(text("span", "", err instanceof Error ? err.message : "Search failed."));
+    return;
+  }
+  showCandidate();
+}
+
+function showCandidate(): void {
+  const option = review.options[review.pick];
+  if (!option) {
+    suggestView.replaceChildren(text("span", "", "Nothing found — try a different search."));
+    suggestMeta.textContent = "";
+    return;
+  }
+  const img = document.createElement("img");
+  img.src = option.thumb;
+  img.alt = option.title;
+  suggestView.replaceChildren(img);
+
+  suggestMeta.replaceChildren(
+    document.createTextNode(`${option.license}${option.artist ? ` · ${option.artist}` : ""} · `),
+  );
+  const link = document.createElement("a");
+  link.href = option.source;
+  link.target = "_blank";
+  link.rel = "noreferrer";
+  link.textContent = "Wikimedia Commons";
+  suggestMeta.append(link, document.createTextNode(`  (${review.pick + 1} of ${review.options.length})`));
+}
+
+function showItem(): void {
+  if (review.at >= review.labels.length) return closeReview();
+  const label = review.labels[review.at];
+  suggestLabel.textContent = label;
+  suggestPos.textContent = `${review.at + 1} of ${review.labels.length}`;
+  suggestQuery.value = label;
+  void loadSuggestions(label);
+}
+
+function closeReview(): void {
+  suggest.hidden = true;
+  review.labels = [];
+  renderArtList();
+}
+
+el("art-suggest").onclick = () => {
+  const pending = currentLabels().filter((l) => !editingArt.has(l));
+  if (!pending.length) return flash("Every entry already has art.");
+  review.labels = pending;
+  review.at = 0;
+  suggest.hidden = false;
+  showItem();
+};
+
+el("suggest-next").onclick = () => {
+  if (review.options.length < 2) return;
+  review.pick = (review.pick + 1) % review.options.length;
+  showCandidate();
+};
+
+el("suggest-skip").onclick = () => {
+  review.at++;
+  showItem();
+};
+
+el("suggest-close").onclick = closeReview;
+
+suggestQuery.onkeydown = (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    void loadSuggestions(suggestQuery.value);
+  }
+};
+
+const suggestUse = el<HTMLButtonElement>("suggest-use");
+suggestUse.onclick = async () => {
+  const option = review.options[review.pick];
+  const label = review.labels[review.at];
+  if (!option || !label || review.busy) return;
+  review.busy = true;
+  suggestUse.disabled = true;
+  try {
+    const blob = await blobFromUrl(option.thumb);
+    editingArt.set(label, {
+      image: await prepareImage(blob),
+      source: option.source,
+      license: option.license,
+    });
+    review.at++;
+    showItem();
+  } catch (err) {
+    flash(err instanceof Error ? err.message : "Could not use that image.");
+  } finally {
+    review.busy = false;
+    suggestUse.disabled = false;
+  }
+};
+
 function artPreview(art: Art | undefined): HTMLElement {
   const node = text("span", "art-preview");
   if (!art) return node;
@@ -319,7 +442,11 @@ function renderArtList(): void {
     const row = text("div", "art-row");
     row.tabIndex = 0;
     row.title = "Drop or paste an image here";
-    row.append(artPreview(art), text("span", "art-label", label));
+    const labelCell = text("span", "art-label", label);
+    if (art && "image" in art && art.license) {
+      labelCell.append(text("span", "art-credit", ` ${art.license}`));
+    }
+    row.append(artPreview(art), labelCell);
 
     const useImage = async (get: () => Promise<Blob>) => {
       row.classList.add("busy");

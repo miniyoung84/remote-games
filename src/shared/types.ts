@@ -3,7 +3,11 @@
  * game that uses sets gets it. `image` is reserved — the upload pipeline isn't
  * built yet, and nothing renders it.
  */
-export type Art = { emoji: string } | { color: string } | { image: string };
+export type Art =
+  | { emoji: string }
+  | { color: string }
+  /** `source` and `license` are kept for suggested images, which are CC-licensed. */
+  | { image: string; source?: string; license?: string };
 
 /** One thing that can be ranked, drafted or knocked out. */
 export type Item = { id: string; label: string; art?: Art };

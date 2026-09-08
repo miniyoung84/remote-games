@@ -1,5 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { fetchRemoteImage } from "./fetch-image.js";
+import { suggestImages } from "./suggest.js";
 import { buildPack } from "./packs.js";
 import { readImage } from "./store.js";
 
@@ -37,6 +38,20 @@ export function handleApi(req: IncomingMessage, res: ServerResponse): boolean {
       (err: unknown) => {
         res.writeHead(400, { "content-type": "text/plain; charset=utf-8" });
         res.end(err instanceof Error ? err.message : "Could not fetch that image.");
+      },
+    );
+    return true;
+  }
+
+  if (url.pathname === "/suggest-images") {
+    suggestImages(url.searchParams.get("q") ?? "", Number(url.searchParams.get("n")) || 8).then(
+      (results) => {
+        res.writeHead(200, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
+        res.end(JSON.stringify(results));
+      },
+      (err: unknown) => {
+        res.writeHead(502, { "content-type": "text/plain; charset=utf-8" });
+        res.end(err instanceof Error ? err.message : "Could not reach Commons.");
       },
     );
     return true;

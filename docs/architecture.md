@@ -252,6 +252,13 @@ private one), a size cap and a timeout. IPv6 literals arrive from
 `URL.hostname` still wrapped in brackets, which has to be stripped or the
 literal check silently misses them.
 
+`/suggest-images` queries Wikimedia Commons. It was picked over an image-search
+API for two reasons that both matter here: no API key, so there's nothing to
+configure or leak from a public repo, and everything is freely licensed, which
+matters because packs embed image bytes. Results are cached for half an hour to
+be a polite client. The license travels with the image in `Art`, since a
+CC BY-SA photo shouldn't lose its attribution the moment it's stored.
+
 `src/server/http.ts` serves `/images/:id` and `/pack.json`, and is mounted by
 both the Vite dev middleware and the production server so the two behave
 identically. Pack export is an ordinary HTTP download rather than a websocket

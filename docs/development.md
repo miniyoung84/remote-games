@@ -117,9 +117,20 @@ Plain strings still work, so sets written before art existed are untouched. The
 host editor has an **Art** row per entry: type an emoji, pick a color, or upload
 an image.
 
-There are three ways to give an entry an image, all ending in the same place:
-pick a file, **drop one dragged straight out of a web page**, or **paste** —
-either a copied image or a copied image URL.
+Four ways to give an entry an image, all ending in the same place: pick a file,
+**drop one dragged straight out of a web page**, **paste** a copied image or
+image URL, or hit **Find images**.
+
+Find images walks the entries that have no art yet, one at a time, offering
+candidates from Wikimedia Commons — use it, skip to the next candidate, skip the
+entry, or edit the search. Nothing is applied in bulk: search is good for
+concrete things (Otter, Mango, Hot air balloon, even Cheez-It) and useless for
+abstract ones (Bad pun), so every image is a deliberate yes.
+
+Commons was chosen over an image-search API because it needs **no API key** —
+nothing to configure, nothing to leak — and everything on it is **freely
+licensed**, which matters because a pack embeds image bytes. The license and
+photographer are shown before you accept and kept alongside the image.
 
 Uploads are resized to 320x320 and re-encoded as WebP **in the browser**, then
 named by a SHA-256 of their own bytes and sent over the existing websocket. That
@@ -132,9 +143,10 @@ Share them with a pack instead.
 If a set is deleted, its images become orphans; the Packs panel offers to
 remove any image no set references.
 
-One thing to keep in mind about images pulled off the web: they stay out of the
-repo, but **a pack embeds them**, so sharing a pack shares whatever you pulled.
-Fine for your own team, worth a thought before posting one publicly.
+One thing to keep in mind about images you drop or paste in yourself: they stay
+out of the repo, but **a pack embeds them**, so sharing a pack shares whatever
+you pulled. Images from Find images are CC-licensed and carry their license with
+them, so those are safe to pass around.
 
 Emoji beat photographs at the ~120px a board chip gets, and colors beat both for
 a set like Best Color. About a third of the library is abstract enough that no
