@@ -84,13 +84,17 @@ week and a tier list the next — comparing the two results is half the fun. Ite
 web, or found for you from Wikimedia Commons with an approve/reject pass — and a **pack** bundles sets plus
 their images into one file you can share or keep as a backup.
 
-Thirty-three sets ship in [data/sets/](data/sets/); add your own in the host
+Thirty-eight sets ship in [data/sets/](data/sets/); add your own in the host
 view or by dropping a JSON file next to them. There's a ready-made prompt for
 generating new ones with any AI in
 [docs/generating-bracket-sets.md](docs/generating-bracket-sets.md).
 
-Five of them — dog breeds, pasta shapes, instruments, sea creatures, footwear —
-have a photograph on every entry. The images themselves are gitignored, but
+Ten of them have a photograph on every entry — dog breeds, pasta shapes,
+instruments, sea creatures and footwear, plus five built to the same recipe as
+Best Fruit: vegetables, ways to cook an egg, potatoes, ice cream flavors and
+pizza toppings. Everyone has first-hand experience of all sixteen, they're
+directly comparable, and a few in each are famously divisive — which is where
+the argument lives. The images themselves are gitignored, but
 they ship inside [packs/photo-packs.pack.json](packs/photo-packs.pack.json) and
 the server restores them on start, so a fresh clone gets the pictures with no
 extra step.

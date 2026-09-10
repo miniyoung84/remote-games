@@ -6,10 +6,17 @@ Packs panel in the host view.
 
 ## photo-packs.pack.json
 
-Five photo sets — Best Dog Breed, Best Pasta Shape, Best Musical Instrument,
-Best Sea Creature, Best Footwear — with a picture on all 80 entries.
+Best Dog Breed, Best Pasta Shape, Best Musical Instrument, Best Sea Creature,
+Best Footwear — a picture on all 80 entries.
 
-**You don't need to import this one.** Those sets are already in
+## food-fights.pack.json
+
+Best Vegetable, Best Way to Cook an Egg, Best Potato, Best Ice Cream Flavor,
+Best Pizza Topping — another 80. Built to the same recipe as Best Fruit:
+everyone has eaten all sixteen, they're directly comparable, and a few are
+famously divisive.
+
+**You don't need to import these.** Those sets are already in
 [../data/sets/](../data/sets/); this pack exists to carry their images, which
 are gitignored. The server restores anything missing from here on start, so a
 fresh clone just works — `npm start` and the pictures are there. `npm run
@@ -17,7 +24,8 @@ restore` does the same by hand.
 
 Every image came from [Wikimedia Commons](https://commons.wikimedia.org) and is
 public domain or Creative Commons. Attribution for each is in
-[photo-packs.credits.md](photo-packs.credits.md), and the license is stored next
+[photo-packs.credits.md](photo-packs.credits.md) and
+[food-fights.credits.md](food-fights.credits.md), and the license is stored next
 to each image inside the pack too.
 
 ## Why images aren't committed directly

@@ -1,0 +1,24 @@
+{
+  "id": "best-potato",
+  "title": "Best Potato",
+  "subtitle": "One humble tuber, many destinies",
+  "items": [
+    {"label":"Fries","art":{"image":"fb21ecdc7842e77d0030607c031516ae","source":"https://commons.wikimedia.org/wiki/File:French_fries_(Potato_Chips).JPG","license":"Public domain"}}, 
+    {"label":"Roast potatoes","art":{"image":"e90fa9cd86b78a00b35eab9aaf427faf","source":"https://commons.wikimedia.org/wiki/File:Kuzu_f%C4%B1r%C4%B1n_with_potatos,_carrots,_onions,_peppers,_and_rosemary.jpg","license":"CC BY-SA 4.0"}}, 
+    {"label":"Mashed","art":{"image":"ef7daecdbd254b2f3cc168a8137886e3","source":"https://commons.wikimedia.org/wiki/File:MashedPotatoes.jpg","license":"Public domain"}}, 
+    {"label":"Baked potato","art":{"image":"dda6a02cecf3164f36646b78899402ab","source":"https://commons.wikimedia.org/wiki/File:BakedPotatoWithButter.jpg","license":"Public domain"}}, 
+    {"label":"Hash browns","art":{"image":"1aebf11e16dfaa2dddf452d933fa8af4","source":"https://commons.wikimedia.org/wiki/File:Hash_browns_at_KFC_in_Yogyakarta,_Indonesia.jpg","license":"CC BY-SA 3.0"}}, 
+    {"label":"Potato chips","art":{"image":"7c788c9acea28940ebde04cbe6fae233","source":"https://commons.wikimedia.org/wiki/File:Potato-Chips.jpg","license":"Public domain"}}, 
+    {"label":"Wedges","art":{"image":"5781c0e3c9cce2b376aef35d6a6c067e","source":"https://commons.wikimedia.org/wiki/File:Potato_wedges_at_Hotel_Taipa_Square_breakfast_buffet_20071225.jpg","license":"CC BY-SA 3.0"}}, 
+    {"label":"Tater tots","art":{"image":"db54bdaf8df6f6b458b13fa6eb2ba838","source":"https://commons.wikimedia.org/wiki/File:TaterTots.jpg","license":"CC BY 3.0"}}, 
+    {"label":"Potato salad","art":{"image":"626ddc9826e2bd45d9b2bb126d3c2783","source":"https://commons.wikimedia.org/wiki/File:Potato_salad_with_egg_and_mayonnaise.jpg","license":"Public domain"}}, 
+    {"label":"Scalloped","art":{"image":"d3447b8ad1735d19d1bca28420cd0ab1","source":"https://commons.wikimedia.org/wiki/File:Potatoes_gratin%C3%A9.JPG","license":"CC BY-SA 3.0"}}, 
+    {"label":"Latkes","art":{"image":"a6d24f7f9fe61792bffaef23699bd57f","source":"https://commons.wikimedia.org/wiki/File:Latkes_frying.JPG","license":"CC BY-SA 3.0"}}, 
+    {"label":"Croquettes","art":{"image":"e236b11dd5132ecbc37772dc8f2ee412","source":"https://commons.wikimedia.org/wiki/File:Potato_croquettes_001.jpg","license":"CC0"}}, 
+    {"label":"Curly fries","art":{"image":"e4a13808348463da55523fb05b8fe449","source":"https://commons.wikimedia.org/wiki/File:Curly_Fries_-_Revolution_Vegan_Kitchen_-_Austin,_Texas_Food_Truck_(46878925454).jpg","license":"CC BY 2.0"}}, 
+    {"label":"Waffle fries","art":{"image":"8399f810ef2f872bf8ec6e6df6e84ece","source":"https://commons.wikimedia.org/wiki/File:Waffle_fries_in_the_fryer_(5428790008).jpg","license":"CC BY 2.0"}}, 
+    {"label":"Boiled","art":{"image":"f3af90989fe576fa9b0487b9585b8cef","source":"https://commons.wikimedia.org/wiki/File:Dana_haslama_in_a_huge_bowl.jpg","license":"CC BY-SA 4.0"}}, 
+    {"label":"Sweet potato fries","art":{"image":"28908cdf5c37542fea1d1d640e090e6f","source":"https://commons.wikimedia.org/wiki/File:Sweet_Potato_Fries.jpg","license":"CC BY-SA 3.0"}}
+  ],
+  "updatedAt": 0
+}

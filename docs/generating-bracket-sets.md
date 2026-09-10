@@ -141,6 +141,19 @@ Give me 5, each with one sentence on why it will play well with this group,
 then the JSON in the same shape as before.
 ````
 
+## What actually plays well
+
+Best Fruit was the runaway success, and the reason is worth copying. Everyone
+has first-hand experience of all sixteen entries, so there is no knowledge
+floor at all; the entries are directly comparable on one axis; and a few are
+famously divisive, which is where the argument lives. Consensus at the top,
+war in the middle.
+
+Sets built on abstract categories are noticeably flatter, even when the entries
+are good — people have no stored opinion to defend. That recipe lives
+overwhelmingly in food and other everyday sensory things, which is why the
+library leans that way.
+
 ## Checking what you get back
 
 Before dropping a set in, skim it for the two failure modes an AI will still

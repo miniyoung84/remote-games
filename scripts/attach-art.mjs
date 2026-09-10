@@ -77,7 +77,12 @@ function relevance(candidate, label) {
   return words.filter((w) => title.includes(w)).length / words.length;
 }
 
-function bestOf(results, label) {
+/**
+ * `trust` is set for hand-written queries: relevance is still scored against
+ * the label (a long query could never appear in a title), but a best-effort
+ * pick is returned instead of declining, since a human chose the search.
+ */
+function bestOf(results, label, trust = false) {
   const safe = results.filter((r) => !BLOCKED.test(r.title));
   const blocked = results.length - safe.length;
 
@@ -96,8 +101,10 @@ function bestOf(results, label) {
     .sort((a, b) => b.score - a.score);
 
   const best = ranked[0];
-  // A negative best means everything on offer was a drawing or a diagram.
-  return { pick: best && best.score > 0 ? best.r : null, score: best?.score ?? 0, blocked };
+  // A non-positive best means nothing named the thing, or everything on offer
+  // was a drawing. Decline — unless the query was hand-written.
+  const usable = best && (best.score > 0 || (trust && !NOT_A_PHOTO.test(best.r.title)));
+  return { pick: usable ? best.r : null, score: best?.score ?? 0, blocked };
 }
 
 async function search(query) {
@@ -145,7 +152,7 @@ for (const [index, raw] of set.items.entries()) {
     console.log(`search failed (${err.message})`);
     continue;
   }
-  const { pick, score, blocked } = bestOf(results, fixes ? query : label);
+  const { pick, score, blocked } = bestOf(results, label, Boolean(fixes));
   if (!pick) {
     console.log(`nothing usable${blocked ? ` (${blocked} filtered)` : ""}`);
     continue;

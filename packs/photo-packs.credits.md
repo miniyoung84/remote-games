@@ -1,9 +1,9 @@
-# Photo credits
+# Photo credits — Photo Packs
 
-Every image in `photo-packs.pack.json` comes from [Wikimedia Commons](https://commons.wikimedia.org)
-and is public domain or Creative Commons. Several of those licenses require
-attribution, so the source and license for each is listed here and stored
-alongside the image in the pack itself.
+Every image comes from [Wikimedia Commons](https://commons.wikimedia.org) and is
+public domain or Creative Commons. Several of those licenses require attribution,
+so each source and license is listed here and stored alongside the image in the
+pack itself.
 
 ## Best Dog Breed
 
