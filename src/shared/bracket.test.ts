@@ -25,9 +25,11 @@ test("bracketSize rounds up to a power of two", () => {
   assert.equal(bracketSize(9), 16);
 });
 
-test("seedOrder matches standard tournament seeding", () => {
+test("seedOrder pairs strongest against weakest, running down the board", () => {
   assert.deepEqual(seedOrder(4), [1, 4, 2, 3]);
-  assert.deepEqual(seedOrder(8), [1, 8, 4, 5, 2, 7, 3, 6]);
+  assert.deepEqual(seedOrder(8), [1, 8, 2, 7, 3, 6, 4, 5]);
+  // Deliberately not the interleaved tournament layout — see seedOrder.
+  assert.deepEqual(seedOrder(16), [1, 16, 2, 15, 3, 14, 4, 13, 5, 12, 6, 11, 7, 10, 8, 9]);
 });
 
 test("a full bracket has n-1 matchups and no byes", () => {
@@ -36,6 +38,18 @@ test("a full bracket has n-1 matchups and no byes", () => {
   assert.equal(bracket.rounds[0].length, 8);
   assert.equal(bracket.rounds.flat().filter((m) => m.bye).length, 0);
   assert.equal(readyMatches(bracket).length, 8);
+});
+
+test("byes land on the top seeds and cluster at the top of the board", () => {
+  // 11 entrants in a 16 slot bracket: seeds 12-16 are byes, so the top five
+  // pairings should each be a walkover and they should be the first five.
+  const first = buildBracket(gameOf(11), []).rounds[0];
+  assert.deepEqual(first.map((m) => m.bye), [true, true, true, true, true, false, false, false]);
+  assert.deepEqual(
+    first.filter((m) => m.bye).map((m) => m.a?.seed),
+    [1, 2, 3, 4, 5],
+    "the byes go to the highest seeds",
+  );
 });
 
 test("byes resolve themselves and never face each other", () => {
@@ -93,7 +107,7 @@ test("slots carry true tournament seeds, not page positions", () => {
   // pairing sums to 17. Page position is deliberately not the seed.
   assert.deepEqual(
     first.map((m) => [m.a?.seed, m.b?.seed]),
-    [[1, 16], [8, 9], [4, 13], [5, 12], [2, 15], [7, 10], [3, 14], [6, 11]],
+    [[1, 16], [2, 15], [3, 14], [4, 13], [5, 12], [6, 11], [7, 10], [8, 9]],
   );
   for (const m of first) assert.equal((m.a?.seed ?? 0) + (m.b?.seed ?? 0), 17);
 });

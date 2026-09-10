@@ -197,11 +197,21 @@ board. `buildBracket()` replays the log to produce the board, so:
 - The board is deterministic; the same log always yields the same bracket.
 - Persistence is trivial, because the log is small and complete.
 
-**Byes.** Sets that aren't a power of two are padded up. Standard tournament
-seeding guarantees every bye faces a real entrant, so no match is ever empty on
-both sides; byes resolve themselves before anyone picks. An n-entrant set always
-takes exactly n-1 real picks. This is property-tested for every size from 3 to
-64 in `src/shared/bracket.test.ts`.
+**Seeding.** First-round pairings run 1v16, 2v15, 3v14 straight down the board,
+every pair summing to size + 1. That is deliberately *not* the standard
+tournament layout, which interleaves the halves (1v16, 8v9, 4v13, 5v12, ...) so
+the top two seeds can't meet before the final. Sets are shuffled by default, so
+seed 1 is whoever was drawn first and there is no strength for that structure to
+protect — while the interleaved numbers jump about when you scan the board,
+which is the one thing a dozen people squinting at a share can't afford.
+
+**Byes.** Sets that aren't a power of two are padded up. Byes fall on the
+highest seeds, so with this order they cluster at the top of the board instead
+of scattering through it — which is also where people expect them. Every bye
+faces a real entrant, so no match is ever empty on both sides, and they resolve
+themselves before anyone picks. An n-entrant set always takes exactly n-1 real
+picks. Property-tested for every size from 3 to 64 in
+`src/shared/bracket.test.ts`.
 
 **Turn attribution.** The host taps whoever raised their hand, then records the
 pick. Deciding a matchup clears the current picker, so the host has to call on
