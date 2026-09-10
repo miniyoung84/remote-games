@@ -2,6 +2,23 @@
   "id": "ultimate-container",
   "title": "Ultimate Container",
   "subtitle": "Best way to hold stuff",
-  "items": ["Cardboard box", "Glass jar", "Tin can", "Plastic tub", "Wicker basket", "Drawstring bag", "Envelope", "Briefcase", "Suitcase", "Backpack", "Barrel", "Crate", "Bucket", "Pouch", "Flask", "Safe"],
+  "items": [
+    "Cardboard box",
+    "Backpack",
+    "Glass jar",
+    "Bucket",
+    "Suitcase",
+    "Plastic tub",
+    "Envelope",
+    "Tin can",
+    "Crate",
+    "Wicker basket",
+    "Briefcase",
+    "Barrel",
+    "Pouch",
+    "Drawstring bag",
+    "Flask",
+    "Safe"
+  ],
   "updatedAt": 0
 }

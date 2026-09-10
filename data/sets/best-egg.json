@@ -3,22 +3,134 @@
   "title": "Best Way to Cook an Egg",
   "subtitle": "There is a correct answer and it is yours",
   "items": [
-    {"label":"Scrambled","art":{"image":"321379eed05d606c36da26a9edc89ab8","source":"https://commons.wikimedia.org/wiki/File:2018-07-21_06_21_04_Scrambled_eggs,_bacon_and_a_waffle_served_as_part_of_breakfast_at_the_Ramada_by_Wyndham_Rochelle_Park_Near_Paramus_in_Rochelle_Park_Township,_Bergen_County,_New_Jersey.jpg","license":"CC BY-SA 4.0"}}, 
-    {"label":"Fried","art":{"image":"f52f2cc26078e0ccb93e2ede20e73449","source":"https://commons.wikimedia.org/wiki/File:Pineapple_bun_with_fried_egg_and_tomato.jpg","license":"CC BY-SA 4.0"}}, 
-    {"label":"Poached","art":{"image":"ab17cd57dd746de08d80fb35740663fa","source":"https://commons.wikimedia.org/wiki/File:Meat,_mushrooms,_tomatoes,_bacon,_bubbles_%26_squeak,_bread,_poached_egg.jpg","license":"CC BY 2.0"}}, 
-    {"label":"Soft boiled","art":{"image":"e9bb109110645eec9f1d4f172a49c46a","source":"https://commons.wikimedia.org/wiki/File:Soft_boiled_egg_with_black_lava_salt_from_hawaii.jpg","license":"CC BY-SA 3.0"}}, 
-    {"label":"Hard boiled","art":{"image":"c174a2e9e3fc987aa981b56596c798d5","source":"https://commons.wikimedia.org/wiki/File:Hard_boiled_egg.jpg","license":"CC BY 2.0"}}, 
-    {"label":"Omelette","art":{"image":"0898259212a33dd2d4de717c401cf3aa","source":"https://commons.wikimedia.org/wiki/File:An_omelette_prepared_with_egg_substitute.jpg","license":"CC BY 2.0"}}, 
-    {"label":"Sunny side up","art":{"image":"d9d0cf7bca6653809d3b3a25a6994fbc","source":"https://commons.wikimedia.org/wiki/File:Fried_egg_sunny_side_up.jpg","license":"CC0"}}, 
-    {"label":"Over easy","art":{"image":"6e511eb225e2bc62531f42d71ca25835","source":"https://commons.wikimedia.org/wiki/File:Special_Fried_Rice_-_Brown_rice,_kale,_bacon,_tomatoes,_red_onions,_over_easy_eggs_(16325885791).jpg","license":"CC BY 2.0"}}, 
-    {"label":"Eggs benedict","art":{"image":"883d85d7aafc16aa167a31e0e06acbfc","source":"https://commons.wikimedia.org/wiki/File:Eggs_Benedict2.jpg","license":"CC BY-SA 3.0"}}, 
-    {"label":"Frittata","art":{"image":"7c83fee4cee230f46f66407ec37367be","source":"https://commons.wikimedia.org/wiki/File:Frittata_1.jpg","license":"Public domain"}}, 
-    {"label":"Shakshuka","art":{"image":"63d6a846519c6d136858a2667c7a01a6","source":"https://commons.wikimedia.org/wiki/File:Shakshuka_011.jpg","license":"CC BY-SA 3.0"}}, 
-    {"label":"Deviled","art":{"image":"4686e05a175fa2d7411626d743b46dc8","source":"https://commons.wikimedia.org/wiki/File:Deviled_Eggs_-_3-23-08.jpg","license":"CC BY-SA 2.0"}}, 
-    {"label":"Quiche","art":{"image":"3ebaf3ab9e201a90eb3ee9bf9340bf43","source":"https://commons.wikimedia.org/wiki/File:QUICHE-VERDURAS.jpg","license":"CC0"}}, 
-    {"label":"Egg salad","art":{"image":"fbc0d84a540463aa781019fdad9a8844","source":"https://commons.wikimedia.org/wiki/File:Egg_Salad.jpg","license":"CC BY 2.0"}}, 
-    {"label":"Egg fried rice","art":{"image":"6750747916848595e0322f764bc17983","source":"https://commons.wikimedia.org/wiki/File:Fried_rice_with_egg.jpg","license":"CC BY-SA 3.0"}}, 
-    {"label":"Meringue","art":{"image":"838424dce48d43164bfd8d47f0fd0942","source":"https://commons.wikimedia.org/wiki/File:Pavlova_dessert.JPG","license":"Public domain"}}
+    {
+      "label": "Scrambled",
+      "art": {
+        "image": "321379eed05d606c36da26a9edc89ab8",
+        "source": "https://commons.wikimedia.org/wiki/File:2018-07-21_06_21_04_Scrambled_eggs,_bacon_and_a_waffle_served_as_part_of_breakfast_at_the_Ramada_by_Wyndham_Rochelle_Park_Near_Paramus_in_Rochelle_Park_Township,_Bergen_County,_New_Jersey.jpg",
+        "license": "CC BY-SA 4.0"
+      }
+    },
+    {
+      "label": "Fried",
+      "art": {
+        "image": "f52f2cc26078e0ccb93e2ede20e73449",
+        "source": "https://commons.wikimedia.org/wiki/File:Pineapple_bun_with_fried_egg_and_tomato.jpg",
+        "license": "CC BY-SA 4.0"
+      }
+    },
+    {
+      "label": "Hard boiled",
+      "art": {
+        "image": "c174a2e9e3fc987aa981b56596c798d5",
+        "source": "https://commons.wikimedia.org/wiki/File:Hard_boiled_egg.jpg",
+        "license": "CC BY 2.0"
+      }
+    },
+    {
+      "label": "Poached",
+      "art": {
+        "image": "ab17cd57dd746de08d80fb35740663fa",
+        "source": "https://commons.wikimedia.org/wiki/File:Meat,_mushrooms,_tomatoes,_bacon,_bubbles_%26_squeak,_bread,_poached_egg.jpg",
+        "license": "CC BY 2.0"
+      }
+    },
+    {
+      "label": "Omelette",
+      "art": {
+        "image": "0898259212a33dd2d4de717c401cf3aa",
+        "source": "https://commons.wikimedia.org/wiki/File:An_omelette_prepared_with_egg_substitute.jpg",
+        "license": "CC BY 2.0"
+      }
+    },
+    {
+      "label": "Sunny side up",
+      "art": {
+        "image": "d9d0cf7bca6653809d3b3a25a6994fbc",
+        "source": "https://commons.wikimedia.org/wiki/File:Fried_egg_sunny_side_up.jpg",
+        "license": "CC0"
+      }
+    },
+    {
+      "label": "Soft boiled",
+      "art": {
+        "image": "e9bb109110645eec9f1d4f172a49c46a",
+        "source": "https://commons.wikimedia.org/wiki/File:Soft_boiled_egg_with_black_lava_salt_from_hawaii.jpg",
+        "license": "CC BY-SA 3.0"
+      }
+    },
+    {
+      "label": "Over easy",
+      "art": {
+        "image": "6e511eb225e2bc62531f42d71ca25835",
+        "source": "https://commons.wikimedia.org/wiki/File:Special_Fried_Rice_-_Brown_rice,_kale,_bacon,_tomatoes,_red_onions,_over_easy_eggs_(16325885791).jpg",
+        "license": "CC BY 2.0"
+      }
+    },
+    {
+      "label": "Eggs benedict",
+      "art": {
+        "image": "883d85d7aafc16aa167a31e0e06acbfc",
+        "source": "https://commons.wikimedia.org/wiki/File:Eggs_Benedict2.jpg",
+        "license": "CC BY-SA 3.0"
+      }
+    },
+    {
+      "label": "Deviled",
+      "art": {
+        "image": "4686e05a175fa2d7411626d743b46dc8",
+        "source": "https://commons.wikimedia.org/wiki/File:Deviled_Eggs_-_3-23-08.jpg",
+        "license": "CC BY-SA 2.0"
+      }
+    },
+    {
+      "label": "Quiche",
+      "art": {
+        "image": "3ebaf3ab9e201a90eb3ee9bf9340bf43",
+        "source": "https://commons.wikimedia.org/wiki/File:QUICHE-VERDURAS.jpg",
+        "license": "CC0"
+      }
+    },
+    {
+      "label": "Frittata",
+      "art": {
+        "image": "7c83fee4cee230f46f66407ec37367be",
+        "source": "https://commons.wikimedia.org/wiki/File:Frittata_1.jpg",
+        "license": "Public domain"
+      }
+    },
+    {
+      "label": "Egg salad",
+      "art": {
+        "image": "fbc0d84a540463aa781019fdad9a8844",
+        "source": "https://commons.wikimedia.org/wiki/File:Egg_Salad.jpg",
+        "license": "CC BY 2.0"
+      }
+    },
+    {
+      "label": "Egg fried rice",
+      "art": {
+        "image": "6750747916848595e0322f764bc17983",
+        "source": "https://commons.wikimedia.org/wiki/File:Fried_rice_with_egg.jpg",
+        "license": "CC BY-SA 3.0"
+      }
+    },
+    {
+      "label": "Shakshuka",
+      "art": {
+        "image": "63d6a846519c6d136858a2667c7a01a6",
+        "source": "https://commons.wikimedia.org/wiki/File:Shakshuka_011.jpg",
+        "license": "CC BY-SA 3.0"
+      }
+    },
+    {
+      "label": "Meringue",
+      "art": {
+        "image": "838424dce48d43164bfd8d47f0fd0942",
+        "source": "https://commons.wikimedia.org/wiki/File:Pavlova_dessert.JPG",
+        "license": "Public domain"
+      }
+    }
   ],
   "updatedAt": 0
 }

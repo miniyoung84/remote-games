@@ -2,6 +2,23 @@
   "id": "tiny-triumphs",
   "title": "Best Tiny Triumph",
   "subtitle": "The little wins that make your day",
-  "items": ["Clean sticker peel", "Beating the alarm", "Perfect high five", "Catching mid-air", "Opening a stuck jar", "Untangling a knot", "Remembering a name", "Canceling plans", "Fixing something", "Exact right word", "Whole orange peel", "Finishing a puzzle", "Perfect toast color", "Perfect punchline", "Blind typing", "Skipping the ads"],
+  "items": [
+    "Beating the alarm",
+    "Remembering a name",
+    "Untangling a knot",
+    "Perfect high five",
+    "Finishing a puzzle",
+    "Clean sticker peel",
+    "Opening a stuck jar",
+    "Skipping the ads",
+    "Canceling plans",
+    "Exact right word",
+    "Fixing something",
+    "Catching mid-air",
+    "Perfect punchline",
+    "Whole orange peel",
+    "Perfect toast color",
+    "Blind typing"
+  ],
   "updatedAt": 0
 }

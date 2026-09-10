@@ -2,6 +2,23 @@
   "id": "superpowers",
   "title": "Best Superpower",
   "subtitle": "You only get one",
-  "items": ["Flight", "Invisibility", "Time travel", "Teleportation", "Super strength", "Mind reading", "Healing factor", "Super speed", "Shapeshifting", "Talking to animals", "Freezing time", "Walking through walls", "Breathing underwater", "Perfect memory", "Invulnerability", "Telekinesis"],
+  "items": [
+    "Flight",
+    "Invisibility",
+    "Time travel",
+    "Super strength",
+    "Teleportation",
+    "Super speed",
+    "Mind reading",
+    "Telekinesis",
+    "Shapeshifting",
+    "Healing factor",
+    "Invulnerability",
+    "Freezing time",
+    "Walking through walls",
+    "Talking to animals",
+    "Breathing underwater",
+    "Perfect memory"
+  ],
   "updatedAt": 0
 }

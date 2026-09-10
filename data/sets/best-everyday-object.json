@@ -2,6 +2,23 @@
   "id": "best-everyday-object",
   "title": "Best Everyday Object",
   "subtitle": "You may keep exactly one",
-  "items": ["Scissors", "Sticky notes", "Duct tape", "Pen", "Paperclip", "Rubber band", "Safety pin", "Bottle opener", "Umbrella", "Zip-lock bag", "Stapler", "Tape measure", "Tweezers", "Hair tie", "Flashlight", "Superglue"],
+  "items": [
+    "Pen",
+    "Scissors",
+    "Umbrella",
+    "Flashlight",
+    "Tape measure",
+    "Stapler",
+    "Duct tape",
+    "Sticky notes",
+    "Paperclip",
+    "Rubber band",
+    "Bottle opener",
+    "Safety pin",
+    "Zip-lock bag",
+    "Tweezers",
+    "Hair tie",
+    "Superglue"
+  ],
   "updatedAt": 0
 }

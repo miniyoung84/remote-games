@@ -2,6 +2,23 @@
   "id": "best-impossible-ride",
   "title": "Best Impossible Ride",
   "subtitle": "Getting there is the fun part",
-  "items": ["Flying carpet", "Rocket sofa", "Bubble submarine", "Cloud with handles", "Walking teacup", "Hovering bathtub", "Balloon canoe", "Jet-powered bed", "Sailing shoe", "Magic shopping cart", "Giant snail", "Bouncing castle", "Flying pancake", "Wind-up whale", "Rainbow train", "Moon-powered bike"],
+  "items": [
+    "Flying carpet",
+    "Cloud with handles",
+    "Rocket sofa",
+    "Giant snail",
+    "Bubble submarine",
+    "Jet-powered bed",
+    "Hovering bathtub",
+    "Bouncing castle",
+    "Magic shopping cart",
+    "Walking teacup",
+    "Balloon canoe",
+    "Flying pancake",
+    "Rainbow train",
+    "Sailing shoe",
+    "Wind-up whale",
+    "Moon-powered bike"
+  ],
   "updatedAt": 0
 }

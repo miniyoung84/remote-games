@@ -2,6 +2,23 @@
   "id": "best-punctuation",
   "title": "Top Punctuation",
   "subtitle": "Grammar, but make it a fight",
-  "items": ["Comma", "Semicolon", "Period", "Exclamation mark", "Question mark", "Em dash", "Hyphen", "Asterisk", "Ampersand", "Tilde", "Ellipsis", "Parentheses", "Brackets", "Curly braces", "Slash", "Apostrophe"],
+  "items": [
+    "Period",
+    "Comma",
+    "Question mark",
+    "Exclamation mark",
+    "Apostrophe",
+    "Hyphen",
+    "Semicolon",
+    "Parentheses",
+    "Em dash",
+    "Ellipsis",
+    "Slash",
+    "Ampersand",
+    "Asterisk",
+    "Brackets",
+    "Curly braces",
+    "Tilde"
+  ],
   "updatedAt": 0
 }

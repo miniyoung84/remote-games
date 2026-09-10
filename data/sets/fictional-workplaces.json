@@ -2,6 +2,23 @@
   "id": "fictional-workplaces",
   "title": "Greatest Fictional Workplace",
   "subtitle": "Would you actually work there?",
-  "items": ["Dunder Mifflin", "Wonka's Chocolate Factory", "Jurassic Park", "The Krusty Krab", "Wayne Enterprises", "Cheers", "Pied Piper", "Central Perk", "Monsters Inc.", "Hogwarts", "The Daily Planet", "Los Pollos Hermanos", "Sterling Cooper", "Weyland-Yutani", "Nakatomi Plaza", "Parks & Rec, Pawnee"],
+  "items": [
+    "Hogwarts",
+    "Jurassic Park",
+    "Dunder Mifflin",
+    "Wayne Enterprises",
+    "The Daily Planet",
+    "Wonka's Chocolate Factory",
+    "Monsters Inc.",
+    "The Krusty Krab",
+    "Central Perk",
+    "Cheers",
+    "Los Pollos Hermanos",
+    "Sterling Cooper",
+    "Nakatomi Plaza",
+    "Weyland-Yutani",
+    "Pied Piper",
+    "Parks & Rec, Pawnee"
+  ],
   "updatedAt": 0
 }

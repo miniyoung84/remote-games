@@ -3,22 +3,102 @@
   "title": "Best Weather",
   "subtitle": "You get this every day from now on",
   "items": [
-    { "label": "Clear blue sky", "art": { "emoji": "☀️" } },
-    { "label": "Light rain", "art": { "emoji": "🌦️" } },
-    { "label": "Thunderstorm", "art": { "emoji": "⛈️" } },
-    { "label": "Fresh snowfall", "art": { "emoji": "❄️" } },
-    { "label": "Thick fog", "art": { "emoji": "🌫️" } },
-    { "label": "Crisp autumn day", "art": { "emoji": "🍂" } },
-    { "label": "Warm breeze", "art": { "emoji": "🌬️" } },
-    { "label": "Overcast and cool", "art": { "emoji": "☁️" } },
-    { "label": "First warm day", "art": { "emoji": "🌤️" } },
-    { "label": "Golden hour", "art": { "emoji": "🌅" } },
-    { "label": "Frost on windows", "art": { "emoji": "🧊" } },
-    { "label": "Starry night", "art": { "emoji": "✨" } },
-    { "label": "Windy and clear", "art": { "emoji": "🍃" } },
-    { "label": "Big fluffy clouds", "art": { "emoji": "⛅" } },
-    { "label": "Hot and dry", "art": { "emoji": "🔥" } },
-    { "label": "After the rain", "art": { "emoji": "🌈" } }
+    {
+      "label": "Clear blue sky",
+      "art": {
+        "emoji": "☀️"
+      }
+    },
+    {
+      "label": "Light rain",
+      "art": {
+        "emoji": "🌦️"
+      }
+    },
+    {
+      "label": "Thunderstorm",
+      "art": {
+        "emoji": "⛈️"
+      }
+    },
+    {
+      "label": "Fresh snowfall",
+      "art": {
+        "emoji": "❄️"
+      }
+    },
+    {
+      "label": "Golden hour",
+      "art": {
+        "emoji": "🌅"
+      }
+    },
+    {
+      "label": "Warm breeze",
+      "art": {
+        "emoji": "🌬️"
+      }
+    },
+    {
+      "label": "Big fluffy clouds",
+      "art": {
+        "emoji": "⛅"
+      }
+    },
+    {
+      "label": "First warm day",
+      "art": {
+        "emoji": "🌤️"
+      }
+    },
+    {
+      "label": "Crisp autumn day",
+      "art": {
+        "emoji": "🍂"
+      }
+    },
+    {
+      "label": "Overcast and cool",
+      "art": {
+        "emoji": "☁️"
+      }
+    },
+    {
+      "label": "Starry night",
+      "art": {
+        "emoji": "✨"
+      }
+    },
+    {
+      "label": "Thick fog",
+      "art": {
+        "emoji": "🌫️"
+      }
+    },
+    {
+      "label": "After the rain",
+      "art": {
+        "emoji": "🌈"
+      }
+    },
+    {
+      "label": "Frost on windows",
+      "art": {
+        "emoji": "🧊"
+      }
+    },
+    {
+      "label": "Hot and dry",
+      "art": {
+        "emoji": "🔥"
+      }
+    },
+    {
+      "label": "Windy and clear",
+      "art": {
+        "emoji": "🍃"
+      }
+    }
   ],
   "updatedAt": 0
 }

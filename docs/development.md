@@ -201,6 +201,17 @@ Two equivalent routes — both write the same files:
   Files are read on demand, so a set added by hand shows up as soon as the host
   view refreshes its state.
 
+**The order of the entries is the bracket seeding.** Entry 1 is the top seed,
+entry 16 the bottom, and standard tournament seeding draws them against each
+other — so list them biggest name first. Among fruit that makes Apple the 1
+seed and Coconut the 16. Byes fall on the top seeds, which is also why the
+order matters.
+
+Because of that, **shuffle is off by default for brackets** and on for tier
+lists, where there's no seeding to preserve and a random queue keeps it fresh.
+Tick shuffle on a bracket and you get a random draw with meaningless seed
+numbers, which is sometimes what you want.
+
 Any number of entries from 2 up works; non-powers-of-two get byes automatically.
 Over 16 entries the board gets cramped on the display, and the editor says so.
 

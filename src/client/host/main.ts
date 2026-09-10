@@ -647,10 +647,14 @@ function renderSets(next: HostState): void {
     const actions = text("div", "set-actions");
     const shuffle = document.createElement("input");
     shuffle.type = "checkbox";
-    shuffle.checked = true;
+    // A set's order is its seeding, so shuffling a bracket throws that away.
+    // A tier list has no seeding, and a random queue keeps it fresh.
+    shuffle.checked = startKind !== "bracket";
     shuffle.id = `shuffle-${set.id}`;
     const shuffleLabel = document.createElement("label");
     shuffleLabel.htmlFor = shuffle.id;
+    shuffleLabel.title =
+      startKind === "bracket" ? "Ignore the set's seeding and draw at random" : "Offer items in a random order";
     shuffleLabel.append(shuffle, document.createTextNode("shuffle"));
 
     const start = button("Start", "primary");

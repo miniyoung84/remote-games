@@ -2,6 +2,23 @@
   "id": "best-sandwich",
   "title": "Best Sandwich",
   "subtitle": "",
-  "items": ["Grilled cheese", "BLT", "Reuben", "Banh mi", "Cubano", "Italian sub", "Philly cheesesteak", "Falafel wrap", "Club sandwich", "Meatball sub", "Chicken salad", "PB&J", "Egg salad", "Pastrami on rye", "Croque monsieur", "Breakfast sandwich"],
+  "items": [
+    "Grilled cheese",
+    "BLT",
+    "Club sandwich",
+    "PB&J",
+    "Italian sub",
+    "Philly cheesesteak",
+    "Reuben",
+    "Meatball sub",
+    "Chicken salad",
+    "Egg salad",
+    "Pastrami on rye",
+    "Banh mi",
+    "Cubano",
+    "Falafel wrap",
+    "Croque monsieur",
+    "Breakfast sandwich"
+  ],
   "updatedAt": 0
 }

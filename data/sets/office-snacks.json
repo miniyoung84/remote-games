@@ -2,6 +2,23 @@
   "id": "office-snacks",
   "title": "Best Office Snack",
   "subtitle": "Settle it once and for all",
-  "items": ["Pretzels", "Cheez-Its", "Trail mix", "Clementines", "Granola bars", "Popcorn", "Gummy bears", "Baby carrots", "Dark chocolate", "Salt & vinegar chips", "String cheese", "Banana bread", "Cashews", "Sour candy", "Oreos", "Apple slices"],
+  "items": [
+    "Pretzels",
+    "Popcorn",
+    "Oreos",
+    "Cheez-Its",
+    "Apple slices",
+    "Banana bread",
+    "Trail mix",
+    "Granola bars",
+    "Baby carrots",
+    "Clementines",
+    "Dark chocolate",
+    "Gummy bears",
+    "Sour candy",
+    "Salt & vinegar chips",
+    "String cheese",
+    "Cashews"
+  ],
   "updatedAt": 0
 }

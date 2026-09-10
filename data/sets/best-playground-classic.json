@@ -2,6 +2,23 @@
   "id": "best-playground-classic",
   "title": "Best Playground Classic",
   "subtitle": "Recess never ended, it just got quieter",
-  "items": ["Swing", "Slide", "Seesaw", "Monkey bars", "Merry-go-round", "Sandbox", "Tire swing", "Fire pole", "Balance beam", "Rope swing", "Tunnel", "Zip line", "Spring rider", "Jungle gym", "Trampoline", "Rocking horse"],
+  "items": [
+    "Swing",
+    "Slide",
+    "Monkey bars",
+    "Seesaw",
+    "Sandbox",
+    "Merry-go-round",
+    "Jungle gym",
+    "Trampoline",
+    "Zip line",
+    "Tire swing",
+    "Fire pole",
+    "Rope swing",
+    "Tunnel",
+    "Balance beam",
+    "Spring rider",
+    "Rocking horse"
+  ],
   "updatedAt": 0
 }

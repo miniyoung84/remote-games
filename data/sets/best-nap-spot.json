@@ -2,6 +2,23 @@
   "id": "best-nap-spot",
   "title": "Best Place to Take a Nap",
   "subtitle": "Alarm clocks will not be consulted",
-  "items": ["Couch", "Hammock", "Window seat", "Under a tree", "Porch swing", "Beanbag", "Warm laundry pile", "Grass in the sun", "Train window", "Hotel bed", "Floor patch of sun", "Car passenger seat", "Library chair", "Beach towel", "Big armchair", "Top bunk"],
+  "items": [
+    "Couch",
+    "Hotel bed",
+    "Hammock",
+    "Big armchair",
+    "Window seat",
+    "Beanbag",
+    "Car passenger seat",
+    "Under a tree",
+    "Grass in the sun",
+    "Beach towel",
+    "Train window",
+    "Porch swing",
+    "Floor patch of sun",
+    "Warm laundry pile",
+    "Library chair",
+    "Top bunk"
+  ],
   "updatedAt": 0
 }

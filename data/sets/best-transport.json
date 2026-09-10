@@ -3,22 +3,102 @@
   "title": "Best Way to Travel",
   "subtitle": "Getting from A to B",
   "items": [
-    { "label": "Train", "art": { "emoji": "🚆" } },
-    { "label": "Airplane", "art": { "emoji": "✈️" } },
-    { "label": "Bicycle", "art": { "emoji": "🚲" } },
-    { "label": "Walking", "art": { "emoji": "🚶" } },
-    { "label": "Car", "art": { "emoji": "🚗" } },
-    { "label": "Bus", "art": { "emoji": "🚌" } },
-    { "label": "Ferry", "art": { "emoji": "⛴️" } },
-    { "label": "Submarine", "art": { "emoji": "🤿" } },
-    { "label": "Hot air balloon", "art": { "emoji": "🎈" } },
-    { "label": "Helicopter", "art": { "emoji": "🚁" } },
-    { "label": "Roller skates", "art": { "emoji": "🛼" } },
-    { "label": "Skateboard", "art": { "emoji": "🛹" } },
-    { "label": "Scooter", "art": { "emoji": "🛴" } },
-    { "label": "Camel", "art": { "emoji": "🐫" } },
-    { "label": "Horse", "art": { "emoji": "🐎" } },
-    { "label": "Teleportation", "art": { "emoji": "✨" } }
+    {
+      "label": "Car",
+      "art": {
+        "emoji": "🚗"
+      }
+    },
+    {
+      "label": "Airplane",
+      "art": {
+        "emoji": "✈️"
+      }
+    },
+    {
+      "label": "Train",
+      "art": {
+        "emoji": "🚆"
+      }
+    },
+    {
+      "label": "Bicycle",
+      "art": {
+        "emoji": "🚲"
+      }
+    },
+    {
+      "label": "Walking",
+      "art": {
+        "emoji": "🚶"
+      }
+    },
+    {
+      "label": "Bus",
+      "art": {
+        "emoji": "🚌"
+      }
+    },
+    {
+      "label": "Ferry",
+      "art": {
+        "emoji": "⛴️"
+      }
+    },
+    {
+      "label": "Helicopter",
+      "art": {
+        "emoji": "🚁"
+      }
+    },
+    {
+      "label": "Horse",
+      "art": {
+        "emoji": "🐎"
+      }
+    },
+    {
+      "label": "Scooter",
+      "art": {
+        "emoji": "🛴"
+      }
+    },
+    {
+      "label": "Skateboard",
+      "art": {
+        "emoji": "🛹"
+      }
+    },
+    {
+      "label": "Roller skates",
+      "art": {
+        "emoji": "🛼"
+      }
+    },
+    {
+      "label": "Hot air balloon",
+      "art": {
+        "emoji": "🎈"
+      }
+    },
+    {
+      "label": "Camel",
+      "art": {
+        "emoji": "🐫"
+      }
+    },
+    {
+      "label": "Submarine",
+      "art": {
+        "emoji": "🤿"
+      }
+    },
+    {
+      "label": "Teleportation",
+      "art": {
+        "emoji": "✨"
+      }
+    }
   ],
   "updatedAt": 0
 }

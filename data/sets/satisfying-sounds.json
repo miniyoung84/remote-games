@@ -2,6 +2,23 @@
   "id": "satisfying-sounds",
   "title": "Most Satisfying Sound",
   "subtitle": "Headphones optional, opinions required",
-  "items": ["Bubble wrap", "Rain on a roof", "Fire crackling", "Ocean waves", "Cat purring", "Coffee brewing", "Popcorn popping", "Distant thunder", "Crunching leaves", "Opening a soda", "Sizzling pan", "Velcro rip", "Keyboard clack", "Wind chimes", "Walking on snow", "Birdsong"],
+  "items": [
+    "Rain on a roof",
+    "Bubble wrap",
+    "Fire crackling",
+    "Ocean waves",
+    "Cat purring",
+    "Coffee brewing",
+    "Birdsong",
+    "Crunching leaves",
+    "Distant thunder",
+    "Popcorn popping",
+    "Opening a soda",
+    "Walking on snow",
+    "Sizzling pan",
+    "Wind chimes",
+    "Keyboard clack",
+    "Velcro rip"
+  ],
   "updatedAt": 0
 }

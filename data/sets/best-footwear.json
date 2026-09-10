@@ -3,22 +3,134 @@
   "title": "Best Footwear",
   "subtitle": "One pair, every day, forever",
   "items": [
-    {"label":"Sneakers","art":{"image":"f7a94c658d916752be57ad2affc88d85","source":"https://commons.wikimedia.org/wiki/File:A_pair_of_white_shoes.jpg","license":"CC BY-SA 4.0"}}, 
-    {"label":"Boots","art":{"image":"e23ec58e097794e39ce0da28486f86c2","source":"https://commons.wikimedia.org/wiki/File:Combat_boots_IMGP8978.jpg","license":"CC BY-SA 3.0"}}, 
-    {"label":"Sandals","art":{"image":"97e5ea1af591ec16a5e8aa5f3790f15d","source":"https://commons.wikimedia.org/wiki/File:Pair_of_sandals_with_probably_modern_wooden_sole,_leather_-_Museo_Egizio,_Turin_S_8411_p02.jpg","license":"CC0"}}, 
-    {"label":"Flip-flops","art":{"image":"6b106eb00ba71d954231a8d76bb902ff","source":"https://commons.wikimedia.org/wiki/File:Flip_flops_-_just_pick_one_up.jpg","license":"CC BY 2.0"}}, 
-    {"label":"Loafers","art":{"image":"cc215fff625a93662d2162df3ce31d50","source":"https://commons.wikimedia.org/wiki/File:Penny_loafers_-_Tokyo_area_-_Jan_2018.jpg","license":"CC BY 3.0"}}, 
-    {"label":"Crocs","art":{"image":"5baa06fbb05452a4ddcadca60e01690b","source":"https://commons.wikimedia.org/wiki/File:HK_Fashion_Plastic_Clogs_n_Shoes_n_Colourful_Crocs_Footwear.JPG","license":"CC BY-SA 3.0"}}, 
-    {"label":"High heels","art":{"image":"6d844b7b2358db041885defbbf33fd55","source":"https://commons.wikimedia.org/wiki/File:High_Heels_pink.jpg","license":"CC BY-SA 3.0"}}, 
-    {"label":"Slippers","art":{"image":"674acd4328ea774363403c23132ef356","source":"https://commons.wikimedia.org/wiki/File:Pair_of_Girl%27s_Slippers_LACMA_AC1997.27.1.1-.2.jpg","license":"Public domain"}}, 
-    {"label":"Hiking boots","art":{"image":"95d353102cc1a9cc21c8fd0fe4aead6b","source":"https://commons.wikimedia.org/wiki/File:Boots_of_a_man.jpg","license":"CC0"}}, 
-    {"label":"Wellington boots","art":{"image":"39afc6907b03828330e276234753751c","source":"https://commons.wikimedia.org/wiki/File:Wellington_boots_in_Wellington_Road,_Oxton.JPG","license":"CC BY-SA 3.0"}}, 
-    {"label":"Ballet flats","art":{"image":"c669e25493c2862e0f3ca59ac18ef5d8","source":"https://commons.wikimedia.org/wiki/File:Ballerinas_(Weiss).jpg","license":"CC BY-SA 3.0"}}, 
-    {"label":"Cowboy boots","art":{"image":"2468b3ff611630fc536f409f8c0769d9","source":"https://commons.wikimedia.org/wiki/File:Dale_Evans_pink_sparkly_cowboy_boots.jpg","license":"CC BY-SA 4.0"}}, 
-    {"label":"Espadrilles","art":{"image":"d489cd61b71c693b21015dbc22ceaa0f","source":"https://commons.wikimedia.org/wiki/File:Espadrilles_van_rood_linnen_geborduurd_met_geel,_wit_en_groen,_rijgveter_door_het_linnen,_touwzool_met_daaromheen_een_leren_rand,_objectnr_62631-1-2.JPG","license":"CC BY-SA 3.0"}}, 
-    {"label":"Clogs","art":{"image":"89d945a1ae518539a993f5797c483c7d","source":"https://commons.wikimedia.org/wiki/File:Clogs_with_wooden_sole_and_leather_upper,_Mary_Jane-style.jpg","license":"Public domain"}}, 
-    {"label":"Moccasins","art":{"image":"c3bd0aa692dd79da730c1e7851f8936b","source":"https://commons.wikimedia.org/wiki/File:Plateau_region_moccasins,_1900-1910_-_Bata_Shoe_Museum_-_DSC00561.JPG","license":"CC0"}}, 
-    {"label":"Roller skates","art":{"image":"053a0655069095b5bb9cbc7bef4ec861","source":"https://commons.wikimedia.org/wiki/File:Modern-baby-roller-skates.jpg","license":"Public domain"}}
+    {
+      "label": "Sneakers",
+      "art": {
+        "image": "f7a94c658d916752be57ad2affc88d85",
+        "source": "https://commons.wikimedia.org/wiki/File:A_pair_of_white_shoes.jpg",
+        "license": "CC BY-SA 4.0"
+      }
+    },
+    {
+      "label": "Boots",
+      "art": {
+        "image": "e23ec58e097794e39ce0da28486f86c2",
+        "source": "https://commons.wikimedia.org/wiki/File:Combat_boots_IMGP8978.jpg",
+        "license": "CC BY-SA 3.0"
+      }
+    },
+    {
+      "label": "Sandals",
+      "art": {
+        "image": "97e5ea1af591ec16a5e8aa5f3790f15d",
+        "source": "https://commons.wikimedia.org/wiki/File:Pair_of_sandals_with_probably_modern_wooden_sole,_leather_-_Museo_Egizio,_Turin_S_8411_p02.jpg",
+        "license": "CC0"
+      }
+    },
+    {
+      "label": "High heels",
+      "art": {
+        "image": "6d844b7b2358db041885defbbf33fd55",
+        "source": "https://commons.wikimedia.org/wiki/File:High_Heels_pink.jpg",
+        "license": "CC BY-SA 3.0"
+      }
+    },
+    {
+      "label": "Slippers",
+      "art": {
+        "image": "674acd4328ea774363403c23132ef356",
+        "source": "https://commons.wikimedia.org/wiki/File:Pair_of_Girl%27s_Slippers_LACMA_AC1997.27.1.1-.2.jpg",
+        "license": "Public domain"
+      }
+    },
+    {
+      "label": "Flip-flops",
+      "art": {
+        "image": "6b106eb00ba71d954231a8d76bb902ff",
+        "source": "https://commons.wikimedia.org/wiki/File:Flip_flops_-_just_pick_one_up.jpg",
+        "license": "CC BY 2.0"
+      }
+    },
+    {
+      "label": "Loafers",
+      "art": {
+        "image": "cc215fff625a93662d2162df3ce31d50",
+        "source": "https://commons.wikimedia.org/wiki/File:Penny_loafers_-_Tokyo_area_-_Jan_2018.jpg",
+        "license": "CC BY 3.0"
+      }
+    },
+    {
+      "label": "Hiking boots",
+      "art": {
+        "image": "95d353102cc1a9cc21c8fd0fe4aead6b",
+        "source": "https://commons.wikimedia.org/wiki/File:Boots_of_a_man.jpg",
+        "license": "CC0"
+      }
+    },
+    {
+      "label": "Cowboy boots",
+      "art": {
+        "image": "2468b3ff611630fc536f409f8c0769d9",
+        "source": "https://commons.wikimedia.org/wiki/File:Dale_Evans_pink_sparkly_cowboy_boots.jpg",
+        "license": "CC BY-SA 4.0"
+      }
+    },
+    {
+      "label": "Wellington boots",
+      "art": {
+        "image": "39afc6907b03828330e276234753751c",
+        "source": "https://commons.wikimedia.org/wiki/File:Wellington_boots_in_Wellington_Road,_Oxton.JPG",
+        "license": "CC BY-SA 3.0"
+      }
+    },
+    {
+      "label": "Crocs",
+      "art": {
+        "image": "5baa06fbb05452a4ddcadca60e01690b",
+        "source": "https://commons.wikimedia.org/wiki/File:HK_Fashion_Plastic_Clogs_n_Shoes_n_Colourful_Crocs_Footwear.JPG",
+        "license": "CC BY-SA 3.0"
+      }
+    },
+    {
+      "label": "Ballet flats",
+      "art": {
+        "image": "c669e25493c2862e0f3ca59ac18ef5d8",
+        "source": "https://commons.wikimedia.org/wiki/File:Ballerinas_(Weiss).jpg",
+        "license": "CC BY-SA 3.0"
+      }
+    },
+    {
+      "label": "Clogs",
+      "art": {
+        "image": "89d945a1ae518539a993f5797c483c7d",
+        "source": "https://commons.wikimedia.org/wiki/File:Clogs_with_wooden_sole_and_leather_upper,_Mary_Jane-style.jpg",
+        "license": "Public domain"
+      }
+    },
+    {
+      "label": "Moccasins",
+      "art": {
+        "image": "c3bd0aa692dd79da730c1e7851f8936b",
+        "source": "https://commons.wikimedia.org/wiki/File:Plateau_region_moccasins,_1900-1910_-_Bata_Shoe_Museum_-_DSC00561.JPG",
+        "license": "CC0"
+      }
+    },
+    {
+      "label": "Espadrilles",
+      "art": {
+        "image": "d489cd61b71c693b21015dbc22ceaa0f",
+        "source": "https://commons.wikimedia.org/wiki/File:Espadrilles_van_rood_linnen_geborduurd_met_geel,_wit_en_groen,_rijgveter_door_het_linnen,_touwzool_met_daaromheen_een_leren_rand,_objectnr_62631-1-2.JPG",
+        "license": "CC BY-SA 3.0"
+      }
+    },
+    {
+      "label": "Roller skates",
+      "art": {
+        "image": "053a0655069095b5bb9cbc7bef4ec861",
+        "source": "https://commons.wikimedia.org/wiki/File:Modern-baby-roller-skates.jpg",
+        "license": "Public domain"
+      }
+    }
   ],
   "updatedAt": 0
 }

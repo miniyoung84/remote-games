@@ -2,6 +2,23 @@
   "id": "superior-shape",
   "title": "Superior Shape",
   "subtitle": "Geometry gets competitive",
-  "items": ["Hexagon", "Triangle", "Circle", "Square", "Star", "Crescent", "Spiral", "Diamond", "Heart", "Oval", "Pentagon", "Octagon", "Cylinder", "Pyramid", "Cube", "Infinity"],
+  "items": [
+    "Circle",
+    "Square",
+    "Triangle",
+    "Star",
+    "Heart",
+    "Diamond",
+    "Hexagon",
+    "Oval",
+    "Spiral",
+    "Cube",
+    "Pyramid",
+    "Crescent",
+    "Pentagon",
+    "Octagon",
+    "Cylinder",
+    "Infinity"
+  ],
   "updatedAt": 0
 }

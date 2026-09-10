@@ -45,6 +45,11 @@ HARD RULES
 
 FORMAT RULES
 - Exactly 16 entries, all distinct.
+- **Order the entries from biggest name to most obscure.** The order is the
+  bracket seeding: entry 1 is the top seed and entry 16 is the bottom seed, and
+  they are drawn against each other. Among fruit, Apple is the 1 seed and
+  Coconut is the 16 — not the other way round. Sort by how readily an ordinary
+  person would name the thing, not by how good you think it is.
 - Keep each entry SHORT: aim for 18 characters or fewer, never more than 30.
   Long entries get truncated on the display.
 - The title is a superlative question, e.g. "Best Office Snack".

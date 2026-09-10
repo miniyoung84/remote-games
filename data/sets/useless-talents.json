@@ -2,6 +2,23 @@
   "id": "useless-talents",
   "title": "Best Useless Talent",
   "subtitle": "Cool, but why?",
-  "items": ["Juggling", "Pen spinning", "Origami folding", "Moonwalking", "Shadow puppets", "Ventriloquism", "Wiggling your ears", "Card shuffling", "Whistling loudly", "Speed cubing", "Coin rolling", "Sleight of hand", "Reciting Pi", "Spinning a ball", "Skipping rocks", "Throwing cards"],
+  "items": [
+    "Juggling",
+    "Whistling loudly",
+    "Moonwalking",
+    "Card shuffling",
+    "Pen spinning",
+    "Origami folding",
+    "Shadow puppets",
+    "Skipping rocks",
+    "Ventriloquism",
+    "Sleight of hand",
+    "Speed cubing",
+    "Reciting Pi",
+    "Wiggling your ears",
+    "Spinning a ball",
+    "Coin rolling",
+    "Throwing cards"
+  ],
   "updatedAt": 0
 }

@@ -3,22 +3,102 @@
   "title": "Best Fruit",
   "subtitle": "No raisins allowed to sneak in",
   "items": [
-    { "label": "Mango", "art": { "emoji": "🥭" } },
-    { "label": "Strawberry", "art": { "emoji": "🍓" } },
-    { "label": "Watermelon", "art": { "emoji": "🍉" } },
-    { "label": "Pineapple", "art": { "emoji": "🍍" } },
-    { "label": "Peach", "art": { "emoji": "🍑" } },
-    { "label": "Grapes", "art": { "emoji": "🍇" } },
-    { "label": "Orange", "art": { "emoji": "🍊" } },
-    { "label": "Banana", "art": { "emoji": "🍌" } },
-    { "label": "Apple", "art": { "emoji": "🍎" } },
-    { "label": "Cherry", "art": { "emoji": "🍒" } },
-    { "label": "Kiwi", "art": { "emoji": "🥝" } },
-    { "label": "Blueberry", "art": { "emoji": "🫐" } },
-    { "label": "Pear", "art": { "emoji": "🍐" } },
-    { "label": "Coconut", "art": { "emoji": "🥥" } },
-    { "label": "Plum", "art": { "emoji": "🟣" } },
-    { "label": "Lemon", "art": { "emoji": "🍋" } }
+    {
+      "label": "Apple",
+      "art": {
+        "emoji": "🍎"
+      }
+    },
+    {
+      "label": "Banana",
+      "art": {
+        "emoji": "🍌"
+      }
+    },
+    {
+      "label": "Orange",
+      "art": {
+        "emoji": "🍊"
+      }
+    },
+    {
+      "label": "Strawberry",
+      "art": {
+        "emoji": "🍓"
+      }
+    },
+    {
+      "label": "Grapes",
+      "art": {
+        "emoji": "🍇"
+      }
+    },
+    {
+      "label": "Watermelon",
+      "art": {
+        "emoji": "🍉"
+      }
+    },
+    {
+      "label": "Mango",
+      "art": {
+        "emoji": "🥭"
+      }
+    },
+    {
+      "label": "Pineapple",
+      "art": {
+        "emoji": "🍍"
+      }
+    },
+    {
+      "label": "Peach",
+      "art": {
+        "emoji": "🍑"
+      }
+    },
+    {
+      "label": "Cherry",
+      "art": {
+        "emoji": "🍒"
+      }
+    },
+    {
+      "label": "Lemon",
+      "art": {
+        "emoji": "🍋"
+      }
+    },
+    {
+      "label": "Pear",
+      "art": {
+        "emoji": "🍐"
+      }
+    },
+    {
+      "label": "Kiwi",
+      "art": {
+        "emoji": "🥝"
+      }
+    },
+    {
+      "label": "Blueberry",
+      "art": {
+        "emoji": "🫐"
+      }
+    },
+    {
+      "label": "Plum",
+      "art": {
+        "emoji": "🟣"
+      }
+    },
+    {
+      "label": "Coconut",
+      "art": {
+        "emoji": "🥥"
+      }
+    }
   ],
   "updatedAt": 0
 }

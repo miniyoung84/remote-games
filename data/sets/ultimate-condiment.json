@@ -2,6 +2,23 @@
   "id": "ultimate-condiment",
   "title": "Ultimate Condiment",
   "subtitle": "The flavor enhancer bracket",
-  "items": ["Ketchup", "Mustard", "Mayonnaise", "Hot sauce", "Soy sauce", "BBQ sauce", "Garlic mayo", "Tartar sauce", "Sriracha", "Salsa", "Guacamole", "Pesto", "Sweet chili", "Hummus", "Balsamic glaze", "Honey mustard"],
+  "items": [
+    "Ketchup",
+    "Mayonnaise",
+    "Mustard",
+    "Hot sauce",
+    "Soy sauce",
+    "BBQ sauce",
+    "Salsa",
+    "Sriracha",
+    "Honey mustard",
+    "Guacamole",
+    "Hummus",
+    "Pesto",
+    "Tartar sauce",
+    "Garlic mayo",
+    "Sweet chili",
+    "Balsamic glaze"
+  ],
   "updatedAt": 0
 }

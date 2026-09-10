@@ -2,6 +2,23 @@
   "id": "minor-inconveniences",
   "title": "Worst Minor Inconvenience",
   "subtitle": "The little things that ruin everything",
-  "items": ["Wet socks", "Stubbed toe", "Paper cut", "Slow Wi-Fi", "Cold coffee", "Lost password", "Tangled cords", "Dead phone battery", "Squeaky door", "Itchy shirt tag", "Popcorn in teeth", "Stepping on Lego", "Dropped keys", "Smudged glasses", "Stuck zipper", "Unexpected rain"],
+  "items": [
+    "Slow Wi-Fi",
+    "Dead phone battery",
+    "Wet socks",
+    "Stubbed toe",
+    "Paper cut",
+    "Lost password",
+    "Tangled cords",
+    "Cold coffee",
+    "Stepping on Lego",
+    "Unexpected rain",
+    "Smudged glasses",
+    "Stuck zipper",
+    "Dropped keys",
+    "Squeaky door",
+    "Itchy shirt tag",
+    "Popcorn in teeth"
+  ],
   "updatedAt": 0
 }

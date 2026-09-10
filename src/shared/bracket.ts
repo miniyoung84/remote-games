@@ -8,25 +8,22 @@ export function bracketSize(n: number): number {
 }
 
 /**
- * Seed numbers in bracket-position order, paired strongest-against-weakest and
- * running straight down the board: 1v16, 2v15, 3v14, and so on. Every
- * first-round pairing sums to size + 1, and adjacent pairs count inward, so the
- * board reads in order instead of jumping about.
+ * Standard tournament seeding: seed numbers in bracket-position order, so the
+ * top seed draws the bottom seed and the top two can only meet in the final.
+ * For size 8 this is [1, 8, 4, 5, 2, 7, 3, 6].
  *
- * This is not the standard tournament layout, which interleaves the halves
- * (1v16, 8v9, 4v13, 5v12, ...) so the top two seeds cannot meet before the
- * final. That protection is worth nothing here: sets are shuffled by default,
- * so seed 1 is whoever happened to be drawn first, and there is no strength for
- * the structure to preserve. Legibility on a screen a dozen people are squinting
- * at is worth more.
- *
- * It also puts the byes where people expect them. Byes fall on the highest
- * seeds, so with this order they cluster at the top of the board rather than
- * scattering through it.
+ * The seeds mean something: a set's item order *is* its seeding, biggest name
+ * first, so Apple is the top seed among fruit and Plum is not. That only holds
+ * while the set order is respected, which is why bracket shuffle defaults off.
  */
 export function seedOrder(size: number): number[] {
-  const order: number[] = [];
-  for (let seed = 1; seed <= size / 2; seed++) order.push(seed, size + 1 - seed);
+  let order = [1, 2];
+  while (order.length < size) {
+    const n = order.length * 2;
+    const next: number[] = [];
+    for (const seed of order) next.push(seed, n + 1 - seed);
+    order = next;
+  }
   return order;
 }
 

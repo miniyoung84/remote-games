@@ -2,6 +2,23 @@
   "id": "mundane-superpowers",
   "title": "Best Mundane Superpower",
   "subtitle": "World peace can wait",
-  "items": ["Never lose keys", "Perfect parking", "All green lights", "Unlimited hot water", "Always exact change", "Never wait in line", "Matching socks", "Instant dry clothes", "Perfect Wi-Fi", "Food never burns", "One extra hour sleep", "Remember names", "Never miss a bus", "Find the remote", "Perfect temperature", "No mosquito bites"],
+  "items": [
+    "Never lose keys",
+    "Perfect parking",
+    "All green lights",
+    "One extra hour sleep",
+    "Perfect Wi-Fi",
+    "Never wait in line",
+    "Find the remote",
+    "Always exact change",
+    "Remember names",
+    "Instant dry clothes",
+    "Unlimited hot water",
+    "Perfect temperature",
+    "Never miss a bus",
+    "Food never burns",
+    "Matching socks",
+    "No mosquito bites"
+  ],
   "updatedAt": 0
 }

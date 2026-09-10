@@ -2,6 +2,23 @@
   "id": "best-room-upgrade",
   "title": "Best Room Upgrade",
   "subtitle": "Practicality is optional",
-  "items": ["Secret door", "Indoor slide", "Ceiling stars", "Giant beanbag", "Window seat", "Hammock", "Movie projector", "Indoor fountain", "Wall aquarium", "Swing chair", "Skylight", "Snack wall", "Library ladder", "Floor cushions", "Mini fridge", "Fireplace"],
+  "items": [
+    "Fireplace",
+    "Skylight",
+    "Movie projector",
+    "Window seat",
+    "Hammock",
+    "Secret door",
+    "Mini fridge",
+    "Giant beanbag",
+    "Wall aquarium",
+    "Indoor slide",
+    "Swing chair",
+    "Library ladder",
+    "Ceiling stars",
+    "Floor cushions",
+    "Snack wall",
+    "Indoor fountain"
+  ],
   "updatedAt": 0
 }

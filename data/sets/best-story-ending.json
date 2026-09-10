@@ -2,6 +2,23 @@
   "id": "best-story-ending",
   "title": "Best Story Ending",
   "subtitle": "Choose the final note",
-  "items": ["Happy ending", "Bittersweet ending", "Big surprise", "Full circle", "Open ending", "Cliffhanger", "Mystery solved", "Mystery remains", "Villain wins", "Hero walks away", "Last-second rescue", "Everyone reunites", "Back to the start", "A quiet goodbye", "One final joke", "A new beginning"],
+  "items": [
+    "Happy ending",
+    "Bittersweet ending",
+    "Big surprise",
+    "Cliffhanger",
+    "Full circle",
+    "Open ending",
+    "Mystery solved",
+    "Last-second rescue",
+    "Everyone reunites",
+    "A new beginning",
+    "Hero walks away",
+    "Villain wins",
+    "Mystery remains",
+    "Back to the start",
+    "A quiet goodbye",
+    "One final joke"
+  ],
   "updatedAt": 0
 }

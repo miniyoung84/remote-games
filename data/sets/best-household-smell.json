@@ -2,6 +2,23 @@
   "id": "best-household-smell",
   "title": "Best Household Smell",
   "subtitle": "Walk in the door and decide",
-  "items": ["Fresh bread", "Coffee", "Clean laundry", "Cut grass", "Rain", "Cinnamon", "Wood fire", "Vanilla", "Cookies baking", "Orange peel", "Pine", "Popcorn", "Lemon", "Tomato sauce", "New book", "Soap"],
+  "items": [
+    "Fresh bread",
+    "Coffee",
+    "Clean laundry",
+    "Cut grass",
+    "Rain",
+    "Cookies baking",
+    "Cinnamon",
+    "Vanilla",
+    "Wood fire",
+    "Pine",
+    "Lemon",
+    "Soap",
+    "Popcorn",
+    "Orange peel",
+    "Tomato sauce",
+    "New book"
+  ],
   "updatedAt": 0
 }

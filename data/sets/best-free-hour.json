@@ -2,6 +2,23 @@
   "id": "best-free-hour",
   "title": "Best Way to Spend a Free Hour",
   "subtitle": "Nothing else needs doing",
-  "items": ["Nap", "Walk outside", "Read a book", "Cook something", "Video game", "Long bath", "Call a friend", "Do nothing", "Tidy up", "One more episode", "Sit in a cafe", "Listen to music", "Learn something", "Sit in the sun", "Bake something", "Long shower"],
+  "items": [
+    "Nap",
+    "Walk outside",
+    "Read a book",
+    "One more episode",
+    "Listen to music",
+    "Video game",
+    "Do nothing",
+    "Cook something",
+    "Long bath",
+    "Call a friend",
+    "Sit in the sun",
+    "Tidy up",
+    "Long shower",
+    "Sit in a cafe",
+    "Bake something",
+    "Learn something"
+  ],
   "updatedAt": 0
 }
