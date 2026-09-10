@@ -9,6 +9,11 @@ Packs panel in the host view.
 Best Dog Breed, Best Pasta Shape, Best Musical Instrument, Best Sea Creature,
 Best Footwear — a picture on all 80 entries.
 
+## snacks-and-things.pack.json
+
+Best Office Snack (24 entries), Best Sandwich, Ultimate Condiment, Best Thing
+to Wear.
+
 ## food-fights.pack.json
 
 Best Vegetable, Best Way to Cook an Egg, Best Potato, Best Ice Cream Flavor,

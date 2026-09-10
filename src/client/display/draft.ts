@@ -107,9 +107,9 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       meta.append(text("span", "band-picker", `${board.last.byName} took it`));
     } else {
       meta.append(text("span", "band-round", board.target ? `${board.total} of ${board.target}` : `${board.total} picked`));
-      meta.append(
-        text("span", "band-picker", frame.state.pickerName ? `${frame.state.pickerName} is on the clock` : "Waiting for the host"),
-      );
+      if (frame.state.pickerName) {
+        meta.append(text("span", "band-picker", `${frame.state.pickerName} is on the clock`));
+      }
     }
 
     if (justPicked && board.last) {
@@ -121,10 +121,7 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       return;
     }
 
-    dom.band.replaceChildren(
-      meta,
-      text("div", "band-message", frame.state.pickerName ? "Say what you're taking" : "Tap someone to put them on the clock"),
-    );
+    dom.band.replaceChildren(meta, text("div", "band-message", frame.state.pickerName ? "Say what you're taking" : ""));
   }
 
   function render(frame: Frame, justPicked: boolean, before: Map<string, DOMRect> | null): void {

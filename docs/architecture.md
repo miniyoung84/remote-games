@@ -197,6 +197,10 @@ board. `buildBracket()` replays the log to produce the board, so:
 - The board is deterministic; the same log always yields the same bracket.
 - Persistence is trivial, because the log is small and complete.
 
+**Entrant cap.** A bracket takes at most `BRACKET_MAX_ENTRANTS` (16) — the top
+seeds — so a set can be longer than 16 for the sake of the tier list without
+making the board unreadable.
+
 **Seeding.** Standard tournament seeding — 1v16, 8v9, 4v13, 5v12 and so on, so
 the top two seeds can only meet in the final.
 

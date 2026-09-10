@@ -58,16 +58,10 @@ function renderIdle(state: DisplayState): void {
   dom.title.replaceChildren(document.createTextNode("remote-games"));
   dom.progress.replaceChildren();
   const idle = text("div", "idle");
-  idle.append(
-    text("h2", "", "remote-games"),
-    text(
-      "p",
-      "",
-      state.presentCount > 0
-        ? `${state.presentCount} here — waiting for the host to start a game`
-        : "Waiting for the host to start a game",
-    ),
-  );
+  idle.append(text("h2", "", "remote-games"));
+  if (state.presentCount > 0) {
+    idle.append(text("p", "", `${state.presentCount} here`));
+  }
   dom.board.replaceChildren(idle);
   dom.band.replaceChildren(text("div", "band-message", "Ready when you are"));
 }

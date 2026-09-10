@@ -1,6 +1,6 @@
 import { GAMES } from "../../shared/games.js";
 import { readItems } from "../../shared/items.js";
-import { bracketSize } from "../../shared/bracket.js";
+import { BRACKET_MAX_ENTRANTS, bracketSize } from "../../shared/bracket.js";
 import type { Action } from "../../shared/protocol.js";
 import type { Art, GameKind, HostState, ItemSetView, RawItem, TierMode } from "../../shared/types.js";
 import { connect } from "../connection.js";
@@ -559,13 +559,15 @@ function updatePreview(): void {
     setPreview.textContent = "At least 2 entries needed.";
     return;
   }
-  const size = bracketSize(count);
-  const byes = size - count;
-  setPreview.textContent =
-    `${count} entries · bracket: ${size} slots, ${count - 1} matchups` +
-    (byes ? `, ${byes} ${byes === 1 ? "bye" : "byes"}` : "") +
-    ` · tier list: ${count} turns` +
-    (size > 16 ? " — over 16 gets cramped on the display" : "");
+  // A bracket only takes the top seeds; a tier list takes the lot.
+  const drawn = Math.min(count, BRACKET_MAX_ENTRANTS);
+  const size = bracketSize(drawn);
+  const byes = size - drawn;
+  const bracketPart =
+    count > BRACKET_MAX_ENTRANTS
+      ? `bracket: top ${BRACKET_MAX_ENTRANTS} seeds, ${drawn - 1} matchups`
+      : `bracket: ${size} slots, ${drawn - 1} matchups${byes ? `, ${byes} ${byes === 1 ? "bye" : "byes"}` : ""}`;
+  setPreview.textContent = `${count} entries · ${bracketPart} · tier list: all ${count}`;
 }
 
 setItems.oninput = () => {

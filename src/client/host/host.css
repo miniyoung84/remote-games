@@ -432,3 +432,6 @@ button, .set, .person, .h-chip, .art-row, .chip {
   button, .set, .person, .h-chip, .art-row, .chip { transition: none; }
   #toast, .suggest, .suggest-card { animation: none; }
 }
+
+.tier-add { display: flex; gap: 8px; margin-bottom: 10px; }
+.tier-add-input { flex: 1; font-size: 14px; }

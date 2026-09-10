@@ -56,14 +56,14 @@ const send = (action) =>
  * innocuous query is sometimes explicit. Blocking obviously adult filenames is
  * the floor, not the ceiling — everything still gets eyeballed before it ships.
  */
-const BLOCKED = /\b(nude|nudity|naked|topless|erotic|porn|nsfw|fetish|footjob|bdsm|bondage|upskirt|genital|penis|vagina|breasts?|nipple|lingerie|underwear|panties|striptease|sex(ual|y)?)\b/i;
+const BLOCKED = /\b(nude|nudity|naked|topless|erotic|porn|nsfw|fetish|footjob|bdsm|bondage|upskirt|genital|penis|vagina|breasts?|nipple|lingerie|underwear|panties|striptease|sex(ual|y)?|shirtless|bare[- ]?chest(ed)?|torso|bikini|swimsuit)\b/i;
 
 /**
  * Subjects that name the right thing but aren't a usable picture of it: a
  * skeleton of a dachshund, a drawing of a loafer, a statue of a seahorse, an
  * engraving of a narwhal. All real results from the first pass.
  */
-const NOT_A_PHOTO = /\b(drawing|drawn|sketch|engraving|etching|illustration|diagram|schematic|icon|logo|skeleton|skull|bones?|fossil|statue|sculpture|figurine|carving|toy|model|replica|coat of arms|stamps?|banknote|map|graph|chart|poster|packaging|label|silhouette|clipart|pictogram)\b/i;
+const NOT_A_PHOTO = /\b(drawing|drawn|sketch|engraving|etching|illustration|diagram|schematic|icon|logo|skeleton|skull|bones?|fossil|statue|sculpture|figurine|carving|toy|model|replica|coat of arms|stamps?|banknote|map|graph|chart|poster|packaging|label|silhouette|clipart|pictogram|lithograph|woodcut|painting|fresco|mural|botanical|k[oö]hler|medicinal plants|nutrition facts|advertisement|patent)\b/i;
 
 /**
  * Relevance: how much of the label actually appears in the file's title. The
@@ -107,6 +107,22 @@ function bestOf(results, label, trust = false) {
   return { pick: usable ? best.r : null, score: best?.score ?? 0, blocked };
 }
 
+/**
+ * Commons ANDs every term together, so a longer, "more specific" query is
+ * usually a query that matches nothing at all — "bagels bread rolls" returns
+ * zero while "Bagel" returns plenty. Drop trailing words until something comes
+ * back rather than reporting nothing found.
+ */
+async function searchNarrowing(query) {
+  const words = query.trim().split(/\s+/);
+  for (let take = words.length; take >= 1; take--) {
+    const attempt = words.slice(0, take).join(" ");
+    const results = await search(attempt);
+    if (results.length) return { results, used: attempt };
+  }
+  return { results: [], used: query };
+}
+
 async function search(query) {
   for (let attempt = 0; attempt < 4; attempt++) {
     const response = await fetch(`http://127.0.0.1:${port}/suggest-images?q=${encodeURIComponent(query)}&n=14`);
@@ -145,9 +161,9 @@ for (const [index, raw] of set.items.entries()) {
 
   const query = fixes ? fixes[label] : hint ? `${label} ${hint}` : label;
   process.stdout.write(`  ${label} … `);
-  let results;
+  let results, used;
   try {
-    results = await search(query);
+    ({ results, used } = await searchNarrowing(query));
   } catch (err) {
     console.log(`search failed (${err.message})`);
     continue;
@@ -191,7 +207,7 @@ for (const [index, raw] of set.items.entries()) {
   chosen.push({ label, title: pick.title, license: pick.license });
   added++;
   filtered += blocked;
-  console.log(`${pick.title.slice(0, 40)} (${pick.license}, ${Math.round(stored.size / 1024)}KB)`);
+  console.log(`${pick.title.slice(0, 38)} (${pick.license}, ${Math.round(stored.size / 1024)}KB)${used !== query ? `  [narrowed to "${used}"]` : ""}`);
   await sleep(PACE_MS);
 }
 

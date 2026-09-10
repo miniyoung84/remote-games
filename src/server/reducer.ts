@@ -1,4 +1,4 @@
-import { buildBracket, readyMatches, resolveCurrentMatch, seedPositions } from "../shared/bracket.js";
+import { BRACKET_MAX_ENTRANTS, buildBracket, readyMatches, resolveCurrentMatch, seedPositions } from "../shared/bracket.js";
 import { readItems } from "../shared/items.js";
 import { DEFAULT_TIERS, buildBoard } from "../shared/tierlist.js";
 import type { Action } from "../shared/protocol.js";
@@ -84,6 +84,8 @@ export function reduce(state: AppState, action: Action): ReduceResult {
         });
       }
 
+      // Longer sets keep their top seeds; the rest sit out the bracket.
+      const drawn = items.slice(0, BRACKET_MAX_ENTRANTS);
       return ok({
         ...state,
         playedAt,
@@ -91,7 +93,8 @@ export function reduce(state: AppState, action: Action): ReduceResult {
         game: {
           kind: "bracket",
           ...shared,
-          positions: seedPositions(items, action.shuffle),
+          items: drawn,
+          positions: seedPositions(drawn, action.shuffle),
           decisions: [],
           selectedMatchId: null,
         },
@@ -196,6 +199,25 @@ export function reduce(state: AppState, action: Action): ReduceResult {
             { itemId: action.itemId, tierId: action.tierId, by: state.currentPickerId, at: Date.now() },
           ],
         },
+      });
+    }
+
+    case "tier/add": {
+      const game = state.game;
+      if (game?.kind !== "tierlist") return fail("No tier list in progress.");
+      if (game.finished) return fail("This tier list is finished.");
+      const label = action.label.trim();
+      if (!label) return fail("Type what to add.");
+      if (label.length > 40) return fail("That name is too long.");
+      if (game.items.some((i) => i.label.toLowerCase() === label.toLowerCase())) {
+        return fail(`${label} is already on the board.`);
+      }
+
+      // Joins the back of the queue, so it doesn't jump ahead of what's waiting.
+      const item = { id: `x${game.items.length}${Date.now().toString(36)}`, label };
+      return ok({
+        ...state,
+        game: { ...game, items: [...game.items, item], order: [...game.order, item.id] },
       });
     }
 

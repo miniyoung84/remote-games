@@ -135,15 +135,13 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       );
     } else if (board.phase === "revising") {
       meta.append(text("span", "band-round", "All placed"));
-      meta.append(text("span", "band-picker", frame.state.pickerName ? `${frame.state.pickerName} can move one` : "Move something, or finish"));
+      if (frame.state.pickerName) meta.append(text("span", "band-picker", `${frame.state.pickerName} can move one`));
     } else if (board.mode === "open") {
       meta.append(text("span", "band-round", `${board.placed} of ${board.total} sorted`));
-      meta.append(
-        text("span", "band-picker", frame.state.pickerName ? `${frame.state.pickerName} picks one` : "Waiting for the host"),
-      );
+      if (frame.state.pickerName) meta.append(text("span", "band-picker", `${frame.state.pickerName} picks one`));
     } else {
       meta.append(text("span", "band-round", `${board.placed + 1} of ${board.total}`));
-      meta.append(text("span", "band-picker", frame.state.pickerName ? `${frame.state.pickerName} is placing` : "Waiting for the host"));
+      if (frame.state.pickerName) meta.append(text("span", "band-picker", `${frame.state.pickerName} is placing`));
     }
 
     const subject = action ? action.item : board.current;

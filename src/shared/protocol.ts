@@ -13,6 +13,7 @@ export type Action =
   | { type: "bracket/decide"; matchId: string; winner: "a" | "b" }
   | { type: "bracket/selectMatch"; matchId: string | null }
   | { type: "tier/place"; itemId: string; tierId: string }
+  | { type: "tier/add"; label: string }
   | { type: "tier/finish" }
   | { type: "draft/start"; topic: string; subtitle: string; rounds: number }
   | { type: "draft/pick"; label: string }

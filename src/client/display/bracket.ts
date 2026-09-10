@@ -107,9 +107,7 @@ export function mountBracket(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     const bracket = frame.game.bracket;
     const match = decidedMatch ?? findMatch(bracket, frame.game.currentMatchId);
     if (!match) {
-      dom.band.replaceChildren(
-        text("div", "band-message", frame.game.phase === "complete" ? "That's the bracket." : "Waiting for the host"),
-      );
+      dom.band.replaceChildren(text("div", "band-message", frame.game.phase === "complete" ? "That's the bracket." : ""));
       return;
     }
 
@@ -120,8 +118,8 @@ export function mountBracket(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       meta.append(
         text("span", "band-picker", match.decidedBy ? `${match.decidedBy} picked ${winner?.label ?? ""}` : `${winner?.label ?? ""} advances`),
       );
-    } else {
-      meta.append(text("span", "band-picker", frame.state.pickerName ? `${frame.state.pickerName} is picking` : "Waiting for the host"));
+    } else if (frame.state.pickerName) {
+      meta.append(text("span", "band-picker", `${frame.state.pickerName} is picking`));
     }
     dom.band.replaceChildren(meta, duel(match, Boolean(decidedMatch)));
   }

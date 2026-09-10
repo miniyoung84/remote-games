@@ -102,6 +102,13 @@ and press Enter. The clock clears after every pick so the next person has to be
 called on deliberately. If the pick duplicates something already taken you're
 told who has it, but nothing stops you.
 
+## Adding an item mid-game
+
+Someone always remembers one that isn't on the list. The tier list host panel
+has an add field: type it, hit Enter, and it joins the back of the queue so it
+doesn't jump ahead of what's waiting. It's added to the running game only —
+the set on disk is untouched, so edit the set if you want it next time.
+
 ## Tier list modes
 
 Pick **One at a time** or **Choose any** next to the game selector before
@@ -200,6 +207,11 @@ Two equivalent routes — both write the same files:
 
   Files are read on demand, so a set added by hand shows up as soon as the host
   view refreshes its state.
+
+A set can hold **more than 16** entries. A bracket draws the **top 16 seeds**
+and the rest sit out — past that the board stops being readable on a shared
+screen. A tier list takes everything, however many there are. The set editor
+spells out both counts as you type.
 
 **The order of the entries is the bracket seeding.** Entry 1 is the top seed,
 entry 16 the bottom, and standard tournament seeding draws them against each

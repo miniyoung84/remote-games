@@ -1,5 +1,12 @@
 import type { Bracket, BracketGame, Entrant, Item, Match, Person } from "./types.js";
 
+/**
+ * A bracket takes at most this many entrants — the top 16 seeds. Beyond that
+ * the board stops being readable on a shared screen, and a set can be longer
+ * than 16 for the sake of other games. Tier lists take everything.
+ */
+export const BRACKET_MAX_ENTRANTS = 16;
+
 /** Smallest power of two >= n, minimum 2. */
 export function bracketSize(n: number): number {
   let size = 2;

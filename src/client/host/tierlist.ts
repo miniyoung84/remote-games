@@ -6,6 +6,26 @@ import { button, text, type HostDom, type HostPanel } from "./panel.js";
 type Game = Extract<HostGame, { kind: "tierlist" }>;
 
 export function mountTierPanel(dom: HostDom, send: (a: Action) => void): HostPanel {
+  // Kept outside render so a state push mid-typing can't wipe what's in it.
+  const addInput = document.createElement("input");
+  addInput.className = "tier-add-input";
+  addInput.placeholder = "Add something to sort…";
+  addInput.autocomplete = "off";
+
+  function submitAdd(): void {
+    const label = addInput.value.trim();
+    if (!label) return;
+    send({ type: "tier/add", label });
+    addInput.value = "";
+  }
+
+  addInput.onkeydown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      submitAdd();
+    }
+  };
+
   /**
    * The item the tier buttons will act on. It can be a placed chip (a move) or,
    * in open mode, one picked out of the queue. Selecting straight off the board
@@ -105,6 +125,13 @@ export function mountTierPanel(dom: HostDom, send: (a: Action) => void): HostPan
       );
     }
 
+    // Someone always remembers one that isn't on the list.
+    const addRow = text("div", "tier-add");
+    const addButton = button("Add", "ghost");
+    addButton.onclick = submitAdd;
+    addRow.append(addInput, addButton);
+    dom.now.append(addRow);
+
     const actions = text("div", "row");
     if (moving) {
       const cancel = button("Cancel move", "ghost");
@@ -193,6 +220,7 @@ export function mountTierPanel(dom: HostDom, send: (a: Action) => void): HostPan
     unmount: () => {
       selectedId = null;
       latest = null;
+      addInput.value = "";
     },
   };
 }
