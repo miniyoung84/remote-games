@@ -9,12 +9,21 @@ Packs panel in the host view.
 Five photo sets — Best Dog Breed, Best Pasta Shape, Best Musical Instrument,
 Best Sea Creature, Best Footwear — with a picture on all 80 entries.
 
+**You don't need to import this one.** Those sets are already in
+[../data/sets/](../data/sets/); this pack exists to carry their images, which
+are gitignored. The server restores anything missing from here on start, so a
+fresh clone just works — `npm start` and the pictures are there. `npm run
+restore` does the same by hand.
+
 Every image came from [Wikimedia Commons](https://commons.wikimedia.org) and is
 public domain or Creative Commons. Attribution for each is in
-[photo-packs.credits.md](photo-packs.credits.md), and the license is also stored
-next to each image inside the pack.
+[photo-packs.credits.md](photo-packs.credits.md), and the license is stored next
+to each image inside the pack too.
 
-The sets themselves also live in [../data/sets/](../data/sets/). The images do
-not — `data/images/` is gitignored — so **import this pack to get the pictures**.
-Importing renames rather than overwrites, so if you already have those sets,
-delete them first or you'll end up with two copies.
+## Why images aren't committed directly
+
+`data/images/` is gitignored on purpose: it also holds anything you drop or
+paste in yourself, which has unknown provenance and shouldn't be republished
+under this project's license. Shipping the curated, freely-licensed ones inside
+a pack keeps that line clear — and restore only writes images that a committed
+set actually references, so a pack can't drop loose files into your tree.

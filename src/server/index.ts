@@ -4,6 +4,7 @@ import type { Action, ClientMessage, Role, ServerMessage } from "../shared/proto
 import type { AppState } from "../shared/types.js";
 import { projectDisplay, projectHost } from "./project.js";
 import { reduce } from "./reducer.js";
+import { restoreMissingImages } from "./restore.js";
 import { loadState, saveState } from "./store.js";
 
 const clients = new Map<WebSocket, Role>();
@@ -48,6 +49,10 @@ const attached = new WeakSet<Server>();
 export function attachGameServer(server: Server): void {
   if (attached.has(server)) return;
   attached.add(server);
+
+  // A fresh clone has the sets but not the image bytes; recover them from any
+  // committed pack before anyone opens the display.
+  restoreMissingImages();
 
   // `noServer` plus our own upgrade listener, NOT `new WebSocketServer({ server,
   // path })`. Given a `server`, ws claims every upgrade request and aborts the

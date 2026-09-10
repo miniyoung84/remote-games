@@ -263,6 +263,13 @@ private one), a size cap and a timeout. IPv6 literals arrive from
 `URL.hostname` still wrapped in brackets, which has to be stripped or the
 literal check silently misses them.
 
+Because `data/images/` is gitignored, a clone has sets whose art ids point at
+nothing. The server fixes that on start: `restoreMissingImages()` writes any
+referenced-but-absent image out of the packs in `packs/`. Content addressing is
+what makes this trivial — the ids already agree, so restoring is just writing
+bytes, with no set touched and nothing renamed. It only ever writes ids a
+committed set references, so a pack cannot drop loose files in.
+
 `/suggest-images` queries Wikimedia Commons. It was picked over an image-search
 API for two reasons that both matter here: no API key, so there's nothing to
 configure or leak from a public repo, and everything is freely licensed, which

@@ -19,7 +19,8 @@
     "sets": "node scripts/set-list.mjs",
     "fit": "node scripts/fitcheck.mjs",
     "art": "node scripts/attach-art.mjs",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "restore": "tsx scripts/restore.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.4.1",

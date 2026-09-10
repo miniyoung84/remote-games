@@ -222,6 +222,13 @@ use, so it survives being emailed or dropped in a chat with nothing missing.
 Packs are also the backup story for `data/images/`, since that directory is
 gitignored. Export all before you wipe a machine.
 
+**Getting the shipped images.** The five photo sets reference images that aren't
+in the repo. On start, the server restores any image a committed set references
+from the packs in `packs/`, so a fresh clone needs no extra step — `npm start`
+and they're there. `npm run restore` does it by hand. It only writes ids a set
+actually asks for, so a pack can't drop loose files into your tree, and it does
+nothing once everything is present.
+
 ## Bulk art
 
 `npm run art -- <setId> --hint <word>` fills every entry that has no art from

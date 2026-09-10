@@ -90,9 +90,10 @@ generating new ones with any AI in
 [docs/generating-bracket-sets.md](docs/generating-bracket-sets.md).
 
 Five of them — dog breeds, pasta shapes, instruments, sea creatures, footwear —
-have a photograph on every entry. The pictures aren't in the repo, so
-**import [packs/photo-packs.pack.json](packs/photo-packs.pack.json)** to get
-them.
+have a photograph on every entry. The images themselves are gitignored, but
+they ship inside [packs/photo-packs.pack.json](packs/photo-packs.pack.json) and
+the server restores them on start, so a fresh clone gets the pictures with no
+extra step.
 
 ## Docs
 
