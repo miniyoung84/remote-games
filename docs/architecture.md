@@ -296,6 +296,11 @@ what makes this trivial — the ids already agree, so restoring is just writing
 bytes, with no set touched and nothing renamed. It only ever writes ids a
 committed set references, so a pack cannot drop loose files in.
 
+The reviewer takes a list of labels and an `apply` callback, so the same modal
+serves the set editor (writing into the draft's art map) and a running tier
+list (dispatching `tier/setArt`). Art applied mid-game lands on the game's own
+copy of the item, never the set file — the same rule as adding an item.
+
 `/suggest-images` queries Wikimedia Commons. It was picked over an image-search
 API for two reasons that both matter here: no API key, so there's nothing to
 configure or leak from a public repo, and everything is freely licensed, which

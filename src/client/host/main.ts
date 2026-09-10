@@ -97,7 +97,7 @@ function ensurePanel(kind: GameKind | null): void {
   dom.now.replaceChildren();
   dom.board.replaceChildren();
   if (kind === "bracket") panel = mountBracketPanel(dom, act);
-  else if (kind === "tierlist") panel = mountTierPanel(dom, act);
+  else if (kind === "tierlist") panel = mountTierPanel(dom, act, openPictureFinder);
   else if (kind === "draft") panel = mountDraftPanel(dom, act);
 }
 
@@ -319,7 +319,27 @@ type Suggestion = { title: string; thumb: string; source: string; license: strin
  * abstract ones, so every image is accepted or rejected by hand rather than
  * applied in bulk.
  */
-const review = { labels: [] as string[], at: 0, options: [] as Suggestion[], pick: 0, busy: false };
+const review = {
+  labels: [] as string[],
+  at: 0,
+  options: [] as Suggestion[],
+  pick: 0,
+  busy: false,
+  /** Where an accepted picture goes — the set editor, or a running game. */
+  apply: (_label: string, _art: Art) => {},
+  done: () => {},
+};
+
+/** Open the reviewer over an arbitrary list of labels. */
+function openPictureFinder(labels: string[], apply: (label: string, art: Art) => void, done = () => {}): void {
+  if (!labels.length) return;
+  review.labels = labels;
+  review.at = 0;
+  review.apply = apply;
+  review.done = done;
+  suggest.hidden = false;
+  showItem();
+}
 
 async function loadSuggestions(query: string): Promise<void> {
   review.options = [];
@@ -372,16 +392,18 @@ function showItem(): void {
 function closeReview(): void {
   suggest.hidden = true;
   review.labels = [];
-  renderArtList();
+  review.done();
+  review.done = () => {};
 }
 
 el("art-suggest").onclick = () => {
   const pending = currentLabels().filter((l) => !editingArt.has(l));
   if (!pending.length) return flash("Every entry already has art.");
-  review.labels = pending;
-  review.at = 0;
-  suggest.hidden = false;
-  showItem();
+  openPictureFinder(
+    pending,
+    (label, art) => editingArt.set(label, art),
+    () => renderArtList(),
+  );
 };
 
 el("suggest-next").onclick = () => {
@@ -413,11 +435,7 @@ suggestUse.onclick = async () => {
   suggestUse.disabled = true;
   try {
     const blob = await blobFromUrl(option.thumb);
-    editingArt.set(label, {
-      image: await prepareImage(blob),
-      source: option.source,
-      license: option.license,
-    });
+    review.apply(label, { image: await prepareImage(blob), source: option.source, license: option.license });
     review.at++;
     showItem();
   } catch (err) {

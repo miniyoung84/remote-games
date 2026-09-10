@@ -106,8 +106,15 @@ told who has it, but nothing stops you.
 
 Someone always remembers one that isn't on the list. The tier list host panel
 has an add field: type it, hit Enter, and it joins the back of the queue so it
-doesn't jump ahead of what's waiting. It's added to the running game only —
-the set on disk is untouched, so edit the set if you want it next time.
+doesn't jump ahead of what's waiting.
+
+Whatever's on the clock also gets a **find a picture** button, which opens the
+usual reviewer scoped to that one item — a couple of seconds, then Use this.
+Handy for something you just added, and for anything already on the board that
+turned up bare.
+
+Both change the running game only; the set on disk is untouched, so edit the
+set if you want them next time.
 
 ## Tier list modes
 

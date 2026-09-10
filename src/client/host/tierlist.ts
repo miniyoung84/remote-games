@@ -1,11 +1,17 @@
 import { placedItems } from "../../shared/tierlist.js";
 import type { Action } from "../../shared/protocol.js";
-import type { HostGame, HostState, Item } from "../../shared/types.js";
+import type { Art, HostGame, HostState, Item } from "../../shared/types.js";
 import { button, text, type HostDom, type HostPanel } from "./panel.js";
 
 type Game = Extract<HostGame, { kind: "tierlist" }>;
 
-export function mountTierPanel(dom: HostDom, send: (a: Action) => void): HostPanel {
+export type FindPicture = (
+  labels: string[],
+  apply: (label: string, art: Art) => void,
+  done?: () => void,
+) => void;
+
+export function mountTierPanel(dom: HostDom, send: (a: Action) => void, findPicture: FindPicture): HostPanel {
   // Kept outside render so a state push mid-typing can't wipe what's in it.
   const addInput = document.createElement("input");
   addInput.className = "tier-add-input";
@@ -101,6 +107,14 @@ export function mountTierPanel(dom: HostDom, send: (a: Action) => void): HostPan
       }
       heading.append(text("span", "subject-label", subject.item.label));
       if (moving) heading.append(text("span", "subject-tag", "moving"));
+
+      // Anything on the board can get a picture mid-game, not just new items.
+      const findButton = button(subject.item.art ? "change picture" : "find a picture", "mini");
+      findButton.onclick = () =>
+        findPicture([subject.item.label], (_label, art) =>
+          send({ type: "tier/setArt", itemId: subject.item.id, art }),
+        );
+      heading.append(findButton);
       dom.now.append(heading);
 
       const tiers = text("div", "tier-buttons");

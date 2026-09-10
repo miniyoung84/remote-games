@@ -221,6 +221,20 @@ export function reduce(state: AppState, action: Action): ReduceResult {
       });
     }
 
+    case "tier/setArt": {
+      const game = state.game;
+      if (game?.kind !== "tierlist") return fail("No tier list in progress.");
+      if (!game.items.some((i) => i.id === action.itemId)) return fail("Unknown item.");
+      // Applies to the running game only; the set on disk is left alone.
+      return ok({
+        ...state,
+        game: {
+          ...game,
+          items: game.items.map((i) => (i.id === action.itemId ? { ...i, art: action.art } : i)),
+        },
+      });
+    }
+
     case "tier/finish": {
       const game = state.game;
       if (game?.kind !== "tierlist") return fail("No tier list in progress.");

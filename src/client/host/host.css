@@ -435,3 +435,4 @@ button, .set, .person, .h-chip, .art-row, .chip {
 
 .tier-add { display: flex; gap: 8px; margin-bottom: 10px; }
 .tier-add-input { flex: 1; font-size: 14px; }
+.tier-subject .mini { border: 2px solid var(--accent); color: var(--accent); padding: 5px 9px; font-size: 11px; white-space: nowrap; }

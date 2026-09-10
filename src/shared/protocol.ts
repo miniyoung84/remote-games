@@ -1,4 +1,4 @@
-import type { DisplayState, GameKind, HostState, ItemSet, Pack, TierMode } from "./types.js";
+import type { Art, DisplayState, GameKind, HostState, ItemSet, Pack, TierMode } from "./types.js";
 
 export type Role = "display" | "host";
 
@@ -14,6 +14,7 @@ export type Action =
   | { type: "bracket/selectMatch"; matchId: string | null }
   | { type: "tier/place"; itemId: string; tierId: string }
   | { type: "tier/add"; label: string }
+  | { type: "tier/setArt"; itemId: string; art: Art }
   | { type: "tier/finish" }
   | { type: "draft/start"; topic: string; subtitle: string; rounds: number }
   | { type: "draft/pick"; label: string }
