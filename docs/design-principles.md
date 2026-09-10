@@ -20,6 +20,14 @@ target, and the usual instincts are mostly wrong.
 - **Avoid continuous motion.** Particles, ambient loops, and video backgrounds
   consume the entire bitrate budget and blur everything else on screen. Static
   compositions with occasional deliberate transitions look dramatically better.
+
+  There is plenty of motion, but every piece of it fires on an event and then
+  stops: boards cascade in when a game starts, chips fly between tiers, the
+  counter ticks, the champion card assembles. **Nothing loops.** That's the line
+  — the display should be completely still between actions, and there's a check
+  asserting exactly that. Everything animates transform and opacity only, so it
+  composites on the GPU and stays smooth with sixteen things moving at once, and
+  `prefers-reduced-motion` turns all of it off.
 - **Grids of large flat shapes and numbers are the best-compressing thing you
   can show.** This is a real argument in favour of board-style games.
 

@@ -1,5 +1,5 @@
 import type { DisplayGame, DisplayState, DraftBoard } from "../../shared/types.js";
-import { setHeader, setProgress, text, type DisplayDom, type Renderer, type Sound } from "./dom.js";
+import { resetProgress, setHeader, setProgress, stagger, text, type DisplayDom, type Renderer, type Sound } from "./dom.js";
 
 type DraftGame = Extract<DisplayGame, { kind: "draft" }>;
 type Frame = { state: DisplayState; game: DraftGame };
@@ -12,6 +12,7 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
   let queued: Frame | null = null;
   let animating = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
+  let builtKey = "";
 
   function capture(): Map<string, DOMRect> {
     const map = new Map<string, DOMRect>();
@@ -63,6 +64,10 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     dom.board.dataset.depth = deepest <= 3 ? "3" : deepest <= 5 ? "5" : deepest <= 8 ? "8" : "12";
     dom.board.dataset.cols = String(Math.min(12, Math.max(1, board.columns.length)));
 
+    const key = `${board.topic}:${board.columns.length}`;
+    const fresh = key !== builtKey;
+    builtKey = key;
+
     dom.board.replaceChildren(
       ...board.columns.map((column) => {
         const node = text("div", "draft-col");
@@ -85,6 +90,7 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
         return node;
       }),
     );
+    if (fresh) stagger(dom.board.querySelectorAll<HTMLElement>(".draft-col"), "entering-up", 45);
   }
 
   function renderBand(frame: Frame, justPicked: boolean): void {
@@ -165,6 +171,8 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     },
     unmount: () => {
       clearTimeout(timer);
+      resetProgress();
+      builtKey = "";
       dom.board.dataset.depth = "";
       dom.board.dataset.cols = "";
       dom.stage.classList.remove("tier-final");

@@ -222,6 +222,18 @@ the bottom carries the live matchup at 56px, which is what people actually read.
 Slot heights are calibrated per bracket size in `display.css`; they are keyed on
 **first-round match count** (half the entrant count).
 
+## Motion
+
+Animations are event-driven without exception. The rule that keeps this honest:
+**once a board has settled, no animation is running.** An ambient effect spends
+bitrate continuously on a compressed share and blurs everything else, so the
+display is completely still between actions.
+
+Entrances are gated on a board *key* rather than on render, since the renderers
+rebuild their DOM on every state push and would otherwise replay the cascade on
+every pick. FLIP handles movement, so entrance animations are only ever applied
+to a newly built board — the two never fight over `transform`.
+
 ## Sound
 
 Synthesized with the Web Audio API rather than shipped as files: the sounds

@@ -1,6 +1,6 @@
 import { roundName } from "../../shared/bracket.js";
 import type { Bracket, DisplayGame, DisplayState, Match } from "../../shared/types.js";
-import { artNode, setHeader, setProgress, text, type DisplayDom, type Renderer, type Sound } from "./dom.js";
+import { artNode, resetProgress, setHeader, setProgress, stagger, text, type DisplayDom, type Renderer, type Sound } from "./dom.js";
 
 type BracketGame = Extract<DisplayGame, { kind: "bracket" }>;
 type Frame = { state: DisplayState; game: BracketGame };
@@ -36,6 +36,7 @@ export function mountBracket(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       column.append(list);
       dom.board.append(column);
     });
+    stagger(dom.board.querySelectorAll<HTMLElement>(".round"), "entering", 70);
   }
 
   function paintSlot(slot: HTMLElement, match: Match, side: "a" | "b"): void {
@@ -225,6 +226,7 @@ export function mountBracket(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     },
     unmount: () => {
       clearTimeout(timer);
+      resetProgress();
       matchNodes.clear();
       boardKey = "";
       dom.board.dataset.size = "";

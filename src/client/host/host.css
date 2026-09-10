@@ -400,3 +400,35 @@ label input, label textarea { margin-top: 5px; text-transform: none; letter-spac
 .tier-mode { margin-top: -4px; }
 .tier-mode .pick { font-size: 12px; }
 .subject-image { width: 30px; height: 30px; object-fit: contain; border-radius: 6px; }
+
+/* ---------- motion ---------- */
+
+button, .set, .person, .h-chip, .art-row, .chip {
+  transition: transform 120ms cubic-bezier(.22,.9,.24,1), border-color 120ms linear,
+    background-color 120ms linear, opacity 120ms linear;
+}
+.choice:hover, .tier-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.choice:active, .tier-btn:active:not(:disabled), button:active { transform: translateY(0) scale(0.985); }
+.h-chip:hover { transform: translateY(-1px); }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translate(-50%, 14px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+#toast { animation: toast-in 220ms cubic-bezier(.22,.9,.24,1); }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes suggest-in {
+  from { opacity: 0; transform: scale(0.94) translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.suggest { animation: fade-in 160ms ease-out; }
+.suggest-card { animation: suggest-in 260ms cubic-bezier(.22,.9,.24,1); }
+
+@media (prefers-reduced-motion: reduce) {
+  button, .set, .person, .h-chip, .art-row, .chip { transition: none; }
+  #toast, .suggest, .suggest-card { animation: none; }
+}

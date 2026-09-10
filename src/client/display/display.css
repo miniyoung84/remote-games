@@ -679,3 +679,76 @@ body {
 /* The band has room for a real picture. */
 .tier-hero .art-image.hero { width: 148px; height: 148px; border-radius: 10px; }
 .h-draft-col .art-image { display: none; }
+
+/* ---------- motion ---------- */
+
+/*
+ * Every animation here fires on an event and then stops. Nothing loops: an
+ * ambient effect spends bitrate continuously and blurs everything else on a
+ * compressed share. Transforms and opacity only, so it all composites on the
+ * GPU and stays smooth with sixteen things moving at once.
+ */
+
+@keyframes enter-up {
+  from { opacity: 0; transform: translateY(26px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes enter-side {
+  from { opacity: 0; transform: translateX(-34px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes enter-pop {
+  0% { opacity: 0; transform: scale(0.82); }
+  62% { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes row-flash {
+  0% { background: var(--ink-2); }
+  22% { background: color-mix(in srgb, var(--tier) 26%, var(--ink-2)); }
+  100% { background: var(--ink-2); }
+}
+
+@keyframes count-tick {
+  0% { transform: none; }
+  40% { transform: translateY(-7px) scale(1.16); }
+  100% { transform: none; }
+}
+
+/* The board assembling itself when a game starts. Rows cascade, so the screen
+   resolves in about half a second instead of appearing all at once. */
+.entering { animation: enter-side 420ms cubic-bezier(.22,.9,.24,1) backwards; }
+.entering-up { animation: enter-up 380ms cubic-bezier(.22,.9,.24,1) backwards; }
+
+.tier.receiving { animation: row-flash 620ms ease-out; }
+
+/* The item on offer arriving in the band. */
+#band .tier-hero, #band .duel, #band .band-message, #band .tier-tray {
+  animation: enter-up 320ms cubic-bezier(.22,.9,.24,1) backwards;
+}
+
+#progress .num { display: inline-block; }
+#progress .num.tick { animation: count-tick 340ms cubic-bezier(.3,1.4,.5,1); }
+
+/* The champion card assembling piece by piece rather than landing as a slab. */
+#champion > * { animation: enter-up 460ms cubic-bezier(.22,.9,.24,1) backwards; }
+#champion > *:nth-child(1) { animation-delay: 60ms; }
+#champion > *:nth-child(2) { animation-delay: 140ms; }
+#champion > *:nth-child(3) { animation-delay: 240ms; }
+#champion > *:nth-child(4) { animation-delay: 320ms; }
+#champion > *:nth-child(5) { animation-delay: 400ms; }
+#champion > *:nth-child(6) { animation-delay: 470ms; }
+#champion .champion-name { animation-name: enter-pop; animation-duration: 560ms; }
+
+.idle h2 { animation: enter-pop 520ms cubic-bezier(.22,.9,.24,1) backwards; }
+.idle p { animation: enter-up 460ms ease-out 160ms backwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .entering, .entering-up, .tier.receiving, #band .tier-hero, #band .duel,
+  #band .band-message, #band .tier-tray, #champion > *, .idle h2, .idle p,
+  #progress .num.tick, .match.just-decided, .chip.in-flight {
+    animation: none !important;
+  }
+}

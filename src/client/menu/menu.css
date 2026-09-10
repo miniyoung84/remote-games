@@ -144,3 +144,32 @@ kbd {
   font-size: 13px;
   font-weight: 800;
 }
+
+/* ---------- motion ---------- */
+
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+.masthead, .status, .games > *, .columns > * {
+  animation: menu-in 420ms cubic-bezier(.22,.9,.24,1) backwards;
+}
+.status { animation-delay: 70ms; }
+.games > *:nth-child(1) { animation-delay: 130ms; }
+.games > *:nth-child(2) { animation-delay: 190ms; }
+.games > *:nth-child(3) { animation-delay: 250ms; }
+.games > *:nth-child(4) { animation-delay: 310ms; }
+.columns > *:nth-child(1) { animation-delay: 340ms; }
+.columns > *:nth-child(2) { animation-delay: 400ms; }
+
+.card, .game button, .game a.button, .status button {
+  transition: transform 140ms cubic-bezier(.22,.9,.24,1), border-color 140ms linear, background-color 140ms linear;
+}
+.game button:hover, .game a.button:hover, .status button:hover { transform: translateY(-2px); }
+.game button:active, .game a.button:active, .status button:active { transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .masthead, .status, .games > *, .columns > * { animation: none; }
+  .card, .game button, .game a.button, .status button { transition: none; }
+}

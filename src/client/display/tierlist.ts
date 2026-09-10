@@ -1,5 +1,5 @@
 import type { DisplayGame, DisplayState, TierAction, TierBoard } from "../../shared/types.js";
-import { artNode, setHeader, setProgress, text, type DisplayDom, type Renderer, type Sound } from "./dom.js";
+import { artNode, resetProgress, setHeader, setProgress, stagger, text, type DisplayDom, type Renderer, type Sound } from "./dom.js";
 
 type TierGame = Extract<DisplayGame, { kind: "tierlist" }>;
 type Frame = { state: DisplayState; game: TierGame };
@@ -12,6 +12,8 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
   let queued: Frame | null = null;
   let animating = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
+  /** Identifies the board so the entrance only plays for a new one. */
+  let builtKey = "";
 
   /**
    * Screen-space rect of every chip, plus the item currently in the band.
@@ -89,6 +91,10 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     const densest = Math.max(1, ...board.rows.map((r) => r.items.length));
     dom.board.dataset.density = densest <= 5 ? "5" : densest <= 8 ? "8" : densest <= 11 ? "11" : "16";
 
+    const key = `${board.title}:${board.total}:${board.mode}`;
+    const fresh = key !== builtKey;
+    builtKey = key;
+
     dom.board.replaceChildren(
       ...board.rows.map((row) => {
         const node = text("div", "tier");
@@ -103,6 +109,7 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
         return node;
       }),
     );
+    if (fresh) stagger(dom.board.querySelectorAll<HTMLElement>(".tier"));
   }
 
   function renderBand(frame: Frame, action: TierAction | null): void {
@@ -226,6 +233,8 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     },
     unmount: () => {
       clearTimeout(timer);
+      resetProgress();
+      builtKey = "";
       dom.board.dataset.density = "";
       dom.stage.classList.remove("tier-final");
     },
