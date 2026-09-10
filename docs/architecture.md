@@ -164,6 +164,17 @@ snake order is impossible, the host view surfaces who has the fewest picks
 instead. Columns cover everyone present *plus* anyone who has already drafted,
 so leaving the meeting never erases what you picked.
 
+### Tier list modes
+
+Two ways to run it, chosen at start. **Queue** hands out the next item and the
+picker must place it — fast, and nobody can dodge the awkward one. **Open**
+shows everything unsorted in a tray and the picker chooses what to sort, which
+is slower but lets someone go after the thing they care about.
+
+The difference is one field. `buildBoard` returns `current: null` in open mode,
+and every surface keys off that: the display swaps the hero item for the tray,
+and the host requires an explicit selection before the tier buttons do anything.
+
 ### How the tier list works
 
 Like the bracket, it stores an ordered log rather than a derived board: an

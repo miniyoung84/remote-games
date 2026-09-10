@@ -2,7 +2,7 @@ import { GAMES } from "../../shared/games.js";
 import { readItems } from "../../shared/items.js";
 import { bracketSize } from "../../shared/bracket.js";
 import type { Action } from "../../shared/protocol.js";
-import type { Art, GameKind, HostState, ItemSetView, RawItem } from "../../shared/types.js";
+import type { Art, GameKind, HostState, ItemSetView, RawItem, TierMode } from "../../shared/types.js";
 import { connect } from "../connection.js";
 import { mountBracketPanel } from "./bracket.js";
 import { button, text, type HostDom, type HostPanel } from "./panel.js";
@@ -41,6 +41,7 @@ const draftStart = el("draft-start");
 const draftTopic = el<HTMLInputElement>("draft-topic");
 const draftSubtitle = el<HTMLInputElement>("draft-subtitle");
 const draftRounds = el<HTMLInputElement>("draft-rounds");
+const tierMode = el("tier-mode");
 const suggest = el("suggest");
 const suggestLabel = el("suggest-label");
 const suggestPos = el("suggest-pos");
@@ -61,6 +62,8 @@ let panelKind: GameKind | null = null;
 const KINDS: GameKind[] = ["bracket", "tierlist", "draft"];
 const requested = new URLSearchParams(location.search).get("game") as GameKind | null;
 let startKind: GameKind = requested && KINDS.includes(requested) ? requested : "bracket";
+/** Only meaningful for the tier list: hand out the next item, or let them choose. */
+let startMode: TierMode = "queue";
 
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
 function flash(message: string): void {
@@ -190,11 +193,21 @@ function matchesFilter(set: ItemSetView, query: string): boolean {
 /** A draft has no pool, so the set library is irrelevant while it's selected. */
 function applyStartKind(): void {
   const drafting = startKind === "draft";
+  tierMode.hidden = startKind !== "tierlist";
   draftStart.hidden = !drafting;
   setFilter.hidden = drafting;
   setsList.hidden = drafting;
   editor.hidden = drafting;
   setsCount.hidden = drafting;
+}
+
+for (const node of tierMode.querySelectorAll<HTMLButtonElement>("button[data-mode]")) {
+  node.onclick = () => {
+    startMode = node.dataset.mode === "open" ? "open" : "queue";
+    for (const other of tierMode.querySelectorAll("button[data-mode]")) {
+      other.classList.toggle("on", other === node);
+    }
+  };
 }
 
 el("draft-go").onclick = () => {
@@ -643,7 +656,7 @@ function renderSets(next: HostState): void {
     const start = button("Start", "primary");
     start.onclick = () => {
       if (next.game && !confirm("A game is already running. Replace it?")) return;
-      act({ type: "game/start", setId: set.id, kind: startKind, shuffle: shuffle.checked });
+      act({ type: "game/start", setId: set.id, kind: startKind, shuffle: shuffle.checked, mode: startMode });
     };
 
     actions.append(shuffleLabel, start);

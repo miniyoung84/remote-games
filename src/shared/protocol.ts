@@ -1,4 +1,4 @@
-import type { DisplayState, GameKind, HostState, ItemSet, Pack } from "./types.js";
+import type { DisplayState, GameKind, HostState, ItemSet, Pack, TierMode } from "./types.js";
 
 export type Role = "display" | "host";
 
@@ -7,7 +7,7 @@ export type Action =
   | { type: "roster/remove"; id: string }
   | { type: "roster/setPresent"; id: string; present: boolean }
   | { type: "roster/setCurrent"; id: string | null }
-  | { type: "game/start"; setId: string; kind: GameKind; shuffle: boolean }
+  | { type: "game/start"; setId: string; kind: GameKind; shuffle: boolean; mode?: TierMode }
   | { type: "game/undo" }
   | { type: "game/reset" }
   | { type: "bracket/decide"; matchId: string; winner: "a" | "b" }

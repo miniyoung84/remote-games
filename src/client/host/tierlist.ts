@@ -7,29 +7,40 @@ type Game = Extract<HostGame, { kind: "tierlist" }>;
 
 export function mountTierPanel(dom: HostDom, send: (a: Action) => void): HostPanel {
   /**
-   * When a placed chip is selected, the tier buttons move that item instead of
-   * placing the next one. Selecting straight from the board is faster than a
-   * separate move mode, which matters when someone is mid-sentence.
+   * The item the tier buttons will act on. It can be a placed chip (a move) or,
+   * in open mode, one picked out of the queue. Selecting straight off the board
+   * beats a separate mode when someone is mid-sentence.
    */
-  let movingId: string | null = null;
+  let selectedId: string | null = null;
   let latest: Game | null = null;
 
   const findItem = (game: Game, id: string): { item: Item; tierId: string } | null =>
     placedItems(game.board).find((p) => p.item.id === id) ?? null;
 
+  function subjectOf(game: Game): { item: Item; from: string | null } | null {
+    if (selectedId) {
+      const placed = findItem(game, selectedId);
+      if (placed) return { item: placed.item, from: placed.tierId };
+      const queued = game.board.unplaced.find((i) => i.id === selectedId);
+      if (queued) return { item: queued, from: null };
+      selectedId = null;
+    }
+    return game.board.current ? { item: game.board.current, from: null } : null;
+  }
+
   function place(game: Game, tierId: string): void {
-    const subject = movingId ? findItem(game, movingId)?.item : game.board.current;
+    const subject = subjectOf(game);
     if (!subject) return;
-    if (movingId && findItem(game, movingId)?.tierId === tierId) return; // already there
-    send({ type: "tier/place", itemId: subject.id, tierId });
-    movingId = null;
+    if (subject.from === tierId) return; // already there
+    send({ type: "tier/place", itemId: subject.item.id, tierId });
+    selectedId = null;
   }
 
   function renderNow(state: HostState, game: Game): void {
     dom.now.replaceChildren();
 
-    const moving = movingId ? findItem(game, movingId) : null;
-    if (movingId && !moving) movingId = null;
+    const subject = subjectOf(game);
+    const moving = subject?.from ? subject : null;
 
     if (game.board.phase === "final") {
       dom.now.append(text("div", "champion-note", "Finished — undo to reopen it."));
@@ -39,21 +50,36 @@ export function mountTierPanel(dom: HostDom, send: (a: Action) => void): HostPan
     const picker = state.roster.find((p) => p.id === state.currentPickerId);
     const line = text("div", picker ? "picker-line" : "picker-line none");
     line.append(
-      text("span", "round", moving ? `Moving from ${game.board.rows.find((r) => r.id === moving.tierId)?.label}` : game.board.current ? `${game.board.placed + 1} of ${game.board.total}` : "All placed"),
+      text(
+        "span",
+        "round",
+        moving
+          ? `Moving from ${game.board.rows.find((r) => r.id === moving.from)?.label}`
+          : subject
+            ? `${game.board.placed + 1} of ${game.board.total}`
+            : "Pick something below",
+      ),
     );
     line.append(document.createTextNode(picker ? `${picker.name} is up` : "Nobody on the clock — tap a name below"));
     dom.now.append(line);
 
-    const subject = moving?.item ?? game.board.current;
     if (subject) {
+      const art = subject.item.art;
       const heading = text("div", "tier-subject");
-      if (subject.art && "emoji" in subject.art) heading.append(text("span", "subject-art", subject.art.emoji));
-      if (subject.art && "color" in subject.art) {
+      if (art && "emoji" in art) heading.append(text("span", "subject-art", art.emoji));
+      if (art && "color" in art) {
         const sw = text("span", "subject-swatch");
-        sw.style.background = subject.art.color;
+        sw.style.background = art.color;
         heading.append(sw);
       }
-      heading.append(text("span", "subject-label", subject.label));
+      if (art && "image" in art) {
+        const img = document.createElement("img");
+        img.className = "subject-image";
+        img.src = `/images/${art.image}.webp`;
+        img.alt = "";
+        heading.append(img);
+      }
+      heading.append(text("span", "subject-label", subject.item.label));
       if (moving) heading.append(text("span", "subject-tag", "moving"));
       dom.now.append(heading);
 
@@ -62,21 +88,32 @@ export function mountTierPanel(dom: HostDom, send: (a: Action) => void): HostPan
         const node = button("", "tier-btn");
         node.style.setProperty("--tier", row.color);
         node.append(text("span", "key", String(i + 1)), text("span", "tier-name", row.label));
-        node.disabled = Boolean(moving && moving.tierId === row.id);
+        node.disabled = subject?.from === row.id;
         node.onclick = () => place(game, row.id);
         tiers.append(node);
       });
       dom.now.append(tiers);
     } else {
-      dom.now.append(text("p", "empty", "Everything is placed. Move something, or finish."));
+      dom.now.append(
+        text(
+          "p",
+          "empty",
+          game.board.unplaced.length
+            ? "Choose-any mode — click something in Up next, or on the board to move it."
+            : "Everything is placed. Move something, or finish.",
+        ),
+      );
     }
 
     const actions = text("div", "row");
     if (moving) {
       const cancel = button("Cancel move", "ghost");
       cancel.onclick = () => {
-        movingId = null;
-        if (latest) renderNow(state, latest);
+        selectedId = null;
+        if (latest) {
+          renderNow(state, latest);
+          renderBoard(state, latest);
+        }
       };
       actions.append(cancel);
     }
@@ -100,9 +137,9 @@ export function mountTierPanel(dom: HostDom, send: (a: Action) => void): HostPan
       for (const item of row.items) {
         const chip = text("div", "h-chip", item.label);
         chip.title = "Select to move";
-        if (item.id === movingId) chip.classList.add("moving");
+        if (item.id === selectedId) chip.classList.add("moving");
         chip.onclick = () => {
-          movingId = movingId === item.id ? null : item.id;
+          selectedId = selectedId === item.id ? null : item.id;
           if (latest) {
             renderNow(state, latest);
             renderBoard(state, latest);
@@ -119,7 +156,19 @@ export function mountTierPanel(dom: HostDom, send: (a: Action) => void): HostPan
       const queue = text("div", "h-queue");
       queue.append(text("div", "h-queue-label", `Up next (${game.board.unplaced.length})`));
       const list = text("div", "h-queue-items");
-      for (const item of game.board.unplaced.slice(0, 12)) list.append(text("span", "h-chip ghost", item.label));
+      for (const item of game.board.unplaced.slice(0, 16)) {
+        const chip = text("span", "h-chip", item.label);
+        if (item.id === selectedId) chip.classList.add("moving");
+        chip.title = "Sort this one";
+        chip.onclick = () => {
+          selectedId = selectedId === item.id ? null : item.id;
+          if (latest) {
+            renderNow(state, latest);
+            renderBoard(state, latest);
+          }
+        };
+        list.append(chip);
+      }
       queue.append(list);
       wrap.append(queue);
     }
@@ -142,7 +191,7 @@ export function mountTierPanel(dom: HostDom, send: (a: Action) => void): HostPan
       return true;
     },
     unmount: () => {
-      movingId = null;
+      selectedId = null;
       latest = null;
     },
   };

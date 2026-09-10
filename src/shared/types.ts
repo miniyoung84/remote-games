@@ -85,8 +85,15 @@ export type Tier = { id: string; label: string; color: string };
 /** One placement. Moving an already-placed item appends another of these. */
 export type Placement = { itemId: string; tierId: string; by: string | null; at: number };
 
+/**
+ * "queue" hands out the next item and you must place it. "open" shows
+ * everything unplaced and lets the picker choose what to sort.
+ */
+export type TierMode = "queue" | "open";
+
 export type TierGame = {
   kind: "tierlist";
+  mode: TierMode;
   setId: string;
   title: string;
   subtitle: string;
@@ -113,6 +120,7 @@ export type TierAction = {
 export type TierBoard = {
   title: string;
   subtitle: string;
+  mode: TierMode;
   rows: TierRow[];
   unplaced: Item[];
   /** The item on offer this turn. */

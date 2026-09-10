@@ -74,6 +74,7 @@ export function reduce(state: AppState, action: Action): ReduceResult {
           currentPickerId: null,
           game: {
             kind: "tierlist",
+            mode: action.mode === "open" ? "open" : "queue",
             ...shared,
             order: (action.shuffle ? shuffled(items) : items).map((i) => i.id),
             tiers: DEFAULT_TIERS,

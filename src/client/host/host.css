@@ -397,3 +397,6 @@ label input, label textarea { margin-top: 5px; text-transform: none; letter-spac
 #suggest-meta a { color: var(--accent); }
 
 .art-credit { font-size: 10px; color: var(--dim); font-weight: 700; }
+.tier-mode { margin-top: -4px; }
+.tier-mode .pick { font-size: 12px; }
+.subject-image { width: 30px; height: 30px; object-fit: contain; border-radius: 6px; }

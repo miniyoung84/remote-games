@@ -2,13 +2,14 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { readItems } from "./items.js";
 import { DEFAULT_TIERS, buildBoard, placedItems } from "./tierlist.js";
-import type { Item, Placement, TierGame } from "./types.js";
+import type { Item, Placement, TierGame, TierMode } from "./types.js";
 
 const items = (n: number): Item[] =>
   Array.from({ length: n }, (_, i) => ({ id: `i${i}`, label: `Item ${i + 1}` }));
 
-const gameOf = (n: number, placements: Placement[] = [], finished = false): TierGame => ({
+const gameOf = (n: number, placements: Placement[] = [], finished = false, mode: TierMode = "queue"): TierGame => ({
   kind: "tierlist",
+  mode,
   setId: "test",
   title: "Test",
   subtitle: "",
@@ -69,6 +70,20 @@ test("a moved item joins the end of its new row", () => {
     [],
   );
   assert.deepEqual(board.rows.find((r) => r.id === "s")?.items.map((i) => i.id), ["i0", "i1", "i2"]);
+});
+
+test("open mode offers no item — the picker chooses", () => {
+  const queue = buildBoard(gameOf(4), []);
+  assert.equal(queue.current?.id, "i0", "queue mode hands out the next one");
+  const open = buildBoard(gameOf(4, [], false, "open"), []);
+  assert.equal(open.current, null, "open mode offers nothing");
+  assert.equal(open.unplaced.length, 4, "but still lists what's left");
+  assert.equal(open.mode, "open");
+});
+
+test("there are six tiers, S through F", () => {
+  const board = buildBoard(gameOf(2), []);
+  assert.deepEqual(board.rows.map((r) => r.label), ["S", "A", "B", "C", "D", "F"]);
 });
 
 test("the board enters revising once everything is placed, and final when called", () => {

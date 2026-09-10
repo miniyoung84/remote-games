@@ -442,6 +442,7 @@ body {
 }
 
 .tier-items { flex: 1; display: flex; align-items: stretch; gap: 6px; padding: 6px 10px 6px 0; min-width: 0; }
+.tier-label { font-size: 46px; }
 
 .chip {
   flex: none;
@@ -450,8 +451,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 6px;
+  gap: 5px;
+  padding: 4px;
   text-align: center;
   border: 3px solid var(--line);
   border-radius: 10px;
@@ -467,11 +468,12 @@ body {
 .chip.focus { border-color: var(--paper); }
 .chip.in-flight { z-index: 6; box-shadow: 0 0 0 5px var(--accent); }
 
-/* art + gap + two lines of label must fit the ~109px a chip actually gets. */
-#board[data-density="5"] { --chip-w: 190px; --chip-font: 22px; --art-size: 52px; }
-#board[data-density="8"] { --chip-w: 150px; --chip-font: 20px; --art-size: 46px; }
-#board[data-density="11"] { --chip-w: 118px; --chip-font: 17px; --art-size: 40px; }
-#board[data-density="16"] { --chip-w: 96px; --chip-font: 14px; --art-size: 32px; }
+/* Six tiers leaves a chip ~89px of content, so art + two lines of label has to
+   fit inside that. Recalibrated when the F tier was added. */
+#board[data-density="5"] { --chip-w: 190px; --chip-font: 21px; --art-size: 42px; }
+#board[data-density="8"] { --chip-w: 150px; --chip-font: 19px; --art-size: 38px; }
+#board[data-density="11"] { --chip-w: 118px; --chip-font: 17px; --art-size: 32px; }
+#board[data-density="16"] { --chip-w: 96px; --chip-font: 14px; --art-size: 24px; }
 
 /* The row taking the item, and the row losing it, both call themselves out. */
 .tier.receiving { border-color: var(--tier); }
@@ -603,3 +605,30 @@ body {
 
 #board[data-cols="9"] .draft-head, #board[data-cols="10"] .draft-head,
 #board[data-cols="11"] .draft-head, #board[data-cols="12"] .draft-head { font-size: 19px; padding: 8px 9px; }
+
+/* ---------- open mode tray ---------- */
+
+.tier-tray { flex: 1; display: flex; align-items: center; gap: 8px; overflow: hidden; }
+.tray-chip {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 146px;
+  height: 100%;
+  padding: 6px;
+  text-align: center;
+  border: 4px solid var(--line);
+  border-radius: 12px;
+  background: var(--ink);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.1;
+  overflow: hidden;
+}
+.tray-chip > span:last-child { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tray-chip .art-emoji.chip, .tray-chip .art-image.chip, .tray-chip .art-swatch.chip { --art-size: 46px; }
+.tray-chip.next { border-color: var(--accent); }
+.tray-more { flex: none; color: var(--dim); font-size: 20px; font-weight: 800; padding: 0 6px; }

@@ -129,12 +129,34 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     } else if (board.phase === "revising") {
       meta.append(text("span", "band-round", "All placed"));
       meta.append(text("span", "band-picker", frame.state.pickerName ? `${frame.state.pickerName} can move one` : "Move something, or finish"));
+    } else if (board.mode === "open") {
+      meta.append(text("span", "band-round", `${board.placed} of ${board.total} sorted`));
+      meta.append(
+        text("span", "band-picker", frame.state.pickerName ? `${frame.state.pickerName} picks one` : "Waiting for the host"),
+      );
     } else {
       meta.append(text("span", "band-round", `${board.placed + 1} of ${board.total}`));
       meta.append(text("span", "band-picker", frame.state.pickerName ? `${frame.state.pickerName} is placing` : "Waiting for the host"));
     }
 
     const subject = action ? action.item : board.current;
+
+    // Open mode has no item on offer, so the band shows what's still unsorted
+    // and the picker chooses from it.
+    if (!subject && board.mode === "open" && board.unplaced.length) {
+      const tray = text("div", "tier-tray");
+      for (const item of board.unplaced.slice(0, 12)) {
+        const chip = text("div", "tray-chip");
+        const art = artNode(item, "chip");
+        if (art) chip.append(art);
+        chip.append(text("span", "", item.label));
+        tray.append(chip);
+      }
+      if (board.unplaced.length > 12) tray.append(text("span", "tray-more", `+${board.unplaced.length - 12}`));
+      dom.band.replaceChildren(meta, tray);
+      return;
+    }
+
     if (!subject) {
       dom.band.replaceChildren(meta, text("div", "band-message", "Nothing left to place"));
       return;

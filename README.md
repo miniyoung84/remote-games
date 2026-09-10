@@ -58,8 +58,10 @@ snake was for. Someone leaving mid-draft keeps their column and their picks.
 
 ## Tier List
 
-Rank sixteen things from S down to D. On your turn you place one item — or
-**move one somebody else already placed**, which is where the arguing starts.
+Rank sixteen things from S down to F, in either of two modes — **one at a
+time**, where you place whatever the queue hands you, or **choose any**, where
+the whole unsorted tray is on screen and you pick what to sort.On your turn you place one item — or **move one somebody else already
+placed**, which is where the arguing starts.
 Placements and moves get distinct animations, and the finished board is the
 artifact: the band collapses and the rows grow so it's worth screenshotting.
 

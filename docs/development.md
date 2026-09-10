@@ -102,6 +102,16 @@ and press Enter. The clock clears after every pick so the next person has to be
 called on deliberately. If the pick duplicates something already taken you're
 told who has it, but nothing stops you.
 
+## Tier list modes
+
+Pick **One at a time** or **Choose any** next to the game selector before
+starting. One at a time gives each person the next item off the queue. Choose
+any shows the whole unsorted tray and lets them pick — in the host view, click
+something under *Up next* (or any chip already on the board, to move it), then
+hit a tier.
+
+Tiers run S, A, B, C, D, F.
+
 ## Item art
 
 Items may carry optional art, which both games render — big in the on-the-clock

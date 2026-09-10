@@ -7,6 +7,7 @@ export const DEFAULT_TIERS: Tier[] = [
   { id: "b", label: "B", color: "#ffd93d" },
   { id: "c", label: "C", color: "#6bd968" },
   { id: "d", label: "D", color: "#5aa9e6" },
+  { id: "f", label: "F", color: "#a78bfa" },
 ];
 
 /**
@@ -52,9 +53,11 @@ export function buildBoard(game: TierGame, roster: Person[]): TierBoard {
   return {
     title: game.title,
     subtitle: game.subtitle,
+    mode: game.mode,
     rows,
     unplaced,
-    current: unplaced[0] ?? null,
+    // In open mode the picker chooses; there is no item on offer.
+    current: game.mode === "open" ? null : (unplaced[0] ?? null),
     phase: game.finished ? "final" : unplaced.length ? "placing" : "revising",
     last:
       last && byId.has(last.itemId)
