@@ -222,6 +222,31 @@ use, so it survives being emailed or dropped in a chat with nothing missing.
 Packs are also the backup story for `data/images/`, since that directory is
 gitignored. Export all before you wipe a machine.
 
+## Bulk art
+
+`npm run art -- <setId> --hint <word>` fills every entry that has no art from
+Wikimedia Commons, using the same path the host UI uses. The hint is appended to
+each search and matters a lot — "Penne" alone finds a novel, "Penne pasta" finds
+pasta.
+
+Expect to review the result. Bulk search is confidently wrong often enough that
+the picker refuses candidates whose title never names the thing, skips drawings
+and diagrams in favour of photographs, and filters explicit filenames outright —
+Commons is not curated for a workplace audience, and one first-pass result was
+plainly unusable. Even so, roughly one entry in ten needs replacing.
+
+For those, `--fixes <file.json>` takes `{ "<setId>": { "<label>": "better
+search" } }` and redoes only those entries, trusting your query over the
+ranking.
+
+## Checks
+
+```bash
+npm test            # unit tests, no server needed
+npm run smoke -- 5173   # end-to-end against a running server
+npm run fit -- 5173     # display placement across monitor sizes
+```
+
 ## Screenshots
 
 `npm run shot` captures `/display` and `/host` against a running server, so you

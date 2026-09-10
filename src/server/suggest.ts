@@ -8,6 +8,8 @@
  */
 export type Suggestion = {
   title: string;
+  mime: string;
+  width: number;
   thumb: string;
   source: string;
   license: string;
@@ -48,7 +50,7 @@ export async function suggestImages(query: string, limit = 8): Promise<Suggestio
     gsrnamespace: "6",
     gsrlimit: String(Math.min(20, Math.max(1, limit))),
     prop: "imageinfo",
-    iiprop: "url|extmetadata",
+    iiprop: "url|extmetadata|mime|size",
     iiurlwidth: "480",
     format: "json",
     origin: "*",
@@ -61,6 +63,8 @@ export async function suggestImages(query: string, limit = 8): Promise<Suggestio
       headers: { "user-agent": UA, accept: "application/json" },
       signal: controller.signal,
     });
+    // Commons rate-limits bursts; say so plainly rather than showing a number.
+    if (response.status === 429) throw new Error("Commons is rate-limiting — wait a moment and try again.");
     if (!response.ok) throw new Error(`Commons returned ${response.status}.`);
 
     const body = (await response.json()) as {
@@ -75,6 +79,8 @@ export async function suggestImages(query: string, limit = 8): Promise<Suggestio
       const meta = (info?.extmetadata ?? {}) as Record<string, { value?: unknown }>;
       results.push({
         title: String(page.title ?? "").replace(/^File:/, ""),
+        mime: typeof info?.mime === "string" ? info.mime : "",
+        width: typeof info?.width === "number" ? info.width : 0,
         thumb,
         source: typeof info?.descriptionurl === "string" ? info.descriptionurl : "",
         license: plain(meta.LicenseShortName?.value) || "see source",

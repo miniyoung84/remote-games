@@ -468,12 +468,12 @@ body {
 .chip.focus { border-color: var(--paper); }
 .chip.in-flight { z-index: 6; box-shadow: 0 0 0 5px var(--accent); }
 
-/* Six tiers leaves a chip ~89px of content, so art + two lines of label has to
-   fit inside that. Recalibrated when the F tier was added. */
-#board[data-density="5"] { --chip-w: 190px; --chip-font: 21px; --art-size: 42px; }
-#board[data-density="8"] { --chip-w: 150px; --chip-font: 19px; --art-size: 38px; }
-#board[data-density="11"] { --chip-w: 118px; --chip-font: 17px; --art-size: 32px; }
-#board[data-density="16"] { --chip-w: 96px; --chip-font: 14px; --art-size: 24px; }
+/* Only the width varies with density — the row height is fixed — so art can
+   stay large and only the label scales. */
+#board[data-density="5"] { --chip-w: 190px; --chip-font: 20px; --art-size: 42px; --card-art: 54px; }
+#board[data-density="8"] { --chip-w: 150px; --chip-font: 19px; --art-size: 38px; --card-art: 54px; }
+#board[data-density="11"] { --chip-w: 118px; --chip-font: 17px; --art-size: 32px; --card-art: 52px; }
+#board[data-density="16"] { --chip-w: 96px; --chip-font: 13px; --art-size: 24px; --card-art: 42px; }
 
 /* The row taking the item, and the row losing it, both call themselves out. */
 .tier.receiving { border-color: var(--tier); }
@@ -632,3 +632,50 @@ body {
 .tray-chip .art-emoji.chip, .tray-chip .art-image.chip, .tray-chip .art-swatch.chip { --art-size: 46px; }
 .tray-chip.next { border-color: var(--accent); }
 .tray-more { flex: none; color: var(--dim); font-size: 20px; font-weight: 800; padding: 0 6px; }
+
+/* ---------- art chips ---------- */
+
+/* Any chip with art becomes a card: the art fills it and the label sits on a
+   solid bar across the bottom. Solid, not a gradient — gradients band badly
+   under compression. Stacking art above a label wasted most of the chip, and
+   an emoji at 42px quietly occupies 60px of box height, which was clipping
+   every label once the F tier tightened the rows. */
+.chip.has-art {
+  padding: 0;
+  gap: 0;
+  position: relative;
+  justify-content: flex-end;
+}
+.chip.has-art .art {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+.chip.has-art .art-emoji { font-size: var(--card-art, 52px); line-height: 1; }
+.chip.has-art .art-swatch { border: none; border-radius: 0; }
+.chip.has-art .art-image { object-fit: cover; }
+.chip.has-art .chip-label {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 3px 5px;
+  background: rgba(10, 12, 15, 0.84);
+  -webkit-line-clamp: 2;
+}
+
+.tray-chip.has-image { padding: 0; position: relative; gap: 0; justify-content: flex-end; }
+.tray-chip.has-image .art-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.tray-chip.has-image > span:last-child {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 4px 6px;
+  background: rgba(10, 12, 15, 0.84);
+}
+
+/* The band has room for a real picture. */
+.tier-hero .art-image.hero { width: 148px; height: 148px; border-radius: 10px; }
+.h-draft-col .art-image { display: none; }

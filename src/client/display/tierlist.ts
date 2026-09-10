@@ -148,7 +148,10 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       for (const item of board.unplaced.slice(0, 12)) {
         const chip = text("div", "tray-chip");
         const art = artNode(item, "chip");
-        if (art) chip.append(art);
+        if (art) {
+          chip.append(art);
+          if (item.art && "image" in item.art) chip.classList.add("has-image");
+        }
         chip.append(text("span", "", item.label));
         tray.append(chip);
       }

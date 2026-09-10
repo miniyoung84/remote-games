@@ -1,0 +1,24 @@
+{
+  "id": "best-dog-breed",
+  "title": "Best Dog Breed",
+  "subtitle": "You are getting one, today",
+  "items": [
+    {"label":"Golden retriever","art":{"image":"64c899dcc584dfc0360d93fb3051b079","source":"https://commons.wikimedia.org/wiki/File:Golden_Retriever_Sammy.jpg","license":"CC BY 2.5"}}, 
+    {"label":"Labrador","art":{"image":"ab19d3c990a38d73f7ba9d48f0a70a94","source":"https://commons.wikimedia.org/wiki/File:Labrador_Retriever_snow.jpg","license":"CC BY 2.5"}}, 
+    {"label":"German shepherd","art":{"image":"091bec7477c4c131c032bb4aead2c1a3","source":"https://commons.wikimedia.org/wiki/File:German_shepherd_wanting_to_play.JPG","license":"Attribution"}}, 
+    {"label":"Poodle","art":{"image":"06399444070dca75f216acd0b5f463c4","source":"https://commons.wikimedia.org/wiki/File:AKC_Poodle_at_Helena_Fall_dog_Show_2011.jpg","license":"CC BY 2.0"}}, 
+    {"label":"Beagle","art":{"image":"dc291c69e5d4a9016b45c5f0975de308","source":"https://commons.wikimedia.org/wiki/File:Beagle_Dog_female.jpg","license":"CC BY-SA 4.0"}}, 
+    {"label":"Dachshund","art":{"image":"010b1201673aee0a95970515af5e9ce1","source":"https://commons.wikimedia.org/wiki/File:Dachshund_Dog_Breed.jpg","license":"CC BY-SA 3.0"}}, 
+    {"label":"Husky","art":{"image":"8de043562533bad56adb57a84fd7d993","source":"https://commons.wikimedia.org/wiki/File:A_Siberian_husky_sled_dog_curled_up_in_the_snow_in_Long_Lake.jpg","license":"CC BY 2.0"}}, 
+    {"label":"Corgi","art":{"image":"92cc918fd5efda4f47807776fedb0d11","source":"https://commons.wikimedia.org/wiki/File:Corgi_Puppy.jpg","license":"CC BY-SA 4.0"}}, 
+    {"label":"Chihuahua","art":{"image":"f1297e083ed426cfdf72caa53fdebe17","source":"https://commons.wikimedia.org/wiki/File:Chihuahua_dog_3.jpg","license":"CC BY-SA 3.0"}}, 
+    {"label":"Bulldog","art":{"image":"a9fefabd47ff2bf5af718c05d5431784","source":"https://commons.wikimedia.org/wiki/File:English_bulldog_wearing_a_harness.jpg","license":"CC BY-SA 4.0"}}, 
+    {"label":"Border collie","art":{"image":"ed707f64957d9b07ad6de1ae3132c9d1","source":"https://commons.wikimedia.org/wiki/File:Border_Collie_600.jpg","license":"CC BY-SA 3.0"}}, 
+    {"label":"Great dane","art":{"image":"e1684e8bf7ea3bb123c15dde0ee08926","source":"https://commons.wikimedia.org/wiki/File:Great_Dane_600.jpg","license":"CC BY-SA 3.0"}}, 
+    {"label":"Pug","art":{"image":"f1805943cc8a68f9814efc42f34139ca","source":"https://commons.wikimedia.org/wiki/File:Pug_black_600.jpg","license":"CC BY-SA 3.0"}}, 
+    {"label":"Shiba inu","art":{"image":"0cc0fa95fc099b502e6d46d6343e2eec","source":"https://commons.wikimedia.org/wiki/File:Shiba_inu_taiki.jpg","license":"Public domain"}}, 
+    {"label":"Greyhound","art":{"image":"a342ba1b91279f9e798a1dda90e0f246","source":"https://commons.wikimedia.org/wiki/File:Greyhound_nor1-tb.jpg","license":"Public domain"}}, 
+    {"label":"Saint bernard","art":{"image":"d4552d5d9b68f47e0570f002b49df9f5","source":"https://commons.wikimedia.org/wiki/File:Nevada_du_Grand-Saint-Bernard.jpeg","license":"CC BY-SA 4.0"}}
+  ],
+  "updatedAt": 0
+}

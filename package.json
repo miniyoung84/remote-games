@@ -17,7 +17,9 @@
     "test": "node --import tsx --test src/**/*.test.ts",
     "shot": "node scripts/shot.mjs",
     "sets": "node scripts/set-list.mjs",
-    "fit": "node scripts/fitcheck.mjs"
+    "fit": "node scripts/fitcheck.mjs",
+    "art": "node scripts/attach-art.mjs",
+    "smoke": "node scripts/smoke.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.4.1",
