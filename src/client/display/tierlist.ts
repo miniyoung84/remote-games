@@ -1,11 +1,33 @@
 import type { DisplayGame, DisplayState, TierAction, TierBoard } from "../../shared/types.js";
-import { artNode, resetProgress, setHeader, setProgress, stagger, text, type DisplayDom, type Renderer, type Sound } from "./dom.js";
+import {
+  artNode,
+  captureRects,
+  fitLabels,
+  flyIn,
+  resetProgress,
+  setHeader,
+  setProgress,
+  stagger,
+  text,
+  type DisplayDom,
+  type Renderer,
+  type Sound,
+} from "./dom.js";
 
 type TierGame = Extract<DisplayGame, { kind: "tierlist" }>;
 type Frame = { state: DisplayState; game: TierGame };
 
 const ACTION_HOLD_MS = 1600;
-const FLIGHT_MS = 620;
+
+/** Chips are sized to the space the fullest row actually has, between these. */
+const CHIP_MAX = 190;
+const CHIP_MIN = 64;
+const CHIP_GAP = 6;
+
+const TRAY_MAX = 220;
+const TRAY_MIN = 110;
+const TRAY_GAP = 8;
+const TRAY_SHOWN = 12;
 
 export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
   let shown: Frame | null = null;
@@ -14,64 +36,6 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   /** Identifies the board so the entrance only plays for a new one. */
   let builtKey = "";
-
-  /**
-   * Screen-space rect of every chip, plus the item currently in the band.
-   * A placement therefore flies in from the band and a move flies across rows,
-   * both from the same captured map.
-   */
-  function capture(): Map<string, DOMRect> {
-    const map = new Map<string, DOMRect>();
-    for (const node of document.querySelectorAll<HTMLElement>("[data-item]")) {
-      if (node.dataset.item) map.set(node.dataset.item, node.getBoundingClientRect());
-    }
-    return map;
-  }
-
-  /**
-   * FLIP: nodes are already in their final position, so we invert them to where
-   * they were and let a transition carry them home.
-   *
-   * The stage is CSS-scaled, so a screen-space delta has to be divided by that
-   * scale before it's used as a local transform — otherwise the scaling is
-   * applied twice and chips fly off in the wrong direction.
-   */
-  function flip(before: Map<string, DOMRect>, focusId: string | null): void {
-    const rect = dom.board.getBoundingClientRect();
-    const scale = dom.board.offsetWidth ? rect.width / dom.board.offsetWidth : 1;
-    if (!scale) return;
-
-    const moved: HTMLElement[] = [];
-    for (const node of dom.board.querySelectorAll<HTMLElement>("[data-item]")) {
-      const id = node.dataset.item;
-      const from = id ? before.get(id) : undefined;
-      if (!from) continue;
-
-      const to = node.getBoundingClientRect();
-      const dx = (from.left - to.left) / scale;
-      const dy = (from.top - to.top) / scale;
-      const ds = to.width ? from.width / to.width : 1;
-      if (Math.abs(dx) < 1 && Math.abs(dy) < 1 && Math.abs(ds - 1) < 0.02) continue;
-
-      node.style.transition = "none";
-      node.style.transform = `translate(${dx}px, ${dy}px) scale(${ds})`;
-      if (id === focusId) node.classList.add("in-flight");
-      moved.push(node);
-    }
-    if (!moved.length) return;
-
-    void dom.board.offsetWidth; // commit the inverted positions
-    for (const node of moved) {
-      node.style.transition = `transform ${FLIGHT_MS}ms cubic-bezier(.22,.9,.24,1)`;
-      node.style.transform = "";
-    }
-    setTimeout(() => {
-      for (const node of moved) {
-        node.style.transition = "";
-        node.classList.remove("in-flight");
-      }
-    }, FLIGHT_MS + 40);
-  }
 
   function chip(item: TierBoard["rows"][number]["items"][number], focus: boolean): HTMLElement {
     const node = text("div", `chip${focus ? " focus" : ""}`);
@@ -85,15 +49,34 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     return node;
   }
 
-  function renderBoard(board: TierBoard, action: TierAction | null): void {
-    // Chip size is driven by the fullest row, so a lopsided S tier doesn't
-    // overflow while the others sit half empty.
-    const densest = Math.max(1, ...board.rows.map((r) => r.items.length));
-    dom.board.dataset.density = densest <= 5 ? "5" : densest <= 8 ? "8" : densest <= 11 ? "11" : "16";
+  /**
+   * One chip width for the whole board, from the room the fullest row has.
+   * Stepping the size on item count alone shrank every chip the moment a row
+   * hit six, with two thirds of the row still empty.
+   */
+  function sizeChips(densest: number): void {
+    const items = dom.board.querySelector<HTMLElement>(".tier-items");
+    if (!items) return;
+    // clientWidth is in stage pixels, untouched by the fit-to-window scale.
+    const style = getComputedStyle(items);
+    const avail = items.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    const width = Math.max(CHIP_MIN, Math.min(CHIP_MAX, Math.floor((avail - (densest - 1) * CHIP_GAP) / densest)));
+    dom.board.style.setProperty("--chip-w", `${width}px`);
+    // Type and art still step, but on the width the chip ended up with.
+    dom.board.dataset.density = width >= 170 ? "xl" : width >= 140 ? "l" : width >= 105 ? "m" : "s";
+  }
 
-    const key = `${board.title}:${board.total}:${board.mode}`;
+  function renderBoard(board: TierBoard, action: TierAction | null, cascade: boolean): void {
+    const densest = Math.max(1, ...board.rows.map((r) => r.items.length));
+
+    // Not keyed on the item count: adding one mid-game must not replay the
+    // whole board's entrance.
+    const key = `${board.title}:${board.mode}`;
     const fresh = key !== builtKey;
     builtKey = key;
+
+    // The tier layout has to be on before the rows are measured.
+    if (!dom.board.dataset.density) dom.board.dataset.density = "xl";
 
     dom.board.replaceChildren(
       ...board.rows.map((row) => {
@@ -109,7 +92,9 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
         return node;
       }),
     );
-    if (fresh) stagger(dom.board.querySelectorAll<HTMLElement>(".tier"));
+    sizeChips(densest);
+    fitLabels(dom.board.querySelectorAll<HTMLElement>(".chip-label"));
+    if (fresh || cascade) stagger(dom.board.querySelectorAll<HTMLElement>(".tier"));
   }
 
   function renderBand(frame: Frame, action: TierAction | null): void {
@@ -150,18 +135,27 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     // and the picker chooses from it.
     if (!subject && board.mode === "open" && board.unplaced.length) {
       const tray = text("div", "tier-tray");
-      for (const item of board.unplaced.slice(0, 12)) {
-        const chip = text("div", "tray-chip");
+      const shownItems = board.unplaced.slice(0, TRAY_SHOWN);
+      for (const item of shownItems) {
+        const node = text("div", "tray-chip");
+        node.dataset.item = item.id; // so the pick flies out of the tray
         const art = artNode(item, "chip");
         if (art) {
-          chip.append(art);
-          if (item.art && "image" in item.art) chip.classList.add("has-image");
+          node.append(art);
+          if (item.art && "image" in item.art) node.classList.add("has-image");
         }
-        chip.append(text("span", "", item.label));
-        tray.append(chip);
+        node.append(text("span", "tray-label", item.label));
+        tray.append(node);
       }
-      if (board.unplaced.length > 12) tray.append(text("span", "tray-more", `+${board.unplaced.length - 12}`));
+      const more = board.unplaced.length - shownItems.length;
+      if (more > 0) tray.append(text("span", "tray-more", `+${more}`));
       dom.band.replaceChildren(meta, tray);
+
+      // Same idea as the board: chips take the room they have.
+      const spare = more > 0 ? 70 : 0;
+      const width = Math.floor((tray.clientWidth - spare - (shownItems.length - 1) * TRAY_GAP) / shownItems.length);
+      tray.style.setProperty("--tray-w", `${Math.max(TRAY_MIN, Math.min(TRAY_MAX, width))}px`);
+      fitLabels(tray.querySelectorAll<HTMLElement>(".tray-label"), 12);
       return;
     }
 
@@ -172,6 +166,9 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
 
     const hero = text("div", `tier-hero${action?.from ? " moved" : ""}`);
     hero.dataset.item = subject.id;
+    // A queued item was already sitting here before it was placed: it fades
+    // rather than re-entering, since the chip that just flew off *is* it.
+    if (action && !action.from && board.mode === "queue") hero.classList.add("held");
     const art = artNode(subject, "hero");
     if (art) {
       hero.append(art);
@@ -184,16 +181,16 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     dom.band.replaceChildren(meta, hero);
   }
 
-  function render(frame: Frame, action: TierAction | null, before: Map<string, DOMRect> | null): void {
+  function render(frame: Frame, action: TierAction | null, before: Map<string, DOMRect> | null, cascade = false): void {
     const board = frame.game.board;
     setHeader(dom, board.title, board.subtitle);
     setProgress(dom, board.placed, board.total, "placed");
     dom.overlay.hidden = true;
     dom.stage.classList.toggle("tier-final", board.phase === "final");
 
-    renderBoard(board, action);
+    renderBoard(board, action, cascade);
     renderBand(frame, action);
-    if (before) flip(before, action?.item.id ?? null);
+    if (before) flyIn(dom, before, action?.item.id ?? null);
   }
 
   function pump(): void {
@@ -203,22 +200,24 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
 
     const isAction = Boolean(shown) && next.game.actionCount > (shown?.game.actionCount ?? 0);
     const action = isAction ? next.game.board.last : null;
-    const before = shown ? capture() : null;
+    const before = shown ? captureRects(dom) : null;
     const wasFinal = shown?.game.board.phase === "final";
+    const becameFinal = Boolean(shown) && !wasFinal && next.game.board.phase === "final";
     shown = next;
 
     if (action) sound.play(action.from ? "move" : "place");
-    else if (!wasFinal && next.game.board.phase === "final") sound.play("finish");
+    else if (becameFinal) sound.play("finish");
 
-    render(next, action, before);
+    // The finished list is the artifact, so it gets its entrance back.
+    render(next, action, before, becameFinal);
 
     if (action) {
       // Hold the result so the room registers who did what, then advance to the
-      // next item on offer.
+      // next item on offer. Nothing moves on that re-render, so no FLIP.
       animating = true;
       timer = setTimeout(() => {
         animating = false;
-        if (shown) render(shown, null, capture());
+        if (shown) render(shown, null, null);
         pump();
       }, ACTION_HOLD_MS);
     }
@@ -234,6 +233,7 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       resetProgress();
       builtKey = "";
       dom.board.dataset.density = "";
+      dom.board.style.removeProperty("--chip-w");
       dom.stage.classList.remove("tier-final");
     },
   };

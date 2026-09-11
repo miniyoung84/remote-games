@@ -1,13 +1,23 @@
 /**
- * Synthesized UI sound. No files and no dependency — the four sounds this needs
- * are a thunk, a whoosh, a blip and a chord, which is less code than a loader
- * and carries no licensing surface at all.
+ * UI sound. Most of it is synthesized — a thunk, a whoosh, a blip and a chord
+ * are less code than a loader and carry no licensing surface. The one shipped
+ * file is the draft-pick sting, which is a real jingle rather than a cue and
+ * lives in public/sounds/. If it hasn't loaded yet, the synthesized thunk
+ * stands in, so a pick is never silent while sound is on.
  *
  * Sound can never carry information here: Teams only shares audio if the host
  * ticks "include computer sound", and people forget. Every cue has a visual
  * twin — see docs/design-principles.md.
  */
-export type SoundName = "place" | "move" | "advance" | "round" | "finish" | "champion";
+export type SoundName = "place" | "move" | "advance" | "round" | "finish" | "champion" | "pick";
+
+/** Sampled sounds, by name. Fetched once the context exists. */
+const SAMPLES: Partial<Record<SoundName, { url: string; gain: number }>> = {
+  pick: { url: "/sounds/draft-pick.ogg", gain: 1.2 },
+};
+
+/** How long the draft-pick sting carries before its tail: the announcement holds this long. */
+export const PICK_STING_MS = 3000;
 
 export type SoundPlayer = {
   /** Must be called from a real user gesture, or the context stays suspended. */
@@ -118,6 +128,10 @@ export function renderSound(
     case "champion":
       chord(ctx, dest, at, [523, 659, 784, 1047], 0.09, 1.1, 0.22);
       break;
+    case "pick":
+      // The synthesized stand-in; the real thing is a sample.
+      renderSound(ctx, dest, "place", at);
+      break;
   }
 }
 
@@ -125,8 +139,34 @@ export function createSound(): SoundPlayer {
   let ctx: AudioContext | null = null;
   let master: GainNode | null = null;
   let on = false;
+  const buffers = new Map<SoundName, AudioBuffer>();
 
   const armed = () => ctx?.state === "running";
+
+  async function loadSamples(context: AudioContext): Promise<void> {
+    for (const [name, sample] of Object.entries(SAMPLES)) {
+      try {
+        const res = await fetch(sample.url);
+        if (!res.ok) throw new Error(`${res.status}`);
+        buffers.set(name as SoundName, await context.decodeAudioData(await res.arrayBuffer()));
+      } catch (err) {
+        console.warn(`[sound] ${sample.url} didn't load; using the synthesized cue`, err);
+      }
+    }
+  }
+
+  function playSample(name: SoundName): boolean {
+    const buffer = buffers.get(name);
+    const sample = SAMPLES[name];
+    if (!ctx || !master || !buffer || !sample) return false;
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    const gain = ctx.createGain();
+    gain.gain.value = sample.gain;
+    source.connect(gain).connect(master);
+    source.start();
+    return true;
+  }
 
   return {
     armed,
@@ -140,11 +180,13 @@ export function createSound(): SoundPlayer {
         master = ctx.createGain();
         master.gain.value = 0.35;
         master.connect(ctx.destination);
+        void loadSamples(ctx);
       }
       if (ctx.state === "suspended") await ctx.resume();
     },
     play: (name, intensity = 0) => {
       if (!on || !ctx || !master || ctx.state !== "running") return;
+      if (playSample(name)) return;
       renderSound(ctx, master, name, ctx.currentTime, intensity);
     },
   };

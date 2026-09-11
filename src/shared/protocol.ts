@@ -18,6 +18,7 @@ export type Action =
   | { type: "tier/finish" }
   | { type: "draft/start"; topic: string; subtitle: string; rounds: number }
   | { type: "draft/pick"; label: string }
+  | { type: "draft/setArt"; pickId: string; art: Art }
   | { type: "draft/finish" }
   | { type: "sets/save"; set: ItemSet }
   | { type: "sets/delete"; id: string }

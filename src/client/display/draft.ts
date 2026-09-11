@@ -1,11 +1,35 @@
+import { pickNumber } from "../../shared/draft.js";
 import type { DisplayGame, DisplayState, DraftBoard } from "../../shared/types.js";
-import { resetProgress, setHeader, setProgress, stagger, text, type DisplayDom, type Renderer, type Sound } from "./dom.js";
+import {
+  artNode,
+  captureRects,
+  fitLabels,
+  flyIn,
+  resetProgress,
+  setHeader,
+  setProgress,
+  stagger,
+  text,
+  type DisplayDom,
+  type Renderer,
+  type Sound,
+} from "./dom.js";
+import { PICK_STING_MS } from "./sound.js";
 
 type DraftGame = Extract<DisplayGame, { kind: "draft" }>;
 type Frame = { state: DisplayState; game: DraftGame };
 
-const PICK_HOLD_MS = 1600;
-const FLIGHT_MS = 620;
+/**
+ * A pick is announced on a takeover card while the sting plays, and only then
+ * does the board update: the chip flies off the card into its column. The
+ * flight is guarded too, so a state push landing mid-flight can't cut it.
+ */
+const ANNOUNCE_MS = PICK_STING_MS;
+const SETTLE_MS = 720;
+
+const PICK_MAX = 150;
+const PICK_MIN = 44;
+const PICK_GAP = 6;
 
 export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
   let shown: Frame | null = null;
@@ -14,54 +38,19 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   let builtKey = "";
 
-  function capture(): Map<string, DOMRect> {
-    const map = new Map<string, DOMRect>();
-    for (const node of document.querySelectorAll<HTMLElement>("[data-item]")) {
-      if (node.dataset.item) map.set(node.dataset.item, node.getBoundingClientRect());
-    }
-    return map;
-  }
-
-  /** Same FLIP as the tier list: a new pick flies out of the band into its column. */
-  function flip(before: Map<string, DOMRect>, focusId: string | null): void {
-    const rect = dom.board.getBoundingClientRect();
-    const scale = dom.board.offsetWidth ? rect.width / dom.board.offsetWidth : 1;
-    if (!scale) return;
-
-    const moved: HTMLElement[] = [];
-    for (const node of dom.board.querySelectorAll<HTMLElement>("[data-item]")) {
-      const id = node.dataset.item;
-      const from = id ? before.get(id) : undefined;
-      if (!from) continue;
-      const to = node.getBoundingClientRect();
-      const dx = (from.left - to.left) / scale;
-      const dy = (from.top - to.top) / scale;
-      const ds = to.width ? from.width / to.width : 1;
-      if (Math.abs(dx) < 1 && Math.abs(dy) < 1 && Math.abs(ds - 1) < 0.02) continue;
-
-      node.style.transition = "none";
-      node.style.transform = `translate(${dx}px, ${dy}px) scale(${ds})`;
-      if (id === focusId) node.classList.add("in-flight");
-      moved.push(node);
-    }
-    if (!moved.length) return;
-
-    void dom.board.offsetWidth;
-    for (const node of moved) {
-      node.style.transition = `transform ${FLIGHT_MS}ms cubic-bezier(.22,.9,.24,1)`;
-      node.style.transform = "";
-    }
-    setTimeout(() => {
-      for (const node of moved) {
-        node.style.transition = "";
-        node.classList.remove("in-flight");
-      }
-    }, FLIGHT_MS + 40);
+  /** Picks take the height the deepest column has, so three picks aren't three thin bars. */
+  function sizePicks(deepest: number): void {
+    const list = dom.board.querySelector<HTMLElement>(".draft-picks");
+    if (!list) return;
+    const style = getComputedStyle(list);
+    const avail = list.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+    const height = Math.max(PICK_MIN, Math.min(PICK_MAX, Math.floor((avail - (deepest - 1) * PICK_GAP) / deepest)));
+    dom.board.style.setProperty("--pick-h", `${height}px`);
+    dom.board.dataset.depth = height >= 120 ? "xl" : height >= 90 ? "l" : height >= 60 ? "m" : "s";
   }
 
   function renderBoard(board: DraftBoard, focusId: string | null): void {
     const deepest = Math.max(1, ...board.columns.map((c) => c.picks.length));
-    dom.board.dataset.depth = deepest <= 3 ? "3" : deepest <= 5 ? "5" : deepest <= 8 ? "8" : "12";
     dom.board.dataset.cols = String(Math.min(12, Math.max(1, board.columns.length)));
 
     const key = `${board.topic}:${board.columns.length}`;
@@ -72,17 +61,27 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       ...board.columns.map((column) => {
         const node = text("div", "draft-col");
         if (!column.present) node.classList.add("away");
-        if (focusId && column.picks.some((p) => p.id === focusId)) node.classList.add("receiving");
+        const receiving = Boolean(focusId) && column.picks.some((p) => p.id === focusId);
+        if (receiving) node.classList.add("receiving");
 
         const head = text("div", "draft-head");
         head.append(text("span", "draft-name", column.name));
-        head.append(text("span", "draft-count", String(column.picks.length)));
+        const count = text("span", "draft-count", String(column.picks.length));
+        if (receiving) count.classList.add("tick");
+        head.append(count);
         node.append(head);
 
         const picks = text("div", "draft-picks");
         for (const pick of column.picks) {
-          const chip = text("div", "draft-pick", pick.label);
+          const chip = text("div", "draft-pick");
           chip.dataset.item = pick.id;
+          const art = artNode(pick, "chip");
+          if (art) {
+            chip.append(art);
+            chip.classList.add("has-art");
+          }
+          chip.append(text("span", "pick-num", pickNumber(pick)));
+          chip.append(text("span", "pick-label", pick.label));
           if (pick.id === focusId) chip.classList.add("focus");
           picks.append(chip);
         }
@@ -90,10 +89,12 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
         return node;
       }),
     );
+    sizePicks(deepest);
+    fitLabels(dom.board.querySelectorAll<HTMLElement>(".pick-label"));
     if (fresh) stagger(dom.board.querySelectorAll<HTMLElement>(".draft-col"), "entering-up", 45);
   }
 
-  function renderBand(frame: Frame, justPicked: boolean): void {
+  function renderBand(frame: Frame): void {
     const board = frame.game.board;
 
     if (board.phase === "final") {
@@ -102,38 +103,54 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     }
 
     const meta = text("div", "band-meta");
-    if (justPicked && board.last) {
-      meta.append(text("span", "band-round", `Pick ${board.total}`));
-      meta.append(text("span", "band-picker", `${board.last.byName} took it`));
-    } else {
-      meta.append(text("span", "band-round", board.target ? `${board.total} of ${board.target}` : `${board.total} picked`));
-      if (frame.state.pickerName) {
-        meta.append(text("span", "band-picker", `${frame.state.pickerName} is on the clock`));
-      }
+    meta.append(text("span", "band-round", board.target ? `${board.total} of ${board.target}` : `${board.total} picked`));
+    if (frame.state.pickerName) {
+      meta.append(text("span", "band-picker", `${frame.state.pickerName} is on the clock`));
     }
-
-    if (justPicked && board.last) {
-      const hero = text("div", "tier-hero");
-      hero.dataset.item = board.last.id;
-      hero.append(text("span", "hero-label", board.last.label));
-      if (board.last.label.length > 26) hero.classList.add("long");
-      dom.band.replaceChildren(meta, hero);
-      return;
-    }
-
     dom.band.replaceChildren(meta, text("div", "band-message", frame.state.pickerName ? "Say what you're taking" : ""));
   }
 
-  function render(frame: Frame, justPicked: boolean, before: Map<string, DOMRect> | null): void {
+  /** The broadcast card: pick number, who, and what — over the whole stage. */
+  function renderAnnouncement(board: DraftBoard): void {
+    const last = board.last;
+    if (!last) return;
+
+    const card = text("div", "announce-card");
+
+    const tag = text("div", "announce-pick");
+    tag.append(text("span", "k", "Pick"), text("span", "n", pickNumber(last)));
+    card.append(tag);
+
+    const body = text("div", "announce-body");
+    body.append(text("div", "announce-who", `${last.byName} selects`));
+    const what = text("div", "announce-what");
+    what.dataset.item = last.id; // the chip flies out of here
+    const art = artNode(last, "hero");
+    if (art) {
+      what.append(art);
+      what.classList.add("has-art");
+    }
+    const label = text("span", "announce-label", last.label);
+    if (last.label.length > 30) label.classList.add("xlong");
+    else if (last.label.length > 16) label.classList.add("long");
+    what.append(label);
+    body.append(what);
+    card.append(body);
+
+    dom.overlay.className = "announce";
+    dom.overlay.replaceChildren(card);
+    dom.overlay.hidden = false;
+  }
+
+  function render(frame: Frame, before: Map<string, DOMRect> | null, focusId: string | null): void {
     const board = frame.game.board;
     setHeader(dom, board.topic, board.subtitle);
     setProgress(dom, board.total, board.target || board.total, "picked");
-    dom.overlay.hidden = true;
     dom.stage.classList.toggle("tier-final", board.phase === "final");
 
-    renderBoard(board, justPicked ? (board.last?.id ?? null) : null);
-    renderBand(frame, justPicked);
-    if (before) flip(before, board.last?.id ?? null);
+    renderBoard(board, focusId);
+    renderBand(frame);
+    if (before) flyIn(dom, before, focusId);
   }
 
   function pump(): void {
@@ -141,24 +158,33 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     const next = queued;
     queued = null;
 
-    const picked = Boolean(shown) && next.game.actionCount > (shown?.game.actionCount ?? 0);
+    const picked = Boolean(shown) && next.game.actionCount > (shown?.game.actionCount ?? 0) && Boolean(next.game.board.last);
     const wasFinal = shown?.game.board.phase === "final";
-    const before = shown ? capture() : null;
+    // Columns reflow when someone joins; let the existing picks slide over.
+    const before = shown ? captureRects(dom) : null;
     shown = next;
 
-    if (picked) sound.play("place");
-    else if (!wasFinal && next.game.board.phase === "final") sound.play("champion");
-
-    render(next, picked, before);
-
     if (picked) {
+      sound.play("pick");
+      // The board stays as it was under the card; the pick lands after.
+      renderAnnouncement(next.game.board);
       animating = true;
       timer = setTimeout(() => {
-        animating = false;
-        if (shown) render(shown, false, capture());
-        pump();
-      }, PICK_HOLD_MS);
+        if (!shown) return;
+        const from = captureRects(dom); // the card is still up: that's where the chip starts
+        dom.overlay.hidden = true;
+        render(shown, from, shown.game.board.last?.id ?? null);
+        timer = setTimeout(() => {
+          animating = false;
+          pump();
+        }, SETTLE_MS);
+      }, ANNOUNCE_MS);
+      return;
     }
+
+    if (!wasFinal && next.game.board.phase === "final") sound.play("champion");
+    dom.overlay.hidden = true;
+    render(next, before, null);
   }
 
   return {
@@ -172,6 +198,7 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       builtKey = "";
       dom.board.dataset.depth = "";
       dom.board.dataset.cols = "";
+      dom.board.style.removeProperty("--pick-h");
       dom.stage.classList.remove("tier-final");
     },
   };

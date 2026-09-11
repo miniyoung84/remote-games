@@ -1,11 +1,12 @@
-import { alreadyDrafted, behindInPicks } from "../../shared/draft.js";
+import { alreadyDrafted, behindInPicks, pickNumber } from "../../shared/draft.js";
 import type { Action } from "../../shared/protocol.js";
-import type { HostGame, HostState } from "../../shared/types.js";
+import type { BoardPick, HostGame, HostState } from "../../shared/types.js";
 import { button, text, type HostDom, type HostPanel } from "./panel.js";
+import type { FindPicture } from "./tierlist.js";
 
 type Game = Extract<HostGame, { kind: "draft" }>;
 
-export function mountDraftPanel(dom: HostDom, send: (a: Action) => void): HostPanel {
+export function mountDraftPanel(dom: HostDom, send: (a: Action) => void, findPicture: FindPicture): HostPanel {
   // Kept outside the render so a state push mid-typing can't wipe the input.
   const input = document.createElement("input");
   input.className = "draft-input";
@@ -34,6 +35,10 @@ export function mountDraftPanel(dom: HostDom, send: (a: Action) => void): HostPa
     warning.textContent = owner ? `${owner} already drafted that` : "";
   };
 
+  function findFor(pick: BoardPick): void {
+    findPicture([pick.label], (_label, art) => send({ type: "draft/setArt", pickId: pick.id, art }));
+  }
+
   function renderNow(state: HostState, game: Game): void {
     dom.now.replaceChildren();
 
@@ -54,6 +59,18 @@ export function mountDraftPanel(dom: HostDom, send: (a: Action) => void): HostPa
     row.append(input, add);
     dom.now.append(row, warning);
     if (picker) input.focus();
+
+    // The pick that just went up is the one most likely to want a picture, so
+    // it gets the button right here rather than a hunt through the board.
+    const last = game.board.last;
+    if (last) {
+      const line = text("div", "draft-last");
+      line.append(text("span", "draft-last-label", `${pickNumber(last)} · ${last.byName} took ${last.label}`));
+      const find = button(last.art ? "change picture" : "find a picture", "mini");
+      find.onclick = () => findFor(last);
+      line.append(find);
+      dom.now.append(line);
+    }
 
     // Who has the fewest picks — the fairness the snake order used to provide.
     const behind = behindInPicks(game.board)
@@ -82,7 +99,20 @@ export function mountDraftPanel(dom: HostDom, send: (a: Action) => void): HostPa
       head.append(text("span", "", column.name), text("span", "h-draft-count", String(column.picks.length)));
       node.append(head);
       const picks = text("div", "h-draft-picks");
-      for (const pick of column.picks) picks.append(text("span", "h-chip", pick.label));
+      for (const pick of column.picks) {
+        const chip = text("span", "h-chip", "");
+        if (pick.art && "image" in pick.art) {
+          const img = document.createElement("img");
+          img.className = "h-thumb";
+          img.src = `/images/${pick.art.image}.webp`;
+          img.alt = "";
+          chip.append(img);
+        }
+        chip.append(text("span", "h-pick-num", pickNumber(pick)), document.createTextNode(pick.label));
+        chip.title = pick.art ? "Change the picture" : "Find a picture";
+        chip.onclick = () => findFor(pick);
+        picks.append(chip);
+      }
       if (!column.picks.length) picks.append(text("span", "h-tier-empty", "—"));
       node.append(picks);
       wrap.append(node);

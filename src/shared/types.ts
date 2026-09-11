@@ -133,8 +133,11 @@ export type TierBoard = {
 
 /* ---------- draft ---------- */
 
-/** Picks are free text typed by the host — there is no pool to choose from. */
-export type DraftPick = { id: string; label: string; by: string; at: number };
+/**
+ * Picks are free text typed by the host — there is no pool to choose from.
+ * Art is attached after the fact, the same way a tier item gets one mid-game.
+ */
+export type DraftPick = { id: string; label: string; by: string; at: number; art?: Art };
 
 export type DraftGame = {
   kind: "draft";
@@ -147,11 +150,18 @@ export type DraftGame = {
   startedAt: number;
 };
 
+/**
+ * A pick as the board shows it, numbered the way a real draft is: round.slot,
+ * so 2.03 is the third pick made in round two. Someone's Nth pick is their
+ * round N — there is no fixed order, so the slot is just arrival order.
+ */
+export type BoardPick = DraftPick & { round: number; slot: number };
+
 export type DraftColumn = {
   personId: string;
   name: string;
   present: boolean;
-  picks: DraftPick[];
+  picks: BoardPick[];
 };
 
 export type DraftBoard = {
@@ -160,7 +170,7 @@ export type DraftBoard = {
   rounds: number;
   columns: DraftColumn[];
   /** The pick just made, with its drafter's name resolved. */
-  last: (DraftPick & { byName: string }) | null;
+  last: (BoardPick & { byName: string }) | null;
   total: number;
   /** rounds x drafters, for the progress readout. */
   target: number;

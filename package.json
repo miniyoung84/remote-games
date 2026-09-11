@@ -20,6 +20,7 @@
     "fit": "node scripts/fitcheck.mjs",
     "art": "node scripts/attach-art.mjs",
     "smoke": "node scripts/smoke.mjs",
+    "motion": "node scripts/motion.mjs",
     "restore": "tsx scripts/restore.mjs"
   },
   "devDependencies": {

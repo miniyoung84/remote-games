@@ -82,7 +82,7 @@ export function projectHost(state: AppState): HostState {
     soundOn: state.soundOn,
     currentPickerId: state.currentPickerId,
     sets: loadSets().map((set) => ({ ...set, lastPlayedAt: state.playedAt[set.id] })),
-    unusedImages: orphanImages().length,
+    unusedImages: orphanImages(state.game).length,
     canUndo,
     game: hostGame(state),
   };

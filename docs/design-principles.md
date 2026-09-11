@@ -22,12 +22,16 @@ target, and the usual instincts are mostly wrong.
   compositions with occasional deliberate transitions look dramatically better.
 
   There is plenty of motion, but every piece of it fires on an event and then
-  stops: boards cascade in when a game starts, chips fly between tiers, the
-  counter ticks, the champion card assembles. **Nothing loops.** That's the line
-  — the display should be completely still between actions, and there's a check
-  asserting exactly that. Everything animates transform and opacity only, so it
-  composites on the GPU and stays smooth with sixteen things moving at once, and
-  `prefers-reduced-motion` turns all of it off.
+  stops: boards cascade in when a game starts, chips fly between tiers and
+  overshoot into place, a band sweeps the row that took one, the counter ticks,
+  a winner wipes into the next round, the champion field wipes open. **Nothing
+  loops.** That's the line — the display should be completely still between
+  actions, and there's a check asserting exactly that. The flashiness is built
+  from big flat shapes moving once — sweeps, wipes, flat flashes, overshoot —
+  never glow or particles, because a video encoder handles the former well and
+  smears the latter. It's transform, opacity and flat colour, so it composites
+  cleanly with sixteen things moving at once, and `prefers-reduced-motion` turns
+  all of it off.
 - **Grids of large flat shapes and numbers are the best-compressing thing you
   can show.** This is a real argument in favour of board-style games.
 
@@ -48,9 +52,10 @@ Transitions fire on an event and then stop.
   Teams only shares system sound if the host ticks "include computer sound."
   Every audio cue needs a visual equivalent.
 
-  The display does synthesize sound — a thunk on a placement, a whoosh on a
-  move, a chord at the end — but it is decoration on top of a visual that
-  already says the same thing, and it is **off by default**. It has to stay
+  The display does have sound — a thunk on a placement, a whoosh on a move, a
+  chord at the end, a sting when a draft pick is announced — but it is
+  decoration on top of a visual that already says the same thing, and it is
+  **off by default**. It has to stay
   that way: at least some of the room will never hear it, and they should not
   be able to tell.
 

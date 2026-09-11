@@ -143,6 +143,15 @@ export function reduce(state: AppState, action: Action): ReduceResult {
       });
     }
 
+    case "draft/setArt": {
+      const game = state.game;
+      if (game?.kind !== "draft") return fail("No draft in progress.");
+      if (!game.picks.some((p) => p.id === action.pickId)) return fail("Unknown pick.");
+      return ok({
+        ...state,
+        game: { ...game, picks: game.picks.map((p) => (p.id === action.pickId ? { ...p, art: action.art } : p)) },
+      });
+    }
     case "draft/finish": {
       const game = state.game;
       if (game?.kind !== "draft") return fail("No draft in progress.");
@@ -326,7 +335,7 @@ export function reduce(state: AppState, action: Action): ReduceResult {
       return ok({ ...state, soundOn: !state.soundOn });
 
     case "images/prune": {
-      const gone = pruneImages();
+      const gone = pruneImages(state.game);
       return { state, setsChanged: true, notice: gone ? `Removed ${gone} unused image${gone === 1 ? "" : "s"}.` : "Nothing to remove." };
     }
 

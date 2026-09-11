@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { alreadyDrafted, behindInPicks, buildDraftBoard } from "./draft.js";
+import { alreadyDrafted, behindInPicks, buildDraftBoard, pickNumber } from "./draft.js";
 import type { DraftGame, DraftPick, Person } from "./types.js";
 
 const people = (...names: string[]): Person[] =>
@@ -80,4 +80,21 @@ test("undo is dropping the last pick", () => {
 
 test("finishing marks the board final", () => {
   assert.equal(buildDraftBoard(gameOf([], 2, true), people("Chase")).phase, "final");
+});
+
+test("picks are numbered round.slot, with someone's Nth pick being their round N", () => {
+  // Dana goes first, Chase twice in a row, then Dana: 1.01, 1.02, 2.01, 2.02.
+  const picks = [pick("Bat", "p1", 0), pick("Dog", "p0", 1), pick("Van", "p0", 2), pick("Map", "p1", 3)];
+  const board = buildDraftBoard(gameOf(picks), people("Chase", "Dana"));
+  const numbers = picks.map((p) => board.columns.flatMap((c) => c.picks).find((b) => b.id === p.id)!).map(pickNumber);
+  assert.deepEqual(numbers, ["1.01", "1.02", "2.01", "2.02"]);
+  assert.equal(pickNumber(board.last!), "2.02");
+  assert.equal(pickNumber({ round: 3, slot: 12 }), "3.12");
+});
+
+test("art on a pick survives the rebuild and stays off the pick count", () => {
+  const picks = [{ ...pick("Bat", "p0", 0), art: { emoji: "🦇" } }];
+  const board = buildDraftBoard(gameOf(picks), people("Chase"));
+  assert.deepEqual(board.columns[0].picks[0].art, { emoji: "🦇" });
+  assert.equal(board.total, 1);
 });

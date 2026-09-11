@@ -102,6 +102,17 @@ and press Enter. The clock clears after every pick so the next person has to be
 called on deliberately. If the pick duplicates something already taken you're
 told who has it, but nothing stops you.
 
+Every pick is announced on the display before it lands: a card with the pick
+number (1.01, 1.02… 2.01 — someone's second pick is their round two), who, and
+what, with the sting playing if sound is on, and then the board takes it. That
+holds the display for about three seconds, so give it a beat before the next
+name.
+
+The pick that just went up gets a **find a picture** button right under the
+entry field — the same reviewer as everywhere else, a couple of seconds, one
+click — and every pick on the host board is clickable for the same thing
+later. Pictures go on the running draft only; there's no set to save them to.
+
 ## Adding an item mid-game
 
 Someone always remembers one that isn't on the list. The tier list host panel
@@ -184,8 +195,10 @@ Click it while you're setting the window up, before you share.
 
 What you'll hear: a thunk when a tier list item is placed, a whoosh when one is
 moved, a knock on every bracket pick that climbs in pitch as the bracket
-narrows, a short chord when a round finishes, and a longer one for a champion or
-a finished list.
+narrows, a short chord when a round finishes, a longer one for a champion or a
+finished list, and a sting when a draft pick is announced. The sting is the one
+sound that's a file — `public/sounds/draft-pick.ogg`; swap it for another Ogg
+and the announcement uses that instead.
 
 For anyone else to hear it you must also share computer audio: Teams has an
 "include computer sound" tick on the share dialog, Discord's Go Live picks up
@@ -282,7 +295,14 @@ ranking.
 npm test            # unit tests, no server needed
 npm run smoke -- 5173   # end-to-end against a running server
 npm run fit -- 5173     # display placement across monitor sizes
+npm run motion -- 5173  # rendering: sizing, labels, flights, announcements
 ```
+
+`motion` plays real games through the display and screenshots each stage into
+`screenshots/motion/`, so run it against a server nobody is sharing. It's the
+check that a chip flies exactly once, that six chips in a row stay full size,
+that no label is truncated, and that nothing is still animating once a board
+has settled.
 
 ## Screenshots
 

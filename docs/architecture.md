@@ -164,6 +164,23 @@ snake order is impossible, the host view surfaces who has the fewest picks
 instead. Columns cover everyone present *plus* anyone who has already drafted,
 so leaving the meeting never erases what you picked.
 
+Picks are numbered the way a real draft reads them, **round.slot**: someone's
+Nth pick is their round N, and the slot is arrival order within that round, so
+the first pick of round two is 2.01 whoever makes it. The numbers are derived
+in `buildDraftBoard`, never stored.
+
+A pick is announced before it lands. The display puts up a broadcast card —
+pick number, who, what — while the sting plays, and only when the card drops
+does the board update, the chip flying off the card into its column. The board
+under the card is deliberately the *old* board. The renderer holds further
+state pushes through the card and the flight, so a host tapping the next name
+mid-announcement can't cut it short.
+
+Art can be attached to a pick after the fact (`draft/setArt`), the same shape
+as `tier/setArt`: it changes the running game only, and it doesn't count as a
+pick, so `actionCount` — what the display uses to detect a new pick — is left
+alone.
+
 ### Tier list modes
 
 Two ways to run it, chosen at start. **Queue** hands out the next item and the
@@ -183,9 +200,23 @@ operation as placing**, undo is "drop the last entry", and the display can tell
 the two apart because a replay knows whether that item had a previous tier.
 
 The display animates with FLIP — render the new positions, invert every chip to
-where it was, then transition home. One consequence worth knowing: the stage is
+where it was, then transition home. Two consequences worth knowing. The stage is
 CSS-scaled, so a screen-space delta must be divided by that scale before being
-used as a local transform, or the scaling is applied twice.
+used as a local transform, or the scaling is applied twice. And when the "before"
+rects are captured, **the board wins over the band**: during a placement the
+chip and the band hero are the same item, and a capture that took the hero's
+rect sent the chip flying out of the band a second time when the hold ended.
+The re-render after a hold passes no rects at all, since nothing moves on it.
+
+Chips are sized by measurement, not by count. `sizeChips` reads the width the
+fullest row actually has and divides it up, capped at a maximum, so six chips
+stay full size in a row that would hold eight and only shrink once they need
+to. Labels then get two or three lines and `fitLabels` steps the type down on
+any that still truncate. Two things make the measurement honest: the stage grid
+declares a definite column (an `auto` track would grow to fit an overflowing row
+and the measurement would read its own chips), and rows don't clip — a chip
+flying in from the band has to be visible the whole way, so nothing about a row
+depends on `overflow: hidden`.
 
 ### How the bracket game works
 
@@ -245,15 +276,32 @@ display is completely still between actions.
 
 Entrances are gated on a board *key* rather than on render, since the renderers
 rebuild their DOM on every state push and would otherwise replay the cascade on
-every pick. FLIP handles movement, so entrance animations are only ever applied
-to a newly built board — the two never fight over `transform`.
+every pick. The key is the set and mode, not the item count — adding an item
+mid-game must not replay the whole board's entrance. FLIP handles movement, so
+entrance animations are only ever applied to a newly built board — the two
+never fight over `transform`.
+
+The vocabulary is chosen for compression: **sweeps, wipes, flat flashes and
+overshoot**, never glow or particles. A band crossing a row is a hard-edged
+gradient in the row's own background (clipped by its rounded box for free), a
+winner arriving in the next round is a `clip-path` wipe, the champion field is
+a circle wipe with two flat bars crossing it once, a landing is a scale
+overshoot plus a tint that drains away. Big flat shapes moving once are what a
+video encoder handles well; a soft glow is the first thing it eats.
 
 ## Sound
 
-Synthesized with the Web Audio API rather than shipped as files: the sounds
+Mostly synthesized with the Web Audio API rather than shipped as files: the cues
 needed here are a thunk, a whoosh, a blip and two chords, which is less code
 than a loader and carries no licensing surface — the same reason images stay out
 of the repo.
+
+The one shipped file is the draft-pick sting in `public/sounds/`, which is a
+jingle rather than a cue. It's fetched and decoded once the audio context
+exists; until it has loaded, or if it fails to, the synthesized thunk stands in
+so a pick with sound on is never silent. Its length sets the announcement hold
+(`PICK_STING_MS`): the sting carries for about three seconds and tails for two,
+so the card drops and the chip lands while the tail rings out.
 
 `renderSound()` is deliberately split from playback so the identical synthesis
 can be rendered into an `OfflineAudioContext` and measured. A sound that has

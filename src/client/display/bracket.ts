@@ -1,4 +1,4 @@
-import { roundName } from "../../shared/bracket.js";
+import { matchId, roundName } from "../../shared/bracket.js";
 import type { Bracket, DisplayGame, DisplayState, Match } from "../../shared/types.js";
 import { artNode, resetProgress, setHeader, setProgress, stagger, text, type DisplayDom, type Renderer, type Sound } from "./dom.js";
 
@@ -62,6 +62,11 @@ export function mountBracket(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       buildBoard(bracket);
     }
 
+    const decided = findMatch(bracket, justDecided);
+    // Where the winner lands: the next round's match, top or bottom slot.
+    const arrival = decided ? `${matchId(decided.round + 1, Math.floor(decided.slot / 2))}:${decided.slot % 2 === 0 ? "a" : "b"}` : null;
+    const liveRound = findMatch(bracket, frame.game.currentMatchId)?.round ?? -1;
+
     for (const match of bracket.rounds.flat()) {
       const node = matchNodes.get(match.id);
       if (!node) continue;
@@ -76,7 +81,13 @@ export function mountBracket(dom: DisplayDom, sound: Sound): Renderer<Frame> {
         void node.offsetWidth;
         node.classList.add("just-decided");
       }
+      if (arrival === `${match.id}:a`) a.classList.add("arrived");
+      if (arrival === `${match.id}:b`) b.classList.add("arrived");
     }
+
+    dom.board.querySelectorAll<HTMLElement>(".round").forEach((column, round) => {
+      column.classList.toggle("live", round === liveRound);
+    });
   }
 
   function findMatch(bracket: Bracket, id: string | null): Match | null {

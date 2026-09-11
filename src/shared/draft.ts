@@ -1,4 +1,4 @@
-import type { DraftBoard, DraftColumn, DraftGame, Person } from "./types.js";
+import type { BoardPick, DraftBoard, DraftColumn, DraftGame, Person } from "./types.js";
 
 /**
  * Build the board from the pick log, the way the other games rebuild from
@@ -9,11 +9,18 @@ import type { DraftBoard, DraftColumn, DraftGame, Person } from "./types.js";
  * marked rather than removed.
  */
 export function buildDraftBoard(game: DraftGame, roster: Person[]): DraftBoard {
-  const byPerson = new Map<string, DraftGame["picks"]>();
+  const byPerson = new Map<string, BoardPick[]>();
+  const slotsInRound = new Map<number, number>();
+  const numbered: BoardPick[] = [];
   for (const pick of game.picks) {
     const list = byPerson.get(pick.by) ?? [];
-    list.push(pick);
+    const round = list.length + 1;
+    const slot = (slotsInRound.get(round) ?? 0) + 1;
+    slotsInRound.set(round, slot);
+    const entry = { ...pick, round, slot };
+    list.push(entry);
     byPerson.set(pick.by, list);
+    numbered.push(entry);
   }
 
   const columns: DraftColumn[] = roster
@@ -25,7 +32,7 @@ export function buildDraftBoard(game: DraftGame, roster: Person[]): DraftBoard {
       picks: byPerson.get(person.id) ?? [],
     }));
 
-  const last = game.picks[game.picks.length - 1] ?? null;
+  const last = numbered[numbered.length - 1] ?? null;
 
   return {
     topic: game.topic,
@@ -39,6 +46,11 @@ export function buildDraftBoard(game: DraftGame, roster: Person[]): DraftBoard {
     target: game.rounds * columns.filter((c) => c.present).length,
     phase: game.finished ? "final" : "drafting",
   };
+}
+
+/** "1.01", "2.10" — the number a pick is announced by. */
+export function pickNumber(pick: { round: number; slot: number }): string {
+  return `${pick.round}.${String(pick.slot).padStart(2, "0")}`;
 }
 
 /** Drafters with the fewest picks — who the host should call on next. */

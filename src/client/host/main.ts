@@ -98,7 +98,7 @@ function ensurePanel(kind: GameKind | null): void {
   dom.board.replaceChildren();
   if (kind === "bracket") panel = mountBracketPanel(dom, act);
   else if (kind === "tierlist") panel = mountTierPanel(dom, act, openPictureFinder);
-  else if (kind === "draft") panel = mountDraftPanel(dom, act);
+  else if (kind === "draft") panel = mountDraftPanel(dom, act, openPictureFinder);
 }
 
 function renderGameActions(next: HostState): void {

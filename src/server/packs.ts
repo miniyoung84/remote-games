@@ -1,5 +1,5 @@
 import { readItems } from "../shared/items.js";
-import type { ItemSet, Pack, RawItem } from "../shared/types.js";
+import type { Game, ItemSet, Pack, RawItem } from "../shared/types.js";
 import { deleteImage, hasImage, isImageId, listImages, loadSets, readImage, saveImage, saveSet } from "./store.js";
 
 export const PACK_FORMAT = "remote-games-pack";
@@ -92,14 +92,21 @@ export function importPack(pack: Pack): ImportResult {
 }
 
 /** Image files on disk that no set references any more. */
-export function orphanImages(): string[] {
+/**
+ * Stored images nothing references. The running game counts: a picture found
+ * mid-game lives only on the game's copy of the item, and pruning it while
+ * that game is up would strip it off the board.
+ */
+export function orphanImages(game: Game | null = null): string[] {
   const used = new Set(loadSets().flatMap((s) => imageIds(s.items)));
+  const live = game?.kind === "draft" ? game.picks : game ? game.items : [];
+  for (const id of imageIds(live)) used.add(id);
   return listImages().filter((id) => !used.has(id));
 }
 
 /** Delete images nothing references. Returns how many went. */
-export function pruneImages(): number {
-  const orphans = orphanImages();
+export function pruneImages(game: Game | null = null): number {
+  const orphans = orphanImages(game);
   for (const id of orphans) deleteImage(id);
   return orphans.length;
 }

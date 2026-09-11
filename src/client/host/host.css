@@ -344,6 +344,11 @@ label input, label textarea { margin-top: 5px; text-transform: none; letter-spac
 }
 .h-draft-count { color: var(--accent); }
 .h-draft-picks { display: flex; flex-wrap: wrap; gap: 5px; padding: 7px; }
+.h-pick-num { color: var(--dim); font-size: 11px; margin-right: 6px; font-variant-numeric: tabular-nums; }
+.h-thumb { width: 20px; height: 20px; object-fit: cover; border-radius: 4px; vertical-align: -5px; margin-right: 6px; }
+.draft-last { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 10px; }
+.draft-last-label { font-size: 13px; font-weight: 700; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.draft-last .mini { flex: none; border: 2px solid var(--accent); color: var(--accent); padding: 5px 9px; font-size: 11px; white-space: nowrap; }
 .art-row.dropping { border-color: var(--accent); background: #2a2410; }
 .art-row.busy { opacity: 0.55; pointer-events: none; }
 .art-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
