@@ -189,9 +189,12 @@ art helps, and those sets are deliberately left plain.
 
 ## Sound
 
-Off by default. **Sound on/off** in the host view toggles it, and the display
-then asks for one click to enable audio — browsers won't start it otherwise.
-Click it while you're setting the window up, before you share.
+Off by default, and there are two switches. **Sound off/on** in the host view
+is the first — the label is the current state, so click it until it reads
+"Sound on". The display then shows a chip saying so, and needs **one click
+anywhere on that window** to enable audio, because browsers won't start it
+otherwise. Do that while you're setting the window up, before you share. Until
+both have happened the display is silent, sting included.
 
 What you'll hear: a thunk when a tier list item is placed, a whoosh when one is
 moved, a knock on every bracket pick that climbs in pitch as the bracket

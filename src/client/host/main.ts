@@ -105,7 +105,9 @@ function renderGameActions(next: HostState): void {
   gameActions.replaceChildren();
 
   const soundBtn = button(next.soundOn ? "Sound on" : "Sound off", next.soundOn ? "primary" : "ghost");
-  soundBtn.title = "Sound plays from the display window, and only if you share computer audio";
+  soundBtn.title = next.soundOn
+    ? "Playing from the display window once it has been clicked. Others hear it only if you share computer audio."
+    : "Off. Turn it on, then click the display window once so the browser lets it play.";
   soundBtn.onclick = () => act({ type: "sound/toggle" });
   gameActions.append(soundBtn);
 

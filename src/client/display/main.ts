@@ -25,10 +25,17 @@ const offline = el("offline");
 const soundArm = el<HTMLButtonElement>("sound-arm");
 const sound = createSound();
 
-soundArm.onclick = async () => {
+async function armSound(): Promise<void> {
   await sound.arm();
   refreshSoundChip();
-};
+}
+
+soundArm.onclick = armSound;
+// The chip is small and easy to miss, and the host has usually clicked the
+// window anyway to bring it forward — so any click counts while it's needed.
+document.addEventListener("pointerdown", () => {
+  if (sound.enabled() && !sound.armed()) void armSound();
+});
 
 /** Only asks for the one click, and only while sound is on but still blocked. */
 function refreshSoundChip(): void {
