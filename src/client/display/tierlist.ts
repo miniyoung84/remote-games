@@ -232,7 +232,7 @@ export function mountTierlist(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       clearTimeout(timer);
       resetProgress();
       builtKey = "";
-      dom.board.dataset.density = "";
+      delete dom.board.dataset.density;
       dom.board.style.removeProperty("--chip-w");
       dom.stage.classList.remove("tier-final");
     },

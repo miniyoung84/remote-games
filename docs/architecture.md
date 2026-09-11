@@ -176,6 +176,18 @@ under the card is deliberately the *old* board. The renderer holds further
 state pushes through the card and the flight, so a host tapping the next name
 mid-announcement can't cut it short.
 
+The band under a draft is shorter than the other games' (the card does the
+announcing) and is the on-the-clock strip: whoever the host tapped, named
+large, plus who is still on the fewest picks this round with the picker
+excluded. When that's everyone, a round has just started and it shows nothing
+— there's no one to nag. The name only re-enters when it changes; a re-render
+for anything else marks it `still` so it doesn't slam again.
+
+Column count caps the type on top of the height bands (`data-width`), and a
+pick can't be taller than its column is wide, so fifteen across is fifteen
+columns of cards rather than slivers. Words are never split: `fitLabels` also
+watches horizontal overflow and shrinks a word that won't fit.
+
 Art can be attached to a pick after the fact (`draft/setArt`), the same shape
 as `tier/setArt`: it changes the running game only, and it doesn't count as a
 pick, so `actionCount` — what the display uses to detect a new pick — is left

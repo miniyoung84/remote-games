@@ -238,7 +238,7 @@ export function mountBracket(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       resetProgress();
       matchNodes.clear();
       boardKey = "";
-      dom.board.dataset.size = "";
+      delete dom.board.dataset.size;
     },
   };
 }

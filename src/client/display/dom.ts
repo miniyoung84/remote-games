@@ -153,15 +153,19 @@ export function flyIn(dom: DisplayDom, before: Map<string, DOMRect>, focusId: st
 }
 
 /**
- * Step a label's type down until its line clamp stops truncating it. Labels
- * get two or three lines; only the ones that still don't fit lose size, so
- * the board stays uniform unless something is genuinely long.
+ * Step a label's type down until it fits: until its line clamp stops
+ * truncating it, and until no single word is wider than the box. Words are
+ * never split — "Waterme/lon" reads worse than smaller type — so a long one
+ * shrinks instead. Only labels that genuinely don't fit lose size, so the
+ * board stays uniform otherwise.
  */
 export function fitLabels(nodes: Iterable<HTMLElement>, min = 11): void {
+  const overflows = (label: HTMLElement) =>
+    label.scrollHeight > label.clientHeight + 1 || label.scrollWidth > label.clientWidth + 1;
   for (const label of nodes) {
     label.style.fontSize = "";
     let size = parseFloat(getComputedStyle(label).fontSize);
-    for (let i = 0; i < 4 && label.scrollHeight > label.clientHeight + 1; i++) {
+    for (let i = 0; i < 5 && overflows(label); i++) {
       size = Math.round(size * 0.86);
       if (size < min) break;
       label.style.fontSize = `${size}px`;

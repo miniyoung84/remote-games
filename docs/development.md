@@ -108,6 +108,16 @@ what, with the sting playing if sound is on, and then the board takes it. That
 holds the display for about three seconds, so give it a beat before the next
 name.
 
+The strip along the bottom is the **on-the-clock panel**: tap a name and it
+sits there large for as long as that person is talking, with the round number
+on the left and, on the right, who still owes a pick this round — the fairness
+a snake order used to provide, made visible to the room. With nobody tapped it
+reads "Waiting for the next hand".
+
+Fifteen people fit. Columns get about 113px each at that count, so the type
+caps lower, the header drops its count (the cards are the count), and any word
+too wide for a card shrinks rather than splitting.
+
 The pick that just went up gets a **find a picture** button right under the
 entry field — the same reviewer as everywhere else, a couple of seconds, one
 click — and every pick on the host board is clickable for the same thing

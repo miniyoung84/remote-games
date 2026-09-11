@@ -45,11 +45,23 @@ const ids = NAMES.map((n) => latest.roster.find((p) => p.name === n).id);
 for (const id of ids) act({ type: "roster/setPresent", id, present: true });
 await wait(200);
 
+// A draft first, so the tier list mounts on a board another game has used.
+// Leftover layout attributes from the previous game once laid tier rows out
+// as draft columns.
+act({ type: "draft/start", topic: "Warm-up", subtitle: "", rounds: 1 });
+await until((s) => s.game?.kind === "draft");
+await wait(400);
+act({ type: "game/reset" });
+await until((s) => s.game === null);
+await wait(300);
+
 // ================= TIER LIST =================
 console.log("tier list");
 act({ type: "game/start", setId: "office-snacks", kind: "tierlist", shuffle: false, mode: "queue" });
 await until((s) => s.game?.kind === "tierlist");
 await wait(900);
+const attrs = await page.evaluate(() => [...document.querySelector("#board").attributes].map((a) => a.name).filter((n) => n.startsWith("data-")));
+ok(JSON.stringify(attrs) === '["data-density"]', `board carries only its own layout attribute (${attrs.join(", ")})`);
 const readChip = () => page.evaluate(() => ({
   w: getComputedStyle(document.querySelector("#board")).getPropertyValue("--chip-w").trim(),
   density: document.querySelector("#board").dataset.density,

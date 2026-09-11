@@ -1,4 +1,4 @@
-import { pickNumber } from "../../shared/draft.js";
+import { behindInPicks, pickNumber } from "../../shared/draft.js";
 import type { DisplayGame, DisplayState, DraftBoard } from "../../shared/types.js";
 import {
   artNode,
@@ -37,21 +37,31 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
   let animating = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
   let builtKey = "";
+  /** Who the band last named, so a re-render for something else doesn't re-slam it. */
+  let clockKey = "";
 
-  /** Picks take the height the deepest column has, so three picks aren't three thin bars. */
+  /**
+   * Picks take the height the deepest column has, so three picks aren't three
+   * thin bars — but no taller than the column is wide, or fifteen across
+   * becomes fifteen columns of tall thin slivers.
+   */
   function sizePicks(deepest: number): void {
     const list = dom.board.querySelector<HTMLElement>(".draft-picks");
     if (!list) return;
     const style = getComputedStyle(list);
     const avail = list.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
-    const height = Math.max(PICK_MIN, Math.min(PICK_MAX, Math.floor((avail - (deepest - 1) * PICK_GAP) / deepest)));
+    const cap = Math.min(PICK_MAX, Math.round(list.clientWidth * 0.9));
+    const height = Math.max(PICK_MIN, Math.min(cap, Math.floor((avail - (deepest - 1) * PICK_GAP) / deepest)));
     dom.board.style.setProperty("--pick-h", `${height}px`);
     dom.board.dataset.depth = height >= 120 ? "xl" : height >= 90 ? "l" : height >= 60 ? "m" : "s";
   }
 
   function renderBoard(board: DraftBoard, focusId: string | null): void {
     const deepest = Math.max(1, ...board.columns.map((c) => c.picks.length));
-    dom.board.dataset.cols = String(Math.min(12, Math.max(1, board.columns.length)));
+    const cols = board.columns.length;
+    dom.board.dataset.cols = String(Math.min(16, Math.max(1, cols)));
+    // Type is capped by how narrow the columns are, on top of the height bands.
+    dom.board.dataset.width = cols <= 6 ? "wide" : cols <= 10 ? "mid" : cols <= 13 ? "narrow" : "tight";
 
     const key = `${board.topic}:${board.columns.length}`;
     const fresh = key !== builtKey;
@@ -94,20 +104,60 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     if (fresh) stagger(dom.board.querySelectorAll<HTMLElement>(".draft-col"), "entering-up", 45);
   }
 
+  /**
+   * The on-the-clock strip. Whoever the host tapped is named large for as long
+   * as they're talking, and the room can see who still owes a pick this round
+   * — the fairness a snake order used to provide, made visible.
+   */
   function renderBand(frame: Frame): void {
     const board = frame.game.board;
 
     if (board.phase === "final") {
       dom.band.replaceChildren(text("div", "band-final", `Final · ${board.topic}`));
+      clockKey = "";
       return;
     }
 
-    const meta = text("div", "band-meta");
-    meta.append(text("span", "band-round", board.target ? `${board.total} of ${board.target}` : `${board.total} picked`));
-    if (frame.state.pickerName) {
-      meta.append(text("span", "band-picker", `${frame.state.pickerName} is on the clock`));
+    const present = board.columns.filter((c) => c.present);
+    const fewest = present.length ? Math.min(...present.map((c) => c.picks.length)) : 0;
+    const round = fewest + 1;
+
+    const pill = text("div", "clock-round");
+    pill.append(text("span", "band-round", `Round ${round}`));
+    pill.append(text("span", "clock-count", board.target ? `${board.total} of ${board.target}` : `${board.total} picked`));
+
+    const clock = text("div", "clock");
+    const picker = frame.state.pickerName;
+    if (picker) {
+      clock.append(text("span", "clock-name", picker), text("span", "clock-tag", "is on the clock"));
+    } else {
+      clock.classList.add("idle");
+      clock.append(text("span", "clock-name", "Waiting for the next hand"));
     }
-    dom.band.replaceChildren(meta, text("div", "band-message", frame.state.pickerName ? "Say what you're taking" : ""));
+    const key = picker ?? "";
+    if (key === clockKey) clock.classList.add("still");
+    clockKey = key;
+
+    // Everyone on the fewest picks, minus whoever is already up. When that's
+    // the whole room, a round has just started and there's nothing to nag about.
+    const behind = behindInPicks(board)
+      .map((id) => board.columns.find((c) => c.personId === id))
+      .filter((c): c is NonNullable<typeof c> => Boolean(c) && c!.name !== picker);
+    const owed = text("div", "owed");
+    if (behind.length && behind.length < present.length) {
+      owed.append(text("span", "owed-label", "Yet to pick"));
+      const names = text("span", "owed-names");
+      // Four names and a count reads; a wrapped list of twelve doesn't.
+      const shownNames = behind.length > 5 ? 4 : 5;
+      behind.slice(0, shownNames).forEach((c, i) => {
+        if (i) names.append(text("span", "sep", "·"));
+        names.append(text("span", "owed-name", c.name));
+      });
+      if (behind.length > shownNames) names.append(text("span", "sep", `+${behind.length - shownNames}`));
+      owed.append(names);
+    }
+
+    dom.band.replaceChildren(pill, clock, owed);
   }
 
   /** The broadcast card: pick number, who, and what — over the whole stage. */
@@ -147,6 +197,7 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     setHeader(dom, board.topic, board.subtitle);
     setProgress(dom, board.total, board.target || board.total, "picked");
     dom.stage.classList.toggle("tier-final", board.phase === "final");
+    dom.stage.classList.add("draft");
 
     renderBoard(board, focusId);
     renderBand(frame);
@@ -196,10 +247,12 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       clearTimeout(timer);
       resetProgress();
       builtKey = "";
-      dom.board.dataset.depth = "";
-      dom.board.dataset.cols = "";
+      delete dom.board.dataset.depth;
+      delete dom.board.dataset.cols;
+      delete dom.board.dataset.width;
       dom.board.style.removeProperty("--pick-h");
-      dom.stage.classList.remove("tier-final");
+      dom.stage.classList.remove("tier-final", "draft");
+      clockKey = "";
     },
   };
 }
