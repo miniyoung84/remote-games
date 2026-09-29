@@ -95,7 +95,15 @@ days of standups with different people present each day.
 
 Pick **Draft** in the host view and the set library hides itself — there's
 nothing to choose from. Give it a topic and how many picks each person gets,
-then hit Start.
+then hit Start. A shelf of prompts sits above the form — one click fills it in;
+they live in `data/draft-topics.json`, so add your own. A blank subtitle
+becomes "3 each" or whatever the count is.
+
+The round count is the board's shape: every column is drawn with that many
+slots from the first second, sized to fill the column, and picks land in them.
+Three each means three big cards per person; eight each means eight smaller
+ones — and nothing shrinks as the draft goes on. The count is a target, not a
+cap: if you let someone take an extra, the column re-divides to fit it.
 
 On someone's turn, tap their name to put them on the clock, type what they said,
 and press Enter. The clock clears after every pick so the next person has to be
@@ -120,8 +128,19 @@ too wide for a card shrinks rather than splitting.
 
 The pick that just went up gets a **find a picture** button right under the
 entry field — the same reviewer as everywhere else, a couple of seconds, one
-click — and every pick on the host board is clickable for the same thing
-later. Pictures go on the running draft only; there's no set to save them to.
+click. Pictures go on the running draft only; there's no set to save them to.
+
+Everything is typed live, so typos happen: **click any pick on the host board**
+to fix its name (Enter saves, Escape cancels) or give it a picture. A fix is
+not a pick — numbering, order and undo are untouched. **+1 round / −1 round**
+change the count mid-draft when the room wants one more go, or fewer; it can't
+drop below what someone already has.
+
+When everyone has their picks the display says so and the host's Finish button
+lights up. Finishing plays a closing card, then the board settles without the
+empty slots. **Copy results** (any game, any time — "Copy board" while it's
+running) puts the whole thing on the clipboard as plain text, one line per
+person or row, ready to paste into the meeting chat.
 
 ## Adding an item mid-game
 

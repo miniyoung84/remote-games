@@ -19,6 +19,8 @@ export type Action =
   | { type: "draft/start"; topic: string; subtitle: string; rounds: number }
   | { type: "draft/pick"; label: string }
   | { type: "draft/setArt"; pickId: string; art: Art }
+  | { type: "draft/rename"; pickId: string; label: string }
+  | { type: "draft/setRounds"; rounds: number }
   | { type: "draft/finish" }
   | { type: "sets/save"; set: ItemSet }
   | { type: "sets/delete"; id: string }

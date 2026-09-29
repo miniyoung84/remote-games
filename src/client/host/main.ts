@@ -7,6 +7,7 @@ import { connect } from "../connection.js";
 import { mountBracketPanel } from "./bracket.js";
 import { button, text, type HostDom, type HostPanel } from "./panel.js";
 import { mountDraftPanel } from "./draft.js";
+import { summarize } from "../../shared/summary.js";
 import { mountTierPanel } from "./tierlist.js";
 
 const el = <T extends HTMLElement>(id: string): T => {
@@ -41,6 +42,7 @@ const draftStart = el("draft-start");
 const draftTopic = el<HTMLInputElement>("draft-topic");
 const draftSubtitle = el<HTMLInputElement>("draft-subtitle");
 const draftRounds = el<HTMLInputElement>("draft-rounds");
+const draftTopics = el("draft-topics");
 const tierMode = el("tier-mode");
 const suggest = el("suggest");
 const suggestLabel = el("suggest-label");
@@ -103,6 +105,23 @@ function ensurePanel(kind: GameKind | null): void {
 
 function renderGameActions(next: HostState): void {
   gameActions.replaceChildren();
+
+  // The board is the artifact during the call; this is the one that survives it.
+  if (next.game) {
+    const finished =
+      next.game.kind === "bracket" ? next.game.phase === "complete" : next.game.board.phase === "final";
+    const copy = button(finished ? "Copy results" : "Copy board", finished ? "primary" : "ghost");
+    copy.title = "Plain text, one line per row or person — paste it into the meeting chat";
+    copy.onclick = () => {
+      const game = state?.game;
+      if (!game) return;
+      navigator.clipboard
+        .writeText(summarize(game))
+        .then(() => flash("Copied — paste it into the chat"))
+        .catch(() => flash("Couldn't reach the clipboard"));
+    };
+    gameActions.append(copy);
+  }
 
   const soundBtn = button(next.soundOn ? "Sound on" : "Sound off", next.soundOn ? "primary" : "ghost");
   soundBtn.title = next.soundOn
@@ -210,6 +229,28 @@ for (const node of tierMode.querySelectorAll<HTMLButtonElement>("button[data-mod
       other.classList.toggle("on", other === node);
     }
   };
+}
+
+/** Prompts from data/draft-topics.json. One click fills the form; Start is still yours. */
+let topicsKey = "";
+function renderDraftTopics(next: HostState): void {
+  const key = JSON.stringify(next.draftTopics);
+  if (key === topicsKey) return;
+  topicsKey = key;
+  draftTopics.replaceChildren();
+  if (!next.draftTopics.length) return;
+  draftTopics.append(text("span", "draft-topics-label", "Need a topic?"));
+  for (const topic of next.draftTopics) {
+    const chip = button(topic.topic, "topic-chip");
+    chip.title = topic.subtitle ? `${topic.subtitle} · ${topic.rounds} each` : `${topic.rounds} each`;
+    chip.onclick = () => {
+      draftTopic.value = topic.topic;
+      draftSubtitle.value = topic.subtitle;
+      draftRounds.value = String(topic.rounds);
+      draftTopic.focus();
+    };
+    draftTopics.append(chip);
+  }
 }
 
 el("draft-go").onclick = () => {
@@ -778,6 +819,7 @@ function render(next: HostState): void {
   renderGameActions(next);
   renderRoster(next);
   renderSets(next);
+  renderDraftTopics(next);
   renderUnused(next);
   // The editor is deliberately not repopulated here — a state push mid-typing
   // would wipe what the operator is writing.

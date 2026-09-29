@@ -325,6 +325,17 @@ label input, label textarea { margin-top: 5px; text-transform: none; letter-spac
 .draft-start { border: 2px solid var(--accent); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
 .draft-start .hint { display: block; margin: 0 0 12px; }
 .draft-start[hidden] { display: none; }
+.draft-topics { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin: 0 0 12px; }
+.draft-topics-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--dim); margin-right: 4px; }
+.topic-chip { border: 2px solid var(--line); background: #12151b; border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 700; color: var(--fg); }
+.topic-chip:hover { border-color: var(--accent); }
+.draft-edit { display: flex; flex-direction: column; gap: 8px; margin: 0 0 10px; padding: 10px; border: 2px solid var(--accent); border-radius: 8px; }
+.draft-edit-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); }
+.draft-edit-row { display: flex; gap: 8px; align-items: center; }
+.draft-edit-row input { flex: 1; font-size: 15px; font-weight: 700; }
+.draft-edit .mini { border: 2px solid var(--line); color: var(--fg); padding: 5px 9px; font-size: 11px; white-space: nowrap; }
+.draft-edit .mini:hover { border-color: var(--accent); }
+.h-chip.editing { border-color: var(--accent); background: #3a2c0d; }
 
 .draft-entry { display: flex; gap: 8px; margin-bottom: 6px; }
 .draft-input { flex: 1; font-size: 17px; font-weight: 700; }

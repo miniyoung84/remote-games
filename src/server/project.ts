@@ -2,7 +2,7 @@ import { buildBracket, readyMatches, resolveCurrentMatch } from "../shared/brack
 import { buildBoard } from "../shared/tierlist.js";
 import { buildDraftBoard } from "../shared/draft.js";
 import type { AppState, DisplayGame, DisplayState, HostGame, HostState } from "../shared/types.js";
-import { loadSets } from "./store.js";
+import { loadDraftTopics, loadSets } from "./store.js";
 import { orphanImages } from "./packs.js";
 
 /**
@@ -82,6 +82,7 @@ export function projectHost(state: AppState): HostState {
     soundOn: state.soundOn,
     currentPickerId: state.currentPickerId,
     sets: loadSets().map((set) => ({ ...set, lastPlayedAt: state.playedAt[set.id] })),
+    draftTopics: loadDraftTopics(),
     unusedImages: orphanImages(state.game).length,
     canUndo,
     game: hostGame(state),

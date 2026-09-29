@@ -164,6 +164,9 @@ export type DraftColumn = {
   picks: BoardPick[];
 };
 
+/** A prompt for a draft — a topic to type in, nothing more. data/draft-topics.json. */
+export type DraftTopic = { topic: string; subtitle: string; rounds: number };
+
 export type DraftBoard = {
   topic: string;
   subtitle: string;
@@ -213,6 +216,7 @@ export type HostState = {
   soundOn: boolean;
   currentPickerId: string | null;
   sets: ItemSetView[];
+  draftTopics: DraftTopic[];
   /** Stored images no set references any more. */
   unusedImages: number;
   canUndo: boolean;

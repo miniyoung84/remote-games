@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import type { AppState, ItemSet } from "../shared/types.js";
+import type { AppState, ItemSet, DraftTopic } from "../shared/types.js";
 
 const DATA_DIR = join(process.cwd(), "data");
 const SETS_DIR = join(DATA_DIR, "sets");
@@ -45,6 +45,22 @@ export function loadState(): AppState {
 export function saveState(state: AppState): void {
   ensureDirs();
   writeJson(STATE_FILE, state);
+}
+
+/** Draft prompts. A missing or broken file just means an empty shelf. */
+export function loadDraftTopics(): DraftTopic[] {
+  const path = join(DATA_DIR, "draft-topics.json");
+  if (!existsSync(path)) return [];
+  try {
+    const raw = JSON.parse(readFileSync(path, "utf8")) as unknown;
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .filter((t): t is DraftTopic => Boolean(t) && typeof t.topic === "string" && t.topic.trim().length > 0)
+      .map((t) => ({ topic: t.topic.trim(), subtitle: String(t.subtitle ?? "").trim(), rounds: Math.min(12, Math.max(1, Math.round(Number(t.rounds)) || 2)) }));
+  } catch (err) {
+    console.warn(`[store] ignoring unreadable draft-topics.json: ${String(err)}`);
+    return [];
+  }
 }
 
 export function loadSets(): ItemSet[] {

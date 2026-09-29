@@ -51,7 +51,7 @@ export function artNode(item: Item, variant: "chip" | "hero"): HTMLElement | nul
 }
 
 export function setHeader(dom: DisplayDom, title: string, subtitle: string): void {
-  dom.title.replaceChildren(document.createTextNode(title));
+  dom.title.replaceChildren(text("span", "main", title));
   if (subtitle) dom.title.append(text("span", "sub", subtitle));
 }
 

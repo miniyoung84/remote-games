@@ -26,8 +26,10 @@ type Frame = { state: DisplayState; game: DraftGame };
  */
 const ANNOUNCE_MS = PICK_STING_MS;
 const SETTLE_MS = 720;
+/** "That's the draft" gets a beat of its own before the finished board shows. */
+const FINALE_MS = 2400;
 
-const PICK_MAX = 150;
+const PICK_MAX = 260;
 const PICK_MIN = 44;
 const PICK_GAP = 6;
 
@@ -41,23 +43,26 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
   let clockKey = "";
 
   /**
-   * Picks take the height the deepest column has, so three picks aren't three
-   * thin bars — but no taller than the column is wide, or fifteen across
-   * becomes fifteen columns of tall thin slivers.
+   * The column is divided by the number of rounds, so the board has its final
+   * shape from the first pick and nothing shrinks as picks land. Only if
+   * someone is allowed past the round count does it re-divide. Cards are
+   * capped at the column's width, or fifteen across becomes tall slivers.
    */
-  function sizePicks(deepest: number): void {
+  function sizePicks(rows: number): void {
     const list = dom.board.querySelector<HTMLElement>(".draft-picks");
     if (!list) return;
     const style = getComputedStyle(list);
     const avail = list.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
     const cap = Math.min(PICK_MAX, Math.round(list.clientWidth * 0.9));
-    const height = Math.max(PICK_MIN, Math.min(cap, Math.floor((avail - (deepest - 1) * PICK_GAP) / deepest)));
+    const height = Math.max(PICK_MIN, Math.min(cap, Math.floor((avail - (rows - 1) * PICK_GAP) / rows)));
     dom.board.style.setProperty("--pick-h", `${height}px`);
-    dom.board.dataset.depth = height >= 120 ? "xl" : height >= 90 ? "l" : height >= 60 ? "m" : "s";
+    dom.board.dataset.depth = height >= 170 ? "xxl" : height >= 120 ? "xl" : height >= 90 ? "l" : height >= 60 ? "m" : "s";
   }
 
-  function renderBoard(board: DraftBoard, focusId: string | null): void {
+  function renderBoard(board: DraftBoard, focusId: string | null, cascade = false): void {
     const deepest = Math.max(1, ...board.columns.map((c) => c.picks.length));
+    // Finished: the empty slots go, and each column is just what they took.
+    const rows = board.phase === "final" ? deepest : Math.max(board.rounds, deepest);
     const cols = board.columns.length;
     dom.board.dataset.cols = String(Math.min(16, Math.max(1, cols)));
     // Type is capped by how narrow the columns are, on top of the height bands.
@@ -95,13 +100,19 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
           if (pick.id === focusId) chip.classList.add("focus");
           picks.append(chip);
         }
+        // The rounds still to come, drawn as empty slots: the board reads as
+        // "three each" before anyone has picked, and a pick lands in a place
+        // that was visibly waiting for it.
+        for (let round = column.picks.length + 1; round <= rows; round++) {
+          picks.append(text("div", "draft-slot", `R${round}`));
+        }
         node.append(picks);
         return node;
       }),
     );
-    sizePicks(deepest);
+    sizePicks(rows);
     fitLabels(dom.board.querySelectorAll<HTMLElement>(".pick-label"));
-    if (fresh) stagger(dom.board.querySelectorAll<HTMLElement>(".draft-col"), "entering-up", 45);
+    if (fresh || cascade) stagger(dom.board.querySelectorAll<HTMLElement>(".draft-col"), "entering-up", 45);
   }
 
   /**
@@ -120,10 +131,11 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
 
     const present = board.columns.filter((c) => c.present);
     const fewest = present.length ? Math.min(...present.map((c) => c.picks.length)) : 0;
-    const round = fewest + 1;
+    const everyoneDone = present.length > 0 && fewest >= board.rounds;
+    const round = Math.min(fewest + 1, board.rounds);
 
     const pill = text("div", "clock-round");
-    pill.append(text("span", "band-round", `Round ${round}`));
+    pill.append(text("span", "band-round", everyoneDone ? "All rounds" : `Round ${round}`));
     pill.append(text("span", "clock-count", board.target ? `${board.total} of ${board.target}` : `${board.total} picked`));
 
     const clock = text("div", "clock");
@@ -132,7 +144,7 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       clock.append(text("span", "clock-name", picker), text("span", "clock-tag", "is on the clock"));
     } else {
       clock.classList.add("idle");
-      clock.append(text("span", "clock-name", "Waiting for the next hand"));
+      clock.append(text("span", "clock-name", everyoneDone ? "Everyone has picked" : "Waiting for the next hand"));
     }
     const key = picker ?? "";
     if (key === clockKey) clock.classList.add("still");
@@ -192,14 +204,36 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
     dom.overlay.hidden = false;
   }
 
-  function render(frame: Frame, before: Map<string, DOMRect> | null, focusId: string | null): void {
+  /** The closing card: the topic, how many picks, how many drafters. */
+  function renderFinale(board: DraftBoard): void {
+    const card = text("div", "announce-card finale");
+    const tag = text("div", "announce-pick");
+    tag.append(text("span", "k", "Draft"), text("span", "n", "Done"));
+    card.append(tag);
+    const body = text("div", "announce-body");
+    body.append(text("div", "announce-who", "That's the draft"));
+    const what = text("div", "announce-what");
+    const label = text("span", "announce-label", board.topic);
+    if (board.topic.length > 30) label.classList.add("xlong");
+    else if (board.topic.length > 16) label.classList.add("long");
+    what.append(label);
+    body.append(what);
+    const drafters = board.columns.filter((c) => c.picks.length).length;
+    body.append(text("div", "announce-meta", `${board.total} pick${board.total === 1 ? "" : "s"} · ${drafters} drafter${drafters === 1 ? "" : "s"}`));
+    card.append(body);
+    dom.overlay.className = "announce";
+    dom.overlay.replaceChildren(card);
+    dom.overlay.hidden = false;
+  }
+
+  function render(frame: Frame, before: Map<string, DOMRect> | null, focusId: string | null, cascade = false): void {
     const board = frame.game.board;
     setHeader(dom, board.topic, board.subtitle);
     setProgress(dom, board.total, board.target || board.total, "picked");
     dom.stage.classList.toggle("tier-final", board.phase === "final");
     dom.stage.classList.add("draft");
 
-    renderBoard(board, focusId);
+    renderBoard(board, focusId, cascade);
     renderBand(frame);
     if (before) flyIn(dom, before, focusId);
   }
@@ -211,6 +245,7 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
 
     const picked = Boolean(shown) && next.game.actionCount > (shown?.game.actionCount ?? 0) && Boolean(next.game.board.last);
     const wasFinal = shown?.game.board.phase === "final";
+    const hadFrame = Boolean(shown);
     // Columns reflow when someone joins; let the existing picks slide over.
     const before = shown ? captureRects(dom) : null;
     shown = next;
@@ -233,7 +268,20 @@ export function mountDraft(dom: DisplayDom, sound: Sound): Renderer<Frame> {
       return;
     }
 
-    if (!wasFinal && next.game.board.phase === "final") sound.play("champion");
+    if (!wasFinal && next.game.board.phase === "final" && hadFrame) {
+      // Finishing gets its own beat: the card, then the board re-assembles
+      // without the empty slots.
+      sound.play("champion");
+      renderFinale(next.game.board);
+      animating = true;
+      timer = setTimeout(() => {
+        dom.overlay.hidden = true;
+        if (shown) render(shown, null, null, true);
+        animating = false;
+        pump();
+      }, FINALE_MS);
+      return;
+    }
     dom.overlay.hidden = true;
     render(next, before, null);
   }

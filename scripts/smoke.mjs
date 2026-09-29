@@ -153,6 +153,18 @@ ok((await host.error()).includes("Unknown pick"), "art for an unknown pick refus
 host.act({ type: "draft/setArt", pickId: p1.id, art: { emoji: "🪓" } });
 h = await host.state((s) => s.game.board.columns[0].picks[0].art);
 ok(h.game.board.columns[0].picks[0].art.emoji === "🪓" && h.game.board.last.id === p2.id, "art lands on the pick without counting as a pick");
+ok(h.game.board.subtitle === "12 each", `blank subtitle defaults to the round count (${h.game.board.subtitle})`);
+ok(Array.isArray(h.draftTopics) && h.draftTopics.length > 0 && h.draftTopics.every((t) => t.topic && t.rounds >= 1), `draft topics shelf loaded (${h.draftTopics.length})`);
+host.act({ type: "draft/rename", pickId: p1.id, label: "   " });
+ok((await host.error()).includes("needs a name"), "renaming to nothing refused");
+host.act({ type: "draft/rename", pickId: p1.id, label: " Crowbar (the good one) " });
+h = await host.state((s) => s.game.board.columns[0].picks[0].label !== "Crowbar");
+ok(h.game.board.columns[0].picks[0].label === "Crowbar (the good one)" && h.game.board.total === 2 && h.game.board.last.id === p2.id, "rename fixes the label, nothing else");
+host.act({ type: "draft/setRounds", rounds: 1 });
+ok((await host.error()).includes("already has 2"), "rounds can't drop below what someone already has");
+host.act({ type: "draft/setRounds", rounds: 3 });
+h = await host.state((s) => s.game.board.rounds === 3);
+ok(h.game.board.subtitle === "3 each" && h.game.board.target === 3, `rounds changed mid-draft, subtitle follows (${h.game.board.subtitle})`);
 host.act({ type: "draft/finish" });
 await host.state((s) => s.game.board.phase === "final");
 host.act({ type: "draft/pick", label: "Late" });

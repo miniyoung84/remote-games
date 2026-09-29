@@ -183,15 +183,33 @@ excluded. When that's everyone, a round has just started and it shows nothing
 — there's no one to nag. The name only re-enters when it changes; a re-render
 for anything else marks it `still` so it doesn't slam again.
 
-Column count caps the type on top of the height bands (`data-width`), and a
-pick can't be taller than its column is wide, so fifteen across is fifteen
-columns of cards rather than slivers. Words are never split: `fitLabels` also
+The column is divided by the round count, not by how many picks have landed,
+so the board has its final shape before the first pick and nothing shrinks as
+the draft goes on; rounds still to come are drawn as hollow slots. Column count
+caps the type on top of the height bands (`data-width`), and a pick can't be
+taller than its column is wide, so fifteen across is fifteen columns of cards
+rather than slivers. Words are never split: `fitLabels` also
 watches horizontal overflow and shrinks a word that won't fit.
 
 Art can be attached to a pick after the fact (`draft/setArt`), the same shape
 as `tier/setArt`: it changes the running game only, and it doesn't count as a
 pick, so `actionCount` — what the display uses to detect a new pick — is left
-alone.
+alone. `draft/rename` follows the same rule: a typo fix rewrites one label in
+place, and nothing about order, numbering or undo notices. `draft/setRounds`
+moves the target mid-game, refusing to go below what someone already holds,
+and rewrites the subtitle only if it was the automatic "N each".
+
+Draft prompts are a plain list in `data/draft-topics.json` — topic, subtitle,
+rounds — loaded on each host projection like sets are and shown as a shelf on
+the start form. They're prompts, not pools: picks stay free text.
+
+Finishing is announced the way a pick is: the same card, reading "That's the
+draft", for a beat, and then the board re-assembles without its empty slots.
+
+`summarize()` in `src/shared/summary.ts` turns any game into plain text — one
+line per drafter, per tier row, or per bracket round — for the host's Copy
+results button. The display is the artifact during the call; the text is the
+one that survives it.
 
 ### Tier list modes
 

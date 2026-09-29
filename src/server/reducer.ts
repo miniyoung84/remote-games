@@ -26,6 +26,12 @@ function shuffled<T>(input: T[]): T[] {
 
 export type ReduceResult = { state: AppState; setsChanged: boolean; error?: string; notice?: string };
 
+function countBy(keys: string[]): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const key of keys) counts[key] = (counts[key] ?? 0) + 1;
+  return counts;
+}
+
 export function reduce(state: AppState, action: Action): ReduceResult {
   const ok = (next: AppState, setsChanged = false): ReduceResult => ({ state: next, setsChanged });
   const fail = (message: string): ReduceResult => ({ state, setsChanged: false, error: message });
@@ -111,7 +117,8 @@ export function reduce(state: AppState, action: Action): ReduceResult {
         game: {
           kind: "draft",
           topic,
-          subtitle: action.subtitle.trim(),
+          // "3 each" is what the subtitle nearly always says anyway.
+          subtitle: action.subtitle.trim() || `${rounds} each`,
           rounds,
           picks: [],
           finished: false,
@@ -151,6 +158,29 @@ export function reduce(state: AppState, action: Action): ReduceResult {
         ...state,
         game: { ...game, picks: game.picks.map((p) => (p.id === action.pickId ? { ...p, art: action.art } : p)) },
       });
+    }
+    case "draft/rename": {
+      const game = state.game;
+      if (game?.kind !== "draft") return fail("No draft in progress.");
+      if (!game.picks.some((p) => p.id === action.pickId)) return fail("Unknown pick.");
+      const label = action.label.trim();
+      if (!label) return fail("A pick needs a name.");
+      if (label.length > 80) return fail("That pick is too long.");
+      // A typo fix, not a pick: order, numbering and undo are all untouched.
+      return ok({
+        ...state,
+        game: { ...game, picks: game.picks.map((p) => (p.id === action.pickId ? { ...p, label } : p)) },
+      });
+    }
+    case "draft/setRounds": {
+      const game = state.game;
+      if (game?.kind !== "draft") return fail("No draft in progress.");
+      if (game.finished) return fail("This draft is finished.");
+      const rounds = Math.min(12, Math.max(1, Math.round(action.rounds) || 1));
+      const deepest = Math.max(0, ...Object.values(countBy(game.picks.map((p) => p.by))));
+      if (rounds < deepest) return fail(`Someone already has ${deepest} picks.`);
+      const subtitle = game.subtitle === `${game.rounds} each` ? `${rounds} each` : game.subtitle;
+      return ok({ ...state, game: { ...game, rounds, subtitle } });
     }
     case "draft/finish": {
       const game = state.game;

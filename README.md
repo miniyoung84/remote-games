@@ -107,6 +107,7 @@ extra step.
 | [Architecture](docs/architecture.md) | Display/host/player roles, state, persistence |
 | [Development](docs/development.md) | Environment setup and running a session |
 | [Generating bracket sets](docs/generating-bracket-sets.md) | Copy-paste prompt for inventing new sets |
+| [Roadmap and ideas](docs/roadmap.md) | What's next, the idea bank, what was rejected and why, and a prompt for getting more |
 
 ## License
 
